@@ -4,12 +4,12 @@ An academic study project of big data analysis and visualization, conducted by a
 
 ## Authors
 
-**Muyang Guo**
-**Changxuan Zhao**
-**Xingjian Wang**
-**Rui Jia**
-**Xiaoxun Liu**
-**Xufan Song**
+* **Muyang Guo**
+* **Changxuan Zhao**
+* **Xingjian Wang**
+* **Rui Jia**
+* **Xiaoxun Liu**
+* **Xufan Song**
 
 
 ## License
@@ -18,4 +18,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* to be updated
+To be updated ... 
