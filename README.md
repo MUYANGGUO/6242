@@ -17,6 +17,15 @@ An academic study project of big data analysis and visualization, conducted by a
  
 - [Proposal](https://github.com/MUYANGGUO/6242/wiki/Project-Proposal). [Oct. 7th dated]
 
+## Datasets
+
+- [Uber Movements](https://movement.uber.com/cities?lang=en-US)
+
+- [Yelp Open Dataset](https://www.yelp.com/dataset)
+
+- [Zillow Dataset](https://www.zillow.com/howto/api/APIOverview.htm)
+
+- [SFPD Historical Crime Data](https://data.sfgov.org/Public-Safety/Police-Department-Incident-Reports-2018-to-Present/wg3w-h783)
 
 ## License
 
