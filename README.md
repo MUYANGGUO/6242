@@ -1,4 +1,4 @@
-# 6242 Final Project
+# Residense Recommendation System based on Personal Interests and Geo-info
 
 An academic study project of big data analysis and visualization, conducted by a group of students from Georgia Institute of Technology.  
 
