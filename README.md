@@ -12,8 +12,10 @@ An academic study project of big data analysis and visualization, conducted by a
 * **Xufan Song**
 
 ## Documentations
+
+- [Project Wiki](https://github.com/MUYANGGUO/6242/wiki)
  
-- [Proposal Presentation](https://github.com/MUYANGGUO/6242/blob/master/Project%20Documentation/team34slides.pdf). [Oct. 7th dated]
+- [Proposal](https://github.com/MUYANGGUO/6242/wiki/Project-Proposal). [Oct. 7th dated]
 
 
 ## License
