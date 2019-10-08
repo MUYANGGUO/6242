@@ -15,6 +15,8 @@ It is also an academic study project of big data analysis and visualization, con
 
 ## Documentations
 
+Direct to project wiki page to download progress documentations in PDF. 
+
 - [Project Wiki](https://github.com/MUYANGGUO/6242/wiki)
  
 - [Proposal](https://github.com/MUYANGGUO/6242/wiki/Project-Proposal) [Oct. 7th dated]
