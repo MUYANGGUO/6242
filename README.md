@@ -19,7 +19,7 @@ Direct to project wiki page to download progress documentations in PDF.
 
 - [Project Wiki](https://github.com/MUYANGGUO/6242/wiki)
  
-- [Proposal](https://github.com/MUYANGGUO/6242/wiki/Project-Proposal) [Oct. 7th dated]
+- [Proposal and Presentation](https://github.com/MUYANGGUO/6242/wiki/Project-Proposal) [Oct. 9th dated]
 
 ## Datasets
 
