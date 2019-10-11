@@ -156,6 +156,7 @@ dmypy.json
 *.log
 *.sql
 *.sqlite
+/tmp
 
 # OS generated files #
 ######################
