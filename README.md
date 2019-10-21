@@ -33,7 +33,7 @@ Direct to project wiki page to download progress documentations in PDF.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](/LICENSE) file for details
+This project is licensed under the GPL_3.0 License - see the [LICENSE.md](/LICENSE) file for details
 
 ## Acknowledgments
 
