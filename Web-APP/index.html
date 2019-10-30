@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <!-- deck.gl standalone bundle -->
+    <script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
+
+    <!-- Mapbox dependencies -->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" rel="stylesheet" />
+
+    <style type="text/css">
+      body {margin: 0; padding: 0;}
+      #container {width: 100vw; height: 100vh;}
+    </style>
+  </head>
+
+  <body>
+    <div id="container"></div>
+  </body>
+
+  <script type="text/javascript">
+
+// var datacheck = d3.json(" https://data.sfgov.org/resource/wg3w-h783.json?$where=within_circle(point, 37.79, -122.45, 1000)").then(function(datacheck) {
+//     console.log(datacheck);
+//   });
+
+// source: Natural Earth http://www.naturalearthdata.com/ via geojson.xyz
+const Neighborhoods =
+  'https://raw.githubusercontent.com/songxufan/6242/master/zillowDataClean/zillow-neighborhoods.geojson';
+
+const deckgl = new deck.DeckGL({
+  container: 'container',
+  // Set your Mapbox access token here
+  mapboxApiAccessToken: '',
+  latitude: 37.7749,
+  longitude: -122.4194,
+  zoom: 11,
+  bearing: 0,
+  pitch: 30,
+  layers: [
+    new deck.GeoJsonLayer({
+      id: 'Neighborhoods',
+      data: Neighborhoods,
+      // Styles
+      filled: true,
+      pointRadiusMinPixels: 2,
+      opacity: 1,
+      pointRadiusScale: 200,
+      getRadius: f => (11 - f.properties.scalerank),
+      getFillColor: [200, 0, 80, 180],
+      // Interactive props
+      pickable: true,
+      autoHighlight: true,
+      onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.abbrev})`)
+    }),
+
+  ]
+});
+  </script>
+</html>
