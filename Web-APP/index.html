@@ -19,13 +19,17 @@
     <div id="container"></div>
   </body>
 
-  <script type="text/javascript">
+<script type="text/javascript">
 
 // var datacheck = d3.json(" https://data.sfgov.org/resource/wg3w-h783.json?$where=within_circle(point, 37.79, -122.45, 1000)").then(function(datacheck) {
 //     console.log(datacheck);
 //   });
+// const SFPD_json = fetch('https://data.sfgov.org/resource/wg3w-h783.json?$where=within_circle(point, 37.79, -122.45, 1000)')
+//       .then(response => response.json())
+//       .then(SFPD_json => alert(SFPD_json[10].point['coordinates']));
 
 // source: github user content raw link
+
 const Neighborhoods =
   'https://raw.githubusercontent.com/songxufan/6242/master/zillowDataClean/zillow-neighborhoods.geojson';
 
@@ -59,10 +63,42 @@ const deckgl = new deck.DeckGL({
       //This is the props when you click on a region
       pickable: true,
       autoHighlight: true,
-      onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.abbrev})`)
+      onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.city})`)
     }),
+
+
+
+    //create scatter plot layer for proping the SFPD fetched data
+    new deck.ScatterplotLayer({
+      data: [
+        {position: [-122.402, 37.79], color: [255, 0, 0], radius: 1000}
+      ],
+      getPosition: d => d.position,
+      getRadius: d => d.radius,
+      getFillColor: d => d.color,
+      opacity: 0.3
+    }),
+    new deck.TextLayer({
+      data: [
+        {position: [-122.402, 37.79], text: 'testing'}
+      ],
+      getPosition: d => d.position,
+      getText: d => d.text,
+      getSize: 28,
+      getAngle: 0,
+      getTextAnchor: 'middle',
+      getAlignmentBaseline: 'bottom'
+    })
 
   ]
 });
-  </script>
+</script>
+
+
+
+<!-- <script>
+fetch('https://data.sfgov.org/resource/wg3w-h783.json?$where=within_circle(point, 37.79, -122.45, 1000)')
+      .then(response => response.json())
+      .then(SFPD_json => alert(SFPD_json[10].point['coordinates']));
+</script> -->
 </html>
