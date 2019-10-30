@@ -33,8 +33,6 @@ Direct to project wiki page to download progress documentations in PDF.
 
 ## Visulization
 
-- [Deck.gl by Uber](https://deck.gl/#/)
-
 - HTML,CSS
 
 - [D3](https://d3js.org/)
