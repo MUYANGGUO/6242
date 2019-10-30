@@ -56,8 +56,11 @@ const deckgl = new deck.DeckGL({
       pointRadiusMinPixels: 2,
       opacity: 1,
       pointRadiusScale: 200,
+      getLineWidth: 20,
+      getLineColor: [128,128,128,200],
+      getElevation: 30,
       getRadius: f => (11 - f.properties.scalerank),
-      getFillColor: [200, 0, 80, 180],
+      getFillColor: [169, 169, 169, 180],
       // Interactive props
 
       //This is the props when you click on a region
@@ -71,7 +74,7 @@ const deckgl = new deck.DeckGL({
     //create scatter plot layer for proping the SFPD fetched data
     new deck.ScatterplotLayer({
       data: [
-        {position: [-122.402, 37.79], color: [255, 0, 0], radius: 1000}
+        {position: [-122.402, 37.79], color: [250, 0, 0], radius: 1000}
       ],
       getPosition: d => d.position,
       getRadius: d => d.radius,
