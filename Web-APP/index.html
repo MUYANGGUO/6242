@@ -1,5 +1,6 @@
 <html>
   <head>
+    <!-- d3 dependencies --> 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <!-- deck.gl standalone bundle -->
     <script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
@@ -24,14 +25,19 @@
 //     console.log(datacheck);
 //   });
 
-// source: Natural Earth http://www.naturalearthdata.com/ via geojson.xyz
+// source: github user content raw link
 const Neighborhoods =
   'https://raw.githubusercontent.com/songxufan/6242/master/zillowDataClean/zillow-neighborhoods.geojson';
 
 const deckgl = new deck.DeckGL({
   container: 'container',
   // Set your Mapbox access token here
+  //Extremely Important, Create your Mapbox account, and use the API KEY generated. Fees will occur if exceeding the free tier limits
+  //////////////////////////////////////////
   mapboxApiAccessToken: '',
+  //////////////////////////////////////////
+
+  //I have set the layer correctly with the geo info for SF, so in testing, no need to use MAPBOX to show the underlying map
   latitude: 37.7749,
   longitude: -122.4194,
   zoom: 11,
@@ -49,6 +55,8 @@ const deckgl = new deck.DeckGL({
       getRadius: f => (11 - f.properties.scalerank),
       getFillColor: [200, 0, 80, 180],
       // Interactive props
+
+      //This is the props when you click on a region
       pickable: true,
       autoHighlight: true,
       onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.abbrev})`)
