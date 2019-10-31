@@ -37,6 +37,10 @@ Direct to project wiki page to download progress documentations in PDF.
 
 - [D3](https://d3js.org/)
 
+## Map Service
+
+- [Mapbox](http://mapbox.com/)
+
 ## License
 
 This project is licensed under the GPL_3.0 License - see the [LICENSE.md](/LICENSE) file for details
