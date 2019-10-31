@@ -19,7 +19,7 @@ Direct to project wiki page to download progress documentations in PDF.
 
 - [Project Wiki](https://github.com/MUYANGGUO/6242/wiki)
  
-- [Proposal](https://github.com/MUYANGGUO/6242/wiki/Project-Proposal) [Oct. 7th dated]
+- [Proposal and Presentation](https://github.com/MUYANGGUO/6242/wiki/Project-Proposal) [Oct. 9th dated]
 
 ## Datasets
 
@@ -31,9 +31,19 @@ Direct to project wiki page to download progress documentations in PDF.
 
 - [SFPD Historical Crime Data](https://data.sfgov.org/Public-Safety/Police-Department-Incident-Reports-2018-to-Present/wg3w-h783)
 
+## Visulization
+
+- HTML,CSS
+
+- [D3](https://d3js.org/)
+
+## Map Service
+
+- [Mapbox](http://mapbox.com/)
+
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](/LICENSE) file for details
+This project is licensed under the GPL_3.0 License - see the [LICENSE.md](/LICENSE) file for details
 
 ## Acknowledgments
 
