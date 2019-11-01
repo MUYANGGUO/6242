@@ -1,0 +1,239 @@
+<html>
+  <head>
+
+
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- media icon dependencies --> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- MDL Style dependencies --> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <!-- <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script> -->
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+   
+    <!-- Material Design icon font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- d3 dependencies --> 
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <!-- deck.gl standalone bundle -->
+    <script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
+
+    <!-- Mapbox dependencies -->
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" rel="stylesheet" />
+
+    <!-- <style type="text/css">
+      body {margin: 0; padding: 0;background-color:grey;}
+      #container {width: 100vw; height: 90vh;}
+     
+    </style> -->
+    <!-- Flat button -->
+    <div id = "nav" class="mdl-layout__header-row">
+    <!-- legft top corner menu bar -->
+      <!-- <button id="demo-menu-lower-left"
+      class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">more_vert</i>
+      </button>
+
+      <ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect"
+      for="demo-menu-lower-left">
+      <li class="mdl-menu__item">Some Action</li>
+      <li class="mdl-menu__item mdl-menu__item--full-bleed-divider">Another Action</li>
+      <li disabled class="mdl-menu__item">Disabled Action</li>
+      <li class="mdl-menu__item">Yet Another Action</li>
+      </ul>  -->
+      <!-- Title -->
+      <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <!-- <div class="mdl-layout-spacer"></div> -->
+
+      
+      <!-- Navigation -->
+      <!-- <nav class="mdl-navigation">
+        <a class="mdl-navigation__link" href="">Link</a>
+        <a class="mdl-navigation__link" href="">Link</a>
+        <a class="mdl-navigation__link" href="">Link</a>
+        <a class="mdl-navigation__link" href="">Link</a>
+      </nav> -->
+
+       <!-- User Container -->
+      <div  id="user-container" class="mdl-layout__header-row">
+        <!-- <button id = "user-profile" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Profile</button> -->
+        <div hidden id="user-pic"></div>
+        <button hidden id="user-name" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white"></button>
+        <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+          Sign-out
+        </button>
+        <button hidden id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+          <i class="material-icons">account_circle</i>Sign-in with Google
+        </button>
+      </div>
+
+      <!-- <div hidden>
+          <h2 style="text-align:center">User Profile Card</h2>
+          
+          <div class="card">
+            <img src="/w3images/team2.jpg" alt="John" style="width:100%">
+            <h1>John Doe</h1>
+            <p class="title">CEO & Founder, Example</p>
+            <p>Harvard University</p>
+            <div style="margin: 24px 0;">
+              <a href="#"><i class="fa fa-dribbble"></i></a> 
+              <a href="#"><i class="fa fa-twitter"></i></a>  
+              <a href="#"><i class="fa fa-linkedin"></i></a>  
+              <a href="#"><i class="fa fa-facebook"></i></a> 
+            </div>
+            <p><button>Contact</button></p>
+          </div>
+        </div> -->
+
+
+    </div>
+
+    <script type="text/javascript">!function(n,e){var t,o,i,c=[],f={passive:!0,capture:!0},r=new Date,a="pointerup",u="pointercancel";function p(n,c){t||(t=c,o=n,i=new Date,w(e),s())}function s(){o>=0&&o<i-r&&(c.forEach(function(n){n(o,t)}),c=[])}function l(t){if(t.cancelable){var o=(t.timeStamp>1e12?new Date:performance.now())-t.timeStamp;"pointerdown"==t.type?function(t,o){function i(){p(t,o),r()}function c(){r()}function r(){e(a,i,f),e(u,c,f)}n(a,i,f),n(u,c,f)}(o,t):p(o,t)}}function w(n){["click","mousedown","keydown","touchstart","pointerdown"].forEach(function(e){n(e,l,f)})}w(n),self.perfMetrics=self.perfMetrics||{},self.perfMetrics.onFirstInputDelay=function(n){c.push(n),s()}}(addEventListener,removeEventListener);</script>
+
+  </head>
+
+  <body>
+    
+    <!-- Deck.gl Container -->
+    <div id="container"></div>
+
+
+
+
+
+
+    <!-- Footer -->
+    <footer id = "footercontainer" class="mdl-mini-footer">
+        <div class="mdl-mini-footer__left-section">
+          <div class="mdl-logo">Project < " Hood --- Mate " > V1
+          </div>
+          
+          <ul class="mdl-mini-footer__link-list">
+            <li><a href="https://github.com/MUYANGGUO/6242" class="fa fa-github"> @Github</a></li>
+            <li><a href="#">Privacy & Terms</a></li>
+          </ul>
+        </div>
+    </footer>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+                          <script  src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
+
+                          <!-- TODO: Add SDKs for Firebase products that you want to use
+                              https://firebase.google.com/docs/web/setup#available-libraries -->
+                          <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-analytics.js"></script>
+                        <script src="/__/firebase/7.2.2/firebase-app.js"></script>
+                        <!-- include only the Firebase features as you need -->
+                        <script src="/__/firebase/7.2.2/firebase-auth.js"></script>
+                        <script src="/__/firebase/7.2.2/firebase-database.js"></script>
+                        <script defer src="/__/firebase/7.2.2/firebase-messaging.js"></script>
+                        <script defer src="/__/firebase/7.2.2/firebase-storage.js"></script>
+                        <!-- initialize the SDK after all desired features are loaded -->
+                        <script  def src="/__/firebase/init.js"></script>
+                          <script> 
+                            // Your web app's Firebase configuration
+                            var firebaseConfig = {
+                              apiKey: "AIzaSyAImL_fsxsMDetaRyT_7j8-QSMOOTKG63U",
+                              authDomain: "project-54404.firebaseapp.com",
+                              databaseURL: "https://project-54404.firebaseio.com",
+                              projectId: "project-54404",
+                              storageBucket: "project-54404.appspot.com",
+                              messagingSenderId: "996709414935",
+                              appId: "1:996709414935:web:19fde9d71dcf913a47c452",
+                              measurementId: "G-21L4CYX736"
+                            };
+                            // Initialize Firebase
+                            firebase.initializeApp(firebaseConfig);
+                            firebase.analytics();
+                          </script>
+
+<script src="scripts/main.js"></script>
+</body>
+
+<script type="text/javascript">
+
+// var datacheck = d3.json(" https://data.sfgov.org/resource/wg3w-h783.json?$where=within_circle(point, 37.79, -122.45, 1000)").then(function(datacheck) {
+//     console.log(datacheck);
+//   });
+// const SFPD_json = fetch('https://data.sfgov.org/resource/wg3w-h783.json?$where=within_circle(point, 37.79, -122.45, 1000)')
+//       .then(response => response.json())
+//       .then(SFPD_json => alert(SFPD_json[10].point['coordinates']));
+
+// source: github user content raw link
+
+const Neighborhoods =
+  'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
+
+const deckgl = new deck.DeckGL({
+  container: 'container',
+  // Set your Mapbox access token here
+  //Extremely Important, Create your Mapbox account, and use the API KEY generated. Fees will occur if exceeding the free tier limits
+  //////////////////////////////////////////
+  mapboxApiAccessToken: '',
+  //////////////////////////////////////////
+
+  //I have set the layer correctly with the geo info for SF, so in testing, no need to use MAPBOX to show the underlying map
+  latitude: 37.7749,
+  longitude: -122.4194,
+  zoom: 11,
+  bearing: 0,
+  pitch: 30,
+  layers: [
+    new deck.GeoJsonLayer({
+      id: 'Neighborhoods',
+      data: Neighborhoods,
+      // Styles
+      filled: true,
+      pointRadiusMinPixels: 2,
+      opacity: 1,
+      pointRadiusScale: 200,
+      getLineWidth: 20,
+      getLineColor: [128,128,128,200],
+      getElevation: 30,
+      getRadius: f => (11 - f.properties.scalerank),
+      getFillColor: [169, 169, 169, 180],
+      // Interactive props
+
+      //This is the props when you click on a region
+      pickable: true,
+      autoHighlight: true,
+      onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.city})`)
+    }),
+
+
+
+    //create scatter plot layer for proping the SFPD fetched data
+    new deck.ScatterplotLayer({
+      data: [
+        {position: [-122.402, 37.79], color: [250, 0, 0], radius: 1000}
+      ],
+      getPosition: d => d.position,
+      getRadius: d => d.radius,
+      getFillColor: d => d.color,
+      opacity: 0.3
+    }),
+    new deck.TextLayer({
+      data: [
+        {position: [-122.402, 37.79], text: 'testing'}
+      ],
+      getPosition: d => d.position,
+      getText: d => d.text,
+      getSize: 28,
+      getAngle: 0,
+      getTextAnchor: 'middle',
+      getAlignmentBaseline: 'bottom'
+    })
+
+  ]
+});
+</script>
+
+
+
+<!-- <script>
+fetch('https://data.sfgov.org/resource/wg3w-h783.json?$where=within_circle(point, 37.79, -122.45, 1000)')
+      .then(response => response.json())
+      .then(SFPD_json => alert(SFPD_json[10].point['coordinates']));
+</script> -->
+</html>
