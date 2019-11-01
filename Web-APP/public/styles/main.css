@@ -13,7 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+ body {margin: 0; padding: 0;background-color:grey;}
+ #container {width: 100vw; height: 90vh;}
+ #footercontainer{ position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  background-color:grey}
+#header-title{
+  color:white;
+}
  html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
 }
@@ -161,6 +170,19 @@ main, #messages-card {
   line-height: 36px;
   padding-right: 10px;
   padding-left: 20px;
+}
+#user-container #sign-in {
+  font-size: 18px;
+  line-height: 36px;
+  padding-right: 10px;
+  padding-left: 20px;
+}
+#user-container #sign-out {
+  font-size: 18px;
+  line-height: 36px;
+  padding-right: 10px;
+  padding-left: 20px;
+  color: darkgrey !important;
 }
 #image-form #submitImage {
   width: auto;

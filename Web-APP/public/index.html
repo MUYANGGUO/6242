@@ -3,12 +3,16 @@
 
 
     <link rel="stylesheet" href="styles/main.css">
-
+    <!-- media icon dependencies --> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- MDL Style dependencies --> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-
+    <!-- <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script> -->
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+   
+    <!-- Material Design icon font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!-- d3 dependencies --> 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <!-- deck.gl standalone bundle -->
@@ -18,11 +22,11 @@
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" rel="stylesheet" />
 
-    <style type="text/css">
+    <!-- <style type="text/css">
       body {margin: 0; padding: 0;background-color:grey;}
       #container {width: 100vw; height: 90vh;}
      
-    </style>
+    </style> -->
     <!-- Flat button -->
     <div id = "nav" class="mdl-layout__header-row">
     <!-- legft top corner menu bar -->
@@ -39,7 +43,7 @@
       <li class="mdl-menu__item">Yet Another Action</li>
       </ul>  -->
       <!-- Title -->
-      <span class="mdl-layout-title">"Hood---Mate"</span>
+      <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span>
       <!-- Add spacer, to align navigation to the right -->
       <!-- <div class="mdl-layout-spacer"></div> -->
 
@@ -54,8 +58,9 @@
 
        <!-- User Container -->
       <div  id="user-container" class="mdl-layout__header-row">
+        <!-- <button id = "user-profile" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Profile</button> -->
         <div hidden id="user-pic"></div>
-        <div hidden id="user-name"></div>
+        <button hidden id="user-name" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white"></button>
         <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
           Sign-out
         </button>
@@ -64,6 +69,23 @@
         </button>
       </div>
 
+      <!-- <div hidden>
+          <h2 style="text-align:center">User Profile Card</h2>
+          
+          <div class="card">
+            <img src="/w3images/team2.jpg" alt="John" style="width:100%">
+            <h1>John Doe</h1>
+            <p class="title">CEO & Founder, Example</p>
+            <p>Harvard University</p>
+            <div style="margin: 24px 0;">
+              <a href="#"><i class="fa fa-dribbble"></i></a> 
+              <a href="#"><i class="fa fa-twitter"></i></a>  
+              <a href="#"><i class="fa fa-linkedin"></i></a>  
+              <a href="#"><i class="fa fa-facebook"></i></a> 
+            </div>
+            <p><button>Contact</button></p>
+          </div>
+        </div> -->
 
 
     </div>
@@ -74,10 +96,26 @@
 
   <body>
     
-
+    <!-- Deck.gl Container -->
     <div id="container"></div>
 
 
+
+
+
+
+    <!-- Footer -->
+    <footer id = "footercontainer" class="mdl-mini-footer">
+        <div class="mdl-mini-footer__left-section">
+          <div class="mdl-logo">Project < " Hood --- Mate " > V1
+          </div>
+          
+          <ul class="mdl-mini-footer__link-list">
+            <li><a href="https://github.com/MUYANGGUO/6242" class="fa fa-github"> @Github</a></li>
+            <li><a href="#">Privacy & Terms</a></li>
+          </ul>
+        </div>
+    </footer>
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
                           <script  src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
