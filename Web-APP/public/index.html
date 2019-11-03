@@ -1,16 +1,16 @@
 <html>
   <head>
-
+    
 
     <link rel="stylesheet" href="styles/main.css">
-    <!-- media icon dependencies --> 
+    <!-- media icon dependencies --> <!-- User Profile Card -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- MDL Style dependencies --> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <!-- <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script> -->
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-   
+    
     <!-- Material Design icon font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!-- d3 dependencies --> 
@@ -22,6 +22,9 @@
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" rel="stylesheet" />
 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    
     <!-- <style type="text/css">
       body {margin: 0; padding: 0;background-color:grey;}
       #container {width: 100vw; height: 90vh;}
@@ -59,8 +62,18 @@
        <!-- User Container -->
       <div  id="user-container" class="mdl-layout__header-row">
         <!-- <button id = "user-profile" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Profile</button> -->
+        
         <div hidden id="user-pic"></div>
-        <button hidden id="user-name" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white"></button>
+
+        <div class="dropdown">
+        <button hidden id="user-name" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+        </button><b hidden id="dropdown-arrow"></b>
+        <div class="dropdown-content">            
+            <a href="#" class="open-button" onclick="openForm()">Update Profile</a>
+            <a href="#">Message Box</a>
+          </div>
+        </div>
+
         <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
           Sign-out
         </button>
@@ -68,6 +81,7 @@
           <i class="material-icons">account_circle</i>Sign-in with Google
         </button>
       </div>
+
 
       <!-- <div hidden>
           <h2 style="text-align:center">User Profile Card</h2>
@@ -95,7 +109,56 @@
   </head>
 
   <body>
-    
+
+  <div class="form-popup" id="user-profile-form">
+      <form action="/action_page.php" class="form-container">  
+        <label for="email"><b>PROFILE NAME</b></label>
+        <input type="text" placeholder="Your Hood---Mate SNS Name" name="profile-name" required>
+
+        <label for="genderSelect"><b>GENDER</b></label><br>
+        <br><label for="male"><b>Male</b>
+        <input type="radio" name="gender" id="male" value="male" required></label>
+        <label for="female"><b>Female</b>
+        <input type="radio" name="gender" id="female" value="female" required></label><br>
+        
+        <br><label for="identitySelect" ><b>IDENTITY</b></label><br>
+        <br><label for="tenant"><b>visitor / tenants</b>
+        <input type="radio" name="identity" id="tenant" value="tenant" onchange="yesnoCheck(this);" required></label>
+        <label for="landlord"><b>host / landloard</b>
+        <input type="radio" name="identity" id="landloard" value="landlord" onchange="yesnoCheck(this);" required></label><br>
+
+        <br><label hidden for="location" id = "destination-field"><b>COMMUTE DESTINATION</b>
+        <input  type="text" placeholder=" Eg. North Ave NW, Atlanta, GA 30332
+        " name="destination" required></label>
+
+        <label hidden for="location" id = "host-field"><b>HOST LOCATION</b>
+          <input  type="text" placeholder=" Eg. North Ave NW, Atlanta, GA 30332
+          " name="host" required></label>
+        
+        <!--  -->
+        <!-- <div  class="avatar-container">
+          <div class="avatar-upload">
+              <div class="avatar-edit">
+                  <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                  <label for="imageUpload"></label>
+              </div>
+              <div class="avatar-preview">
+                  <div id="imagePreview" style="background-image: url(http://i.pravatar.cc/500?img=7);">
+                  </div>
+              </div>
+          </div>
+      </div> -->
+
+
+
+        <!--  -->
+        <button type="submit" class="btn"><b>Update!</b></button>
+        <button type="button" class="btn cancel" onclick="closeForm()"><b>Cancel</b></button>
+      </form>
+    </div>
+
+
+
     <!-- Deck.gl Container -->
     <div id="container"></div>
 

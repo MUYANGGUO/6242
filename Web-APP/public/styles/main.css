@@ -26,6 +26,171 @@
  html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
 }
+#user-container {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  top: 4px;
+  width: 100%;
+  right: 0;
+  padding-left: 10px;
+  justify-content: flex-end;
+  padding-right: 30px;
+}
+#user-container #user-pic {
+  top: -3px;
+  position: relative;
+  display: inline-block;
+  background-image: url('/images/profile_placeholder.png');
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: 40px;
+  border-radius: 20px;
+}
+#user-container #user-name {
+  font-size: 18px;
+  line-height: 36px;
+  padding-right: 10px;
+  padding-left: 20px;
+}
+
+#user-container #sign-in {
+  font-size: 18px;
+  line-height: 36px;
+  padding-right: 10px;
+  padding-left: 20px;
+}
+#user-container #sign-out {
+  font-size: 18px;
+  line-height: 36px;
+  padding-right: 10px;
+  padding-left: 20px;
+  color: darkgrey !important;
+}
+
+
+/*Dropdown class settings */
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown b{
+  display: -webkit-inline-box;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 12px solid white;
+  
+  
+}
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color:#191919;
+  opacity: 0.8;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: black}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+/* popup form settings */
+
+.form-popup {
+  display: none;
+  position: fixed;float:right;;
+  bottom: 60;
+  top:60;
+  right: 30;
+  border: none;
+  z-index: 1;
+  margin-left:100px;
+  margin-top: 100px;
+
+}
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: black;
+  opacity: 0.8;
+  color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: white;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.5;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 main, #messages-card {
   height: 100%;
   padding-bottom: 0;
@@ -143,47 +308,7 @@ main, #messages-card {
   right: 0;
   font-size: 40px !important;
 }
-#user-container {
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-  top: 4px;
-  width: 100%;
-  right: 0;
-  padding-left: 10px;
-  justify-content: flex-end;
-  padding-right: 30px;
-}
-#user-container #user-pic {
-  top: -3px;
-  position: relative;
-  display: inline-block;
-  background-image: url('/images/profile_placeholder.png');
-  background-repeat: no-repeat;
-  width: 40px;
-  height: 40px;
-  background-size: 40px;
-  border-radius: 20px;
-}
-#user-container #user-name {
-  font-size: 18px;
-  line-height: 36px;
-  padding-right: 10px;
-  padding-left: 20px;
-}
-#user-container #sign-in {
-  font-size: 18px;
-  line-height: 36px;
-  padding-right: 10px;
-  padding-left: 20px;
-}
-#user-container #sign-out {
-  font-size: 18px;
-  line-height: 36px;
-  padding-right: 10px;
-  padding-left: 20px;
-  color: darkgrey !important;
-}
+
 #image-form #submitImage {
   width: auto;
   padding: 0 6px 0 1px;

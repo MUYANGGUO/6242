@@ -15,6 +15,27 @@
  */
 'use strict';
 
+
+
+
+// identity selection check//
+function yesnoCheck(that) {
+    if (that.value == "tenant") {
+        document.getElementById("destination-field").removeAttribute('hidden');
+        document.getElementById("host-field").setAttribute('hidden', 'true');
+    } else {
+        document.getElementById("host-field").removeAttribute('hidden');
+        document.getElementById("destination-field").setAttribute('hidden', 'true');
+    }
+}
+
+function openForm() {
+    document.getElementById("user-profile-form").style.display = "block";
+  }
+  
+  function closeForm() {
+    document.getElementById("user-profile-form").style.display = "none";
+  }
 // Signs-in Friendly Chat.
 function signIn() {
   // Sign into Firebase using popup auth & Google as the identity provider.
@@ -71,41 +92,41 @@ function requestNotificationsPermissions() {
   // TODO 11: Request permissions to send notifications.
 }
 
-// Triggered when a file is selected via the media picker.
-function onMediaFileSelected(event) {
-  event.preventDefault();
-  var file = event.target.files[0];
+// // Triggered when a file is selected via the media picker.
+// function onMediaFileSelected(event) {
+//   event.preventDefault();
+//   var file = event.target.files[0];
 
-  // Clear the selection in the file picker input.
-  imageFormElement.reset();
+//   // Clear the selection in the file picker input.
+//   imageFormElement.reset();
 
-  // Check if the file is an image.
-  if (!file.type.match('image.*')) {
-    var data = {
-      message: 'You can only share images',
-      timeout: 2000
-    };
-    signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
-    return;
-  }
-  // Check if the user is signed-in
-  if (checkSignedInWithMessage()) {
-    saveImageMessage(file);
-  }
-}
+//   // Check if the file is an image.
+//   if (!file.type.match('image.*')) {
+//     var data = {
+//       message: 'You can only share images',
+//       timeout: 2000
+//     };
+//     signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
+//     return;
+//   }
+//   // Check if the user is signed-in
+//   if (checkSignedInWithMessage()) {
+//     saveImageMessage(file);
+//   }
+// }
 
-// Triggered when the send new message form is submitted.
-function onMessageFormSubmit(e) {
-  e.preventDefault();
-  // Check that the user entered a message and is signed in.
-  if (messageInputElement.value && checkSignedInWithMessage()) {
-    saveMessage(messageInputElement.value).then(function() {
-      // Clear message text field and re-enable the SEND button.
-      resetMaterialTextfield(messageInputElement);
-      toggleButton();
-    });
-  }
-}
+// // Triggered when the send new message form is submitted.
+// function onMessageFormSubmit(e) {
+//   e.preventDefault();
+//   // Check that the user entered a message and is signed in.
+//   if (messageInputElement.value && checkSignedInWithMessage()) {
+//     saveMessage(messageInputElement.value).then(function() {
+//       // Clear message text field and re-enable the SEND button.
+//       resetMaterialTextfield(messageInputElement);
+//       toggleButton();
+//     });
+//   }
+// }
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
 function authStateObserver(user) {
@@ -120,6 +141,7 @@ function authStateObserver(user) {
 
     // Show user's profile and sign-out button.
     userNameElement.removeAttribute('hidden');
+    dropdownArrowElement.removeAttribute('hidden');
     userPicElement.removeAttribute('hidden');
     signOutButtonElement.removeAttribute('hidden');
 
@@ -131,6 +153,7 @@ function authStateObserver(user) {
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
     userNameElement.setAttribute('hidden', 'true');
+    dropdownArrowElement.setAttribute('hidden', 'true');
     userPicElement.setAttribute('hidden', 'true');
     signOutButtonElement.setAttribute('hidden', 'true');
 
@@ -292,6 +315,7 @@ var imageFormElement = document.getElementById('image-form');
 var mediaCaptureElement = document.getElementById('mediaCapture');
 var userPicElement = document.getElementById('user-pic');
 var userNameElement = document.getElementById('user-name');
+var dropdownArrowElement = document.getElementById('dropdown-arrow');
 var signInButtonElement = document.getElementById('sign-in');
 var signOutButtonElement = document.getElementById('sign-out');
 var signInSnackbarElement = document.getElementById('must-signin-snackbar');
