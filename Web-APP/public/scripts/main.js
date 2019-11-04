@@ -17,6 +17,32 @@
 
 
 
+// user avatar image
+$(document).ready(function() {
+	
+  var readURL = function(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $('.profile-pic').attr('src', e.target.result);
+          }
+  
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+ 
+  $(".file-upload").on('change', function(){
+      readURL(this);
+  });
+  
+  $(".upload-button").on('click', function() {
+     $(".file-upload").click();
+  });
+});
+// user avatar image//
+
+
 
 // identity selection check//
 
@@ -46,6 +72,7 @@ function signIn() {
 // Signs-out of Friendly Chat.
 function signOut() {
   // Sign out of Firebase.
+  document.getElementById("user-profile-form").style.display = "none";
   firebase.auth().signOut();
 }
 // Initiate firebase auth.
@@ -138,6 +165,7 @@ function authStateObserver(user) {
 
     // Set the user's profile pic and name.
     userPicElement.style.backgroundImage = 'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
+    profilepicbeforeuploadElement.style.backgroundImage = 'url(' +profilePicUrl + ')';
     userNameElement.textContent = userName;
 
     // Show user's profile and sign-out button.
@@ -200,6 +228,8 @@ function addSizeToGoogleProfilePic(url) {
   }
   return url;
 }
+
+
 
 // A loading image URL.
 var LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
@@ -320,6 +350,7 @@ var dropdownArrowElement = document.getElementById('dropdown-arrow');
 var signInButtonElement = document.getElementById('sign-in');
 var signOutButtonElement = document.getElementById('sign-out');
 var signInSnackbarElement = document.getElementById('must-signin-snackbar');
+var profilepicbeforeuploadElement = document.getElementById("profile-pic-before-upload");
 
 // Saves message on form submit.
 //messageFormElement.addEventListener('submit', onMessageFormSubmit);

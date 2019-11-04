@@ -40,6 +40,17 @@
   padding-left: 10px;
   justify-content: flex-end;
   padding-right: 30px;
+  
+  background-color: grey !important;
+}
+#user-container #header-title {
+  top: -3px;
+  position: absolute;
+  display: inline-block;
+  background-repeat: no-repeat;
+  margin-left:0;
+  left:16;
+  background-position-x: 0%;
 }
 #user-container #user-pic {
   top: -3px;
@@ -178,8 +189,108 @@
 }
 
 
+.close {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+
+}
+.close:hover {
+  opacity: 1;
+}
+.close:before, .close:after {
+  position: absolute;
+  left: 8px;
+  content: ' ';
+  height: 33px;
+  width: 2px;
+  background-color: #333;
+
+}
+.close:before {
+  top: 0px;
+  transform: rotate(45deg);
+}
+.close:after {
+  top: 0px;
+  transform: rotate(-45deg);
+}
 
 
+
+
+
+
+
+
+
+
+
+.avatar-wrapper :hover{
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.avatar-wrapper{
+	position: relative;
+	height: 150px;
+	width: 150px;
+	margin: 10px auto;
+	border-radius: 50%;
+	overflow: hidden;
+	box-shadow: 1px 1px 15px -5px black;
+  transition: all .3s ease;
+
+  }
+  
+	:hover .profile-pic{
+		opacity: .5;
+  }
+  .profile-pic :after{
+    content: "\f007";
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    font-size: 190px;
+    background: grey;
+    color: black;
+    text-align: center;
+  }
+	.profile-pic {
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    font-size: 150px;
+    transition: all .3s ease;
+    background-size:cover;
+  }
+  .upload-button:hover .fa-arrow-circle-up{
+    opacity: .9;
+  }
+  .upload-button .fa-arrow-circle-up{
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    font-size: 150px;
+    top: 0;
+    left: 0;
+    text-align: center;
+    opacity: 0;
+    transition: all .3s ease;
+    color:white;
+  }
+	.upload-button {
+		position: absolute;
+		top: 0; left: 0;
+		height: 100%;
+		width: 100%;
+	}
+}
 
 
 
@@ -207,8 +318,8 @@ main, #messages-card {
   margin-top: 15px;
 }
 .mdl-layout__header-row span {
-  margin-left: 15px;
-  margin-top: 17px;
+  margin-left: 16px;
+  margin-top: 16px;
 }
 .mdl-grid {
   max-width: 1024px;

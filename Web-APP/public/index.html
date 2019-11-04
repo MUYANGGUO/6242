@@ -46,7 +46,7 @@
       <li class="mdl-menu__item">Yet Another Action</li>
       </ul>  -->
       <!-- Title -->
-      <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span>
+      <!-- <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span> -->
       <!-- Add spacer, to align navigation to the right -->
       <!-- <div class="mdl-layout-spacer"></div> -->
 
@@ -62,7 +62,7 @@
        <!-- User Container -->
       <div  id="user-container" class="mdl-layout__header-row">
         <!-- <button id = "user-profile" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Profile</button> -->
-        
+        <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span>
         <div hidden id="user-pic"></div>
 
         <div class="dropdown">
@@ -111,21 +111,30 @@
   <body>
 
   <div class="form-popup" id="user-profile-form">
-      <form action="/action_page.php" class="form-container">  
-        <label for="email"><b>PROFILE NAME</b></label>
+      <form action="/action_page.php" class="form-container"> 
+        <button type="button" class="close" onclick="closeForm()"></button>
+        <label for="avatar"><b>AVARTAR</b></label>
+        <div class="avatar-wrapper">
+          <img class="profile-pic" id = "profile-pic-before-upload" src="" />
+          <div class="upload-button">
+            <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+          </div>
+          <input class="file-upload" type="file" accept="image/*"/>
+        </div> 
+        <label for="name"><b>PROFILE NAME</b></label>
         <input type="text" placeholder="Your Hood---Mate SNS Name" name="profile-name" required>
 
-        <label for="genderSelect"><b>GENDER</b></label><br>
-        <br><label for="male"><b>Male</b>
+        <label for="genderSelect"><b>GENDER</b>
+        <label for="male" style="margin-left: 30px; margin-right: 30px;"><b>Male</b>
         <input type="radio" name="gender" id="male" value="male" required></label>
         <label for="female"><b>Female</b>
-        <input type="radio" name="gender" id="female" value="female" required></label><br>
+        <input type="radio" name="gender" id="female" value="female" required></label><br></label>
         
-        <br><label for="identitySelect" ><b>IDENTITY</b></label><br>
-        <br><label for="tenant"><b>visitor / tenants</b>
+        <br><label for="identitySelect" ><b>IDENTITY</b><br>
+        <label for="tenant"><b>visitor / tenants</b>
         <input type="radio" name="identity" id="tenant" value="tenant" onchange="yesnoCheck(this);" required></label>
-        <label for="landlord"><b>host / landloard</b>
-        <input type="radio" name="identity" id="landloard" value="landlord" onchange="yesnoCheck(this);" required></label><br>
+        <label for="landlord" style="margin-left: 30px;"><b>host / landloard</b>
+        <input type="radio" name="identity" id="landloard" value="landlord" onchange="yesnoCheck(this);" required></label><br></label>
 
         <br><label hidden for="location" id = "destination-field"><b>COMMUTE DESTINATION</b>
         <input  type="text" placeholder=" Eg. North Ave NW, Atlanta, GA 30332
@@ -151,9 +160,13 @@
 
 
 
+
+      
+
+
         <!--  -->
         <button type="submit" class="btn"><b>Update!</b></button>
-        <button type="button" class="btn cancel" onclick="closeForm()"><b>Cancel</b></button>
+        <!-- <button type="button" class="btn cancel" onclick="closeForm()"><b>Cancel</b></button> -->
       </form>
     </div>
 
