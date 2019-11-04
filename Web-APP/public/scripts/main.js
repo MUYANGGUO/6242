@@ -19,6 +19,7 @@
 
 
 // identity selection check//
+
 function yesnoCheck(that) {
     if (that.value == "tenant") {
         document.getElementById("destination-field").removeAttribute('hidden');
