@@ -1,4 +1,5 @@
 In this part, we analyse the uber movement speed data in San Francisco.
+
 First step: We preprocess the speed data from uber https://movement.uber.com/?lang=en-US. 
             After processing, we get the mean speed from every road junction. 
             Based on this processsing, we decrease data size from 780MB to 12 MB.
