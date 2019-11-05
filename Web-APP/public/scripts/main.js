@@ -13,8 +13,83 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+var db = firebase.firestore();
 
+
+
+
+function updateUserProfile() {
+
+var empty = true;
+$('input[type="text"]').each(function(){
+  if($(this).val()!=""){
+      empty =false;
+      return false;
+    }
+});
+
+
+  if(empty != true){
+    console.log('all fields checked');
+    var user = firebase.auth().currentUser;
+    var name, email, photoUrl, uid;
+    
+    if (user != null) {
+      name = user.displayName;
+      email = user.email;
+      photoUrl = user.photoURL;
+      uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
+                       // this value to authenticate with your backend server, if
+                       // you have one. Use User.getToken() instead.
+    }
+    
+    var profilename = $("#form-user-name").val();
+    var gender = $("#radiodivgender input[type='radio']:checked").val();
+    var identity = $("#radiodividentity input[type='radio']:checked").val();
+    var location = $("#location-input-field").val();
+    console.log(profilename);
+    console.log(gender);
+    console.log(identity);
+    console.log(location);
+    console.log(name);
+    console.log(email);
+    console.log(photoUrl);
+    console.log(uid);
+    document.getElementById("closeformbutton").removeAttribute('hidden');
+    document.getElementById("updatebutton").setAttribute('hidden', 'true');
+  }
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+'use strict';
+//drag and drop
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+  console.log('check');
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+  console.log("check");
+}
+//drag and drop//
 
 
 // user avatar image
@@ -50,9 +125,13 @@ function yesnoCheck(that) {
     if (that.value == "tenant") {
         document.getElementById("destination-field").removeAttribute('hidden');
         document.getElementById("host-field").setAttribute('hidden', 'true');
+        document.getElementById("location-input-field").removeAttribute('hidden');
+        
     } else {
         document.getElementById("host-field").removeAttribute('hidden');
         document.getElementById("destination-field").setAttribute('hidden', 'true');
+        document.getElementById("location-input-field").removeAttribute('hidden');
+
     }
 }
 
@@ -62,8 +141,14 @@ function openForm() {
   
   function closeForm() {
     document.getElementById("user-profile-form").style.display = "none";
+    document.getElementById("updatebutton").removeAttribute('hidden');
+    document.getElementById("closeformbutton").setAttribute('hidden', 'true');
+    document.getElementById("user-profile-form-field").reset(); 
+    document.getElementById("host-field").setAttribute('hidden', 'true');
+    document.getElementById("destination-field").setAttribute('hidden', 'true');
+    document.getElementById("location-input-field").setAttribute('hidden', 'true');
   }
-// Signs-in Friendly Chat.
+
 function signIn() {
   // Sign into Firebase using popup auth & Google as the identity provider.
   var provider = new firebase.auth.GoogleAuthProvider();
@@ -177,6 +262,7 @@ function authStateObserver(user) {
     // Hide sign-in button.
     signInButtonElement.setAttribute('hidden', 'true');
 
+
     // We save the Firebase Messaging Device token and enable notifications.
     saveMessagingDeviceToken();
   } else { // User is signed out!
@@ -234,95 +320,6 @@ function addSizeToGoogleProfilePic(url) {
 // A loading image URL.
 var LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
 
-// Delete a Message from the UI.
-// function deleteMessage(id) {
-//   var div = document.getElementById(id);
-//   // If an element for that message exists we delete it.
-//   if (div) {
-//     div.parentNode.removeChild(div);
-//   }
-// }
-
-// function createAndInsertMessage(id, timestamp) {
-//   const container = document.createElement('div');
-//   container.innerHTML = MESSAGE_TEMPLATE;
-//   const div = container.firstChild;
-//   div.setAttribute('id', id);
-
-  // If timestamp is null, assume we've gotten a brand new message.
-  // https://stackoverflow.com/a/47781432/4816918
-//   timestamp = timestamp ? timestamp.toMillis() : Date.now();
-//   div.setAttribute('timestamp', timestamp);
-
-  // figure out where to insert new message
-//   const existingMessages = messageListElement.children;
-//   if (existingMessages.length === 0) {
-//     messageListElement.appendChild(div);
-//   } else {
-//     let messageListNode = existingMessages[0];
-
-//     while (messageListNode) {
-//       const messageListNodeTime = messageListNode.getAttribute('timestamp');
-
-//       if (!messageListNodeTime) {
-//         throw new Error(
-//           `Child ${messageListNode.id} has no 'timestamp' attribute`
-//         );
-//       }
-
-//       if (messageListNodeTime > timestamp) {
-//         break;
-//       }
-
-//       messageListNode = messageListNode.nextSibling;
-//     }
-
-//     messageListElement.insertBefore(div, messageListNode);
-//   }
-
-//   return div;
-// }
-
-// Displays a Message in the UI.
-// function displayMessage(id, timestamp, name, text, picUrl, imageUrl) {
-//   var div = document.getElementById(id) || createAndInsertMessage(id, timestamp);
-
-//   // profile picture
-//   if (picUrl) {
-//     div.querySelector('.pic').style.backgroundImage = 'url(' + addSizeToGoogleProfilePic(picUrl) + ')';
-//   }
-
-//   div.querySelector('.name').textContent = name;
-//   var messageElement = div.querySelector('.message');
-
-//   if (text) { // If the message is text.
-//     messageElement.textContent = text;
-//     // Replace all line breaks by <br>.
-//     messageElement.innerHTML = messageElement.innerHTML.replace(/\n/g, '<br>');
-//   } else if (imageUrl) { // If the message is an image.
-//     var image = document.createElement('img');
-//     image.addEventListener('load', function() {
-//       messageListElement.scrollTop = messageListElement.scrollHeight;
-//     });
-//     image.src = imageUrl + '&' + new Date().getTime();
-//     messageElement.innerHTML = '';
-//     messageElement.appendChild(image);
-//   }
-//   // Show the card fading-in and scroll to view the new message.
-//   setTimeout(function() {div.classList.add('visible')}, 1);
-//   messageListElement.scrollTop = messageListElement.scrollHeight;
-//   messageInputElement.focus();
-// }
-
-// // Enables or disables the submit button depending on the values of the input
-// // fields.
-// function toggleButton() {
-//   if (messageInputElement.value) {
-//     submitButtonElement.removeAttribute('disabled');
-//   } else {
-//     submitButtonElement.setAttribute('disabled', 'true');
-//   }
-// }
 
 // Checks that the Firebase SDK has been correctly setup and configured.
 function checkSetup() {
@@ -352,31 +349,17 @@ var signOutButtonElement = document.getElementById('sign-out');
 var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 var profilepicbeforeuploadElement = document.getElementById("profile-pic-before-upload");
 
-// Saves message on form submit.
-//messageFormElement.addEventListener('submit', onMessageFormSubmit);
+
 signOutButtonElement.addEventListener('click', signOut);
 signInButtonElement.addEventListener('click', signIn);
-
-// Toggle for the button.
-// messageInputElement.addEventListener('keyup', toggleButton);
-// messageInputElement.addEventListener('change', toggleButton);
-
-// Events for image upload.
-// imageButtonElement.addEventListener('click', function(e) {
-//   e.preventDefault();
-//   mediaCaptureElement.click();
-// });
-// mediaCaptureElement.addEventListener('change', onMediaFileSelected);
 
 // initialize Firebase
 initFirebaseAuth();
 
-// Remove the warning about timstamps change. 
-var firestore = firebase.firestore();
-var settings = {timestampsInSnapshots: true};
-firestore.settings(settings);
 
-// TODO: Enable Firebase Performance Monitoring.
+// var firestore = firebase.firestore();
 
-// We load currently existing chat messages and listen to new ones.
-loadMessages();
+
+// var settings = {timestampsInSnapshots: true};
+// firestore.settings(settings);
+

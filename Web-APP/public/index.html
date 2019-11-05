@@ -1,6 +1,7 @@
 <html>
   <head>
-    
+
+      
 
     <link rel="stylesheet" href="styles/main.css">
     <!-- media icon dependencies --> <!-- User Profile Card -->
@@ -17,6 +18,9 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <!-- deck.gl standalone bundle -->
     <script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
+  <!-- <script src="https://unpkg.com/@deck.gl/core@^7.0.0/dist.min.js"></script>
+  <script src="https://unpkg.com/@deck.gl/layers@^7.0.0/dist.min.js"></script> -->
+
 
     <!-- Mapbox dependencies -->
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js"></script>
@@ -63,14 +67,22 @@
       <div  id="user-container" class="mdl-layout__header-row">
         <!-- <button id = "user-profile" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Profile</button> -->
         <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span>
-        <div hidden id="user-pic"></div>
+        <div hidden id="user-pic">
+        </div>
+
 
         <div class="dropdown">
         <button hidden id="user-name" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
-        </button><b hidden id="dropdown-arrow"></b>
+        </button>
+        
+        <b hidden id="dropdown-arrow">
+        </b>
         <div class="dropdown-content">            
             <a href="#" class="open-button" onclick="openForm()">Update Profile</a>
-            <a href="#">Message Box</a>
+            <a href="#" class="notification">
+                Message Box
+                <span class="badge">0</span>
+            </a> 
           </div>
         </div>
 
@@ -111,7 +123,7 @@
   <body>
 
   <div class="form-popup" id="user-profile-form">
-      <form action="/action_page.php" class="form-container"> 
+      <form  class="form-container" action ="" id = "user-profile-form-field"> 
         <button type="button" class="close" onclick="closeForm()"></button>
         <label for="avatar"><b>AVARTAR</b></label>
         <div class="avatar-wrapper">
@@ -122,58 +134,46 @@
           <input class="file-upload" type="file" accept="image/*"/>
         </div> 
         <label for="name"><b>PROFILE NAME</b></label>
-        <input type="text" placeholder="Your Hood---Mate SNS Name" name="profile-name" required>
+        <input type="text" placeholder="Your Hood---Mate SNS Name" name="profile-name" id="form-user-name" required>
 
-        <label for="genderSelect"><b>GENDER</b>
-        <label for="male" style="margin-left: 30px; margin-right: 30px;"><b>Male</b>
-        <input type="radio" name="gender" id="male" value="male" required></label>
-        <label for="female"><b>Female</b>
-        <input type="radio" name="gender" id="female" value="female" required></label><br></label>
+        <div id = "radiodivgender" >
+        <label for="genderSelect" id ="form-user-gender"><b>GENDER</b>
         
-        <br><label for="identitySelect" ><b>IDENTITY</b><br>
+        <label for="male" style="margin-left: 30px; margin-right: 30px;"><b>Male</b>
+        <input type="radio" name="gender" id="male" value="male" id = "form-user-gender-male" required></label>
+        <label for="female"><b>Female</b>
+        <input type="radio" name="gender" id="female" value="female" id= "form-user-gender-female" required></label><br></label>
+        </div>
+
+        <br>
+
+        <div id = "radiodividentity" >
+        <label for="identitySelect" ><b>IDENTITY</b><br>
         <label for="tenant"><b>visitor / tenants</b>
         <input type="radio" name="identity" id="tenant" value="tenant" onchange="yesnoCheck(this);" required></label>
         <label for="landlord" style="margin-left: 30px;"><b>host / landloard</b>
         <input type="radio" name="identity" id="landloard" value="landlord" onchange="yesnoCheck(this);" required></label><br></label>
+        </div>
 
-        <br><label hidden for="location" id = "destination-field"><b>COMMUTE DESTINATION</b>
-        <input  type="text" placeholder=" Eg. North Ave NW, Atlanta, GA 30332
-        " name="destination" required></label>
+        <br><label name="destination" hidden for="location" id = "destination-field"><b>COMMUTE DESTINATION</b></label>
+        <label hidden name="host" for="location" id = "host-field"><b>HOST LOCATION</b></label>
+        <input hidden type="text" id = "location-input-field" placeholder=" Eg. North Ave NW, Atlanta, GA 30332
+        " name="destination" required>
 
-        <label hidden for="location" id = "host-field"><b>HOST LOCATION</b>
-          <input  type="text" placeholder=" Eg. North Ave NW, Atlanta, GA 30332
-          " name="host" required></label>
         
-        <!--  -->
-        <!-- <div  class="avatar-container">
-          <div class="avatar-upload">
-              <div class="avatar-edit">
-                  <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
-                  <label for="imageUpload"></label>
-              </div>
-              <div class="avatar-preview">
-                  <div id="imagePreview" style="background-image: url(http://i.pravatar.cc/500?img=7);">
-                  </div>
-              </div>
-          </div>
-      </div> -->
-
-
-
-
-      
-
+  
+        
 
         <!--  -->
-        <button type="submit" class="btn"><b>Update!</b></button>
-        <!-- <button type="button" class="btn cancel" onclick="closeForm()"><b>Cancel</b></button> -->
+        <button id="updatebutton" type="button" class="btn"  onclick="updateUserProfile()"><b>UPDATE !</b></button>
+        <button hidden id ="closeformbutton" type="button" class="btn cancel"  onclick="closeForm()"><b>COMPLETED and CLOSE</b></button>
       </form>
     </div>
-
-
+ 
 
     <!-- Deck.gl Container -->
-    <div id="container"></div>
+    <div id="container">
+    </div>
 
 
 
@@ -195,6 +195,7 @@
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
                           <script  src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
+                          <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-firestore.js"></script>
 
                           <!-- TODO: Add SDKs for Firebase products that you want to use
                               https://firebase.google.com/docs/web/setup#available-libraries -->
@@ -202,29 +203,19 @@
                         <script src="/__/firebase/7.2.2/firebase-app.js"></script>
                         <!-- include only the Firebase features as you need -->
                         <script src="/__/firebase/7.2.2/firebase-auth.js"></script>
+                        <script src="/__/firebase/7.2.2/firebase-firestore.js"></script>
                         <script src="/__/firebase/7.2.2/firebase-database.js"></script>
                         <script defer src="/__/firebase/7.2.2/firebase-messaging.js"></script>
                         <script defer src="/__/firebase/7.2.2/firebase-storage.js"></script>
                         <!-- initialize the SDK after all desired features are loaded -->
                         <script  def src="/__/firebase/init.js"></script>
                           <script> 
-                            // Your web app's Firebase configuration
-                            var firebaseConfig = {
-                              apiKey: "AIzaSyAImL_fsxsMDetaRyT_7j8-QSMOOTKG63U",
-                              authDomain: "project-54404.firebaseapp.com",
-                              databaseURL: "https://project-54404.firebaseio.com",
-                              projectId: "project-54404",
-                              storageBucket: "project-54404.appspot.com",
-                              messagingSenderId: "996709414935",
-                              appId: "1:996709414935:web:19fde9d71dcf913a47c452",
-                              measurementId: "G-21L4CYX736"
-                            };
-                            // Initialize Firebase
-                            firebase.initializeApp(firebaseConfig);
+
                             firebase.analytics();
+    
                           </script>
 
-<script src="scripts/main.js"></script>
+                      <script src="scripts/main.js"></script>
 </body>
 
 <script type="text/javascript">
@@ -240,6 +231,9 @@
 
 const Neighborhoods =
   'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
+
+const heatdata =
+  'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/sf-bike-parking.json';
 
 const deckgl = new deck.DeckGL({
   container: 'container',
@@ -299,7 +293,36 @@ const deckgl = new deck.DeckGL({
       getAngle: 0,
       getTextAnchor: 'middle',
       getAlignmentBaseline: 'bottom'
+    }),
+
+    new deck.HeatmapLayer({
+      id: 'heatmapLayer',
+      data: heatdata,
+      getPosition: d => d.COORDINATES,
+      //-----// getWeight: d => d.WEIGHT    
     })
+
+    // new deck.IconLayer({
+    //   id: 'icon-layer',
+    //   data,
+    // pickable: true,
+    // // iconAtlas and iconMapping are required
+    // // getIcon: return a string
+    // iconAtlas: 'images/icon-atlas.png',
+    // iconMapping: ICON_MAPPING,
+    // getIcon: d => 'marker',
+
+    // sizeScale: 15,
+    // getPosition: d => d.coordinates,
+    // getSize: d => 5,
+    // getColor: d => [Math.sqrt(d.exits), 140, 0],
+    // onHover: ({object, x, y}) => {
+    //   const tooltip = `${object.name}\n${object.address}`;
+    //   /* Update tooltip
+    //      http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object
+    //   */
+    // }
+    // })
 
   ]
 });
