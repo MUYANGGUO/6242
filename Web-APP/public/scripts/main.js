@@ -23,10 +23,12 @@ function updateUserProfile() {
 var empty = false;
 $('input[type="text"]').each(function(){
   if($(this).val() ==""){
+      // $(this).addClass("alert-field");
       empty =true;
       return true;
     }
 });
+
 
 
   if(empty != true){
