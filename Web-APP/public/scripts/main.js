@@ -20,11 +20,11 @@ var db = firebase.firestore();
 
 function updateUserProfile() {
 
-var empty = true;
+var empty = false;
 $('input[type="text"]').each(function(){
-  if($(this).val()!=""){
-      empty =false;
-      return false;
+  if($(this).val() ==""){
+      empty =true;
+      return true;
     }
 });
 
