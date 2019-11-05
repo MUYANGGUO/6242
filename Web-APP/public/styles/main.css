@@ -15,6 +15,7 @@
  */
  body {margin: 0; padding: 0;background-color:grey;}
  #container {width: 100vw; height: 85vh;}
+ 
  #footercontainer{ position: absolute;
   bottom: 0;
   width: 100%;
@@ -97,8 +98,6 @@
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-top: 12px solid white;
-  
-  
 }
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
@@ -168,6 +167,7 @@
 
 /* Set a style for the submit/login button */
 .form-container .btn {
+  font-size: 14px;
   background-color: #4CAF50;
   color: white;
   padding: 16px 20px;
@@ -175,12 +175,12 @@
   cursor: pointer;
   width: 100%;
   margin-bottom:10px;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 /* Add a red background color to the cancel button */
 .form-container .cancel {
-  background-color: red;
+  background-color: cornflowerblue;
 }
 
 /* Add some hover effects to buttons */
@@ -195,7 +195,8 @@
   top: 0px;
   width: 32px;
   height: 32px;
-  opacity: 0.3;
+  opacity: 0.5;
+  margin-left: 4px;
 
 }
 .close:hover {
@@ -203,21 +204,49 @@
 }
 .close:before, .close:after {
   position: absolute;
-  left: 8px;
+  left: 4px;
   content: ' ';
-  height: 33px;
+  height: 32px;
   width: 2px;
+  top: 0px;
+  bottom:0px;
+  margin-left: 4px;
+
+
   background-color: #333;
+  /* bacground-color: blue; */
 
 }
 .close:before {
-  top: 0px;
+  
   transform: rotate(45deg);
 }
 .close:after {
-  top: 0px;
+ 
   transform: rotate(-45deg);
 }
+
+
+
+.notification {
+  text-decoration: none;
+  padding: 15px 32px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  opacity: 0.9;
+  color: white;
+}
+
 
 
 
@@ -256,7 +285,7 @@
     height: 100%;
     position: absolute;
     font-size: 190px;
-    background: grey;
+    background: black;
     color: black;
     text-align: center;
   }
