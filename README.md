@@ -1,5 +1,7 @@
 # Residense Recommendation System based on Personal Interests and Geo-info
 
+## Project <"Hood---Mate"> V1
+
 The project is aimed to build a local social network product powered by a recommendation algorithm that helps users to locate the best residency in the city and match their profile and personal interests with potential roommates.
 
 It is also an academic study project of big data analysis and visualization, conducted by a group of students from Georgia Institute of Technology.  
