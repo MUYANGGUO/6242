@@ -232,8 +232,8 @@
 const Neighborhoods =
   'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
 
-const heatdata =
-  'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/sf-bike-parking.json';
+// const heatdata =
+//   'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/sf-bike-parking.json';
 
 const deckgl = new deck.DeckGL({
   container: 'container',
@@ -295,12 +295,12 @@ const deckgl = new deck.DeckGL({
       getAlignmentBaseline: 'bottom'
     }),
 
-    new deck.HeatmapLayer({
-      id: 'heatmapLayer',
-      data: heatdata,
-      getPosition: d => d.COORDINATES,
-      //-----// getWeight: d => d.WEIGHT    
-    })
+    // new deck.HeatmapLayer({
+    //   id: 'heatmapLayer',
+    //   data: heatdata,
+    //   getPosition: d => d.COORDINATES,
+    //   //-----// getWeight: d => d.WEIGHT    
+    // })
 
     // new deck.IconLayer({
     //   id: 'icon-layer',
