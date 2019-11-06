@@ -16,8 +16,8 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <!-- deck.gl standalone bundle -->
     <script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
-  <!-- <script src="https://unpkg.com/@deck.gl/core@^7.0.0/dist.min.js"></script>
-  <script src="https://unpkg.com/@deck.gl/layers@^7.0.0/dist.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/@deck.gl/core@^7.0.0/dist.min.js"></script>
+    <script src="https://unpkg.com/@deck.gl/layers@^7.0.0/dist.min.js"></script> -->
 
 
     <!-- Mapbox dependencies -->
@@ -80,7 +80,7 @@
         </b>
         <div class="dropdown-content">            
             <a href="#" class="open-button" onclick="openForm()">Update Profile</a>
-            <a href="#" class="notification">
+            <a href="#" class="notification" onclick="openMessage()">
                 Message Box
                 <span class="badge">0</span>
             </a> 
@@ -146,7 +146,23 @@
         <button hidden id ="closeformbutton" type="button" class="btn cancel"  onclick="closeForm()"><b>COMPLETE & CLOSE</b></button>
       </form>
     </div>
- 
+    
+    <!-- trying with message card -->
+
+    <div class="form-popup" id="message-profile-form" style="left: 5px;margin-left: 20px;">
+        <form  class="form-container" action ="" id = "message-form-field"> 
+            <button type="button" class="close" onclick="closeMessage()" style="left: 5px;margin-left: 283px;"></button>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="message" autocomplete="off">
+                <label class="mdl-textfield__label" for="message">Message...</label>
+            </div>
+            <!-- <button id="submit" disabled type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                Send
+            </button> -->
+        </form>
+    </div>
+    <!-- trying with message card end-->
+
 
     <!-- Deck.gl Container -->
     <div id="container">
