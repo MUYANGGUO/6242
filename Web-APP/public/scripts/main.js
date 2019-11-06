@@ -16,6 +16,22 @@
 var db = firebase.firestore();
 
 
+// function updateUserAvatarImage(){
+//   $(document).ready(function() {
+	
+//   var readURL = function(input) {
+//       if (input.files && input.files[0]) {
+//           var reader = new FileReader();
+
+//           reader.onload = function (e) {
+//               $('.profile-pic').attr('src', e.target.result);
+//           }
+  
+//           reader.readAsDataURL(input.files[0]);
+//       }
+//   }
+// };
+
 
 
 function updateUserProfile() {
@@ -176,9 +192,11 @@ function yesnoCheck(that) {
 
 function openForm() {
     document.getElementById("user-profile-form").style.display = "block";
+    document.getElementById("message-profile-form").style.display = "none";
   }
+
   
-  function closeForm() {
+function closeForm() {
     document.getElementById("user-profile-form").style.display = "none";
     document.getElementById("updatebutton").removeAttribute('hidden');
     document.getElementById("closeformbutton").setAttribute('hidden', 'true');
@@ -187,6 +205,16 @@ function openForm() {
     document.getElementById("destination-field").setAttribute('hidden', 'true');
     document.getElementById("location-input-field").setAttribute('hidden', 'true');
   }
+
+function openMessage() {
+    document.getElementById("message-profile-form").style.display = "block";
+    document.getElementById("user-profile-form").style.display = "none";
+}
+
+function closeMessage() {
+  document.getElementById("message-profile-form").style.display = "none";
+}
+
 
 function signIn() {
   // Sign into Firebase using popup auth & Google as the identity provider.
