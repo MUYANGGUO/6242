@@ -256,6 +256,10 @@
 
 
 
+/* alert text CSS */
+.swal2-content{
+  color:white !important;
+}
 
 
 

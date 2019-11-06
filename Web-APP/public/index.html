@@ -209,6 +209,18 @@
 const Neighborhoods =
   'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
 
+console.log(Neighborhoods.length);
+
+
+
+var rawbase = 'https://raw.githubusercontent.com/';
+var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
+
+$.getJSON(rawbase + jsonloc, function( data ) {
+   console.log(data);
+  //do what you want with data
+});
+
 // const heatdata =
 //   'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/sf-bike-parking.json';
 
