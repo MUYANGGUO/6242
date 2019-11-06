@@ -24,7 +24,7 @@
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" rel="stylesheet" />
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <!-- alert customization --> <!-- User Profile Card -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -192,7 +192,21 @@
     
                           </script>
 
-                      <script src="scripts/main.js"></script>
+                      <script src="/scripts/main.js"></script>
+                      <!-- <script src="/scripts/init-firebase.js"></script> -->
+                      <script> 
+                      var firebaseConfig = {
+                        apiKey: "AIzaSyAImL_fsxsMDetaRyT_7j8-QSMOOTKG63U",
+                        authDomain: "project-54404.firebaseapp.com",
+                        databaseURL: "https://project-54404.firebaseio.com",
+                        projectId: "project-54404",
+                        storageBucket: "project-54404.appspot.com",
+                        messagingSenderId: "996709414935",
+                        appId: "1:996709414935:web:19fde9d71dcf913a47c452",
+                        measurementId: "G-21L4CYX736"
+                      };
+                    // Initialize Firebase
+                    firebase.initializeApp(firebaseConfig);</script>
 </body>
 
 <script type="text/javascript">
@@ -209,17 +223,17 @@
 const Neighborhoods =
   'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
 
-console.log(Neighborhoods.length);
+// console.log(Neighborhoods.length);
 
 
 
-var rawbase = 'https://raw.githubusercontent.com/';
-var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
+// var rawbase = 'https://raw.githubusercontent.com/';
+// var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
 
-$.getJSON(rawbase + jsonloc, function( data ) {
-   console.log(data);
-  //do what you want with data
-});
+// $.getJSON(rawbase + jsonloc, function( data ) {
+//    console.log(data);
+//   //do what you want with data
+// });
 
 // const heatdata =
 //   'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/sf-bike-parking.json';
