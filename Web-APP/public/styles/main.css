@@ -128,6 +128,12 @@
 
 
 /* popup form settings */
+.alert-field {
+  color: red;
+  border-color: red;
+}
+
+
 
 .form-popup {
   display: none;
@@ -250,6 +256,10 @@
 
 
 
+/* alert text CSS */
+.swal2-content{
+  color:white !important;
+}
 
 
 

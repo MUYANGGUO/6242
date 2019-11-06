@@ -20,45 +20,84 @@ var db = firebase.firestore();
 
 function updateUserProfile() {
 
-var empty = false;
-$('input[type="text"]').each(function(){
-  if($(this).val() ==""){
-      empty =true;
-      return true;
-    }
-});
+  var empty = false;
+  $('input[type="text"]').each(function(){
+    if($(this).val() ==""){
+        // $(this).addClass("alert-field");
+        empty =true;
+        return true;
+
+      }
+  });
+
 
 
   if(empty != true){
     console.log('all fields checked');
     var user = firebase.auth().currentUser;
-    var name, email, photoUrl, uid;
+    var username, useremail, userphotoUrl, useruid;
     
     if (user != null) {
-      name = user.displayName;
-      email = user.email;
-      photoUrl = user.photoURL;
-      uid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
+      username = user.displayName;
+      useremail = user.email;
+      userphotoUrl = user.photoURL;
+      useruid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
                        // this value to authenticate with your backend server, if
                        // you have one. Use User.getToken() instead.
     }
     
-    var profilename = $("#form-user-name").val();
-    var gender = $("#radiodivgender input[type='radio']:checked").val();
-    var identity = $("#radiodividentity input[type='radio']:checked").val();
-    var location = $("#location-input-field").val();
-    console.log(profilename);
-    console.log(gender);
-    console.log(identity);
-    console.log(location);
-    console.log(name);
-    console.log(email);
-    console.log(photoUrl);
-    console.log(uid);
+    var userprofilename = $("#form-user-name").val();
+    var usergender = $("#radiodivgender input[type='radio']:checked").val();
+    var useridentity = $("#radiodividentity input[type='radio']:checked").val();
+    var userlocation = $("#location-input-field").val();
+    db.collection("users").doc(useruid).set({
+      name: userprofilename,
+      gender:usergender,
+      id: useruid,
+      type: useridentity,
+      location: userlocation,
+      email:useremail,
+    })
+    .then(function() {
+        console.log("Document successfully written!");
+    })
+    .catch(function(error) {
+        console.error("Error writing document: ", error);
+        Swal.fire({
+          position: 'top',
+          icon:'error',
+          background: `rgb(0,0,0,9)`,
+          text: 'Server Error',
+          confirmButtonColor: `rgb(0,0,0)`,
+        })
+    });
+    // console.log(userprofilename);
+    // console.log(usergender);
+    // console.log(useridentity);
+    // console.log(userlocation);
+    // console.log(username);
+    // console.log(useremail);
+    // console.log(userphotoUrl);
+    // console.log(useruid);
     document.getElementById("closeformbutton").removeAttribute('hidden');
     document.getElementById("updatebutton").setAttribute('hidden', 'true');
+    Swal.fire({
+      position: 'top',
+      icon:'success',
+      background: `rgb(0,0,0,9)`,
+      text: 'Profile updated! Please finish by clicking the COMPLETE & CLOSE button.',
+      confirmButtonColor: `rgb(0,0,0)`,
+    })
   }
-
+  else{
+      Swal.fire({
+        position: 'top',
+        icon: 'warning',
+        background: `rgb(0,0,0,0.9)`,
+        text: 'Please fill in all the profile inputs ...',
+        confirmButtonColor: `rgb(0,0,0)`,
+      })
+  }
 
 
 

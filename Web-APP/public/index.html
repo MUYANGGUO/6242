@@ -1,8 +1,6 @@
 <html>
   <head>
 
-      
-
     <link rel="stylesheet" href="styles/main.css">
     <!-- media icon dependencies --> <!-- User Profile Card -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -26,8 +24,11 @@
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" rel="stylesheet" />
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
+    <!-- alert customization --> <!-- User Profile Card -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="sweetalert2.all.min.js"></script>
     
     <!-- <style type="text/css">
       body {margin: 0; padding: 0;background-color:grey;}
@@ -95,25 +96,6 @@
       </div>
 
 
-      <!-- <div hidden>
-          <h2 style="text-align:center">User Profile Card</h2>
-          
-          <div class="card">
-            <img src="/w3images/team2.jpg" alt="John" style="width:100%">
-            <h1>John Doe</h1>
-            <p class="title">CEO & Founder, Example</p>
-            <p>Harvard University</p>
-            <div style="margin: 24px 0;">
-              <a href="#"><i class="fa fa-dribbble"></i></a> 
-              <a href="#"><i class="fa fa-twitter"></i></a>  
-              <a href="#"><i class="fa fa-linkedin"></i></a>  
-              <a href="#"><i class="fa fa-facebook"></i></a> 
-            </div>
-            <p><button>Contact</button></p>
-          </div>
-        </div> -->
-
-
     </div>
 
     <script type="text/javascript">!function(n,e){var t,o,i,c=[],f={passive:!0,capture:!0},r=new Date,a="pointerup",u="pointercancel";function p(n,c){t||(t=c,o=n,i=new Date,w(e),s())}function s(){o>=0&&o<i-r&&(c.forEach(function(n){n(o,t)}),c=[])}function l(t){if(t.cancelable){var o=(t.timeStamp>1e12?new Date:performance.now())-t.timeStamp;"pointerdown"==t.type?function(t,o){function i(){p(t,o),r()}function c(){r()}function r(){e(a,i,f),e(u,c,f)}n(a,i,f),n(u,c,f)}(o,t):p(o,t)}}function w(n){["click","mousedown","keydown","touchstart","pointerdown"].forEach(function(e){n(e,l,f)})}w(n),self.perfMetrics=self.perfMetrics||{},self.perfMetrics.onFirstInputDelay=function(n){c.push(n),s()}}(addEventListener,removeEventListener);</script>
@@ -159,14 +141,9 @@
         <label hidden name="host" for="location" id = "host-field"><b>HOST LOCATION</b></label>
         <input hidden type="text" id = "location-input-field" placeholder=" Eg. North Ave NW, Atlanta, GA 30332
         " name="destination" required>
-
-        
-  
-        
-
         <!--  -->
         <button id="updatebutton" type="button" class="btn"  onclick="updateUserProfile()"><b>UPDATE !</b></button>
-        <button hidden id ="closeformbutton" type="button" class="btn cancel"  onclick="closeForm()"><b>COMPLETED and CLOSE</b></button>
+        <button hidden id ="closeformbutton" type="button" class="btn cancel"  onclick="closeForm()"><b>COMPLETE & CLOSE</b></button>
       </form>
     </div>
  
@@ -215,7 +192,21 @@
     
                           </script>
 
-                      <script src="scripts/main.js"></script>
+                      <script src="/scripts/main.js"></script>
+                      <!-- <script src="/scripts/init-firebase.js"></script> -->
+                      <script> 
+                      var firebaseConfig = {
+                        apiKey: "AIzaSyAImL_fsxsMDetaRyT_7j8-QSMOOTKG63U",
+                        authDomain: "project-54404.firebaseapp.com",
+                        databaseURL: "https://project-54404.firebaseio.com",
+                        projectId: "project-54404",
+                        storageBucket: "project-54404.appspot.com",
+                        messagingSenderId: "996709414935",
+                        appId: "1:996709414935:web:19fde9d71dcf913a47c452",
+                        measurementId: "G-21L4CYX736"
+                      };
+                    // Initialize Firebase
+                    firebase.initializeApp(firebaseConfig);</script>
 </body>
 
 <script type="text/javascript">
@@ -231,6 +222,18 @@
 
 const Neighborhoods =
   'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
+
+// console.log(Neighborhoods.length);
+
+
+
+// var rawbase = 'https://raw.githubusercontent.com/';
+// var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
+
+// $.getJSON(rawbase + jsonloc, function( data ) {
+//    console.log(data);
+//   //do what you want with data
+// });
 
 // const heatdata =
 //   'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/sf-bike-parking.json';
