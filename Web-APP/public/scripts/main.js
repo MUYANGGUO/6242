@@ -20,14 +20,15 @@ var db = firebase.firestore();
 
 function updateUserProfile() {
 
-var empty = false;
-$('input[type="text"]').each(function(){
-  if($(this).val() ==""){
-      // $(this).addClass("alert-field");
-      empty =true;
-      return true;
-    }
-});
+  var empty = false;
+  $('input[type="text"]').each(function(){
+    if($(this).val() ==""){
+        // $(this).addClass("alert-field");
+        empty =true;
+        return true;
+
+      }
+  });
 
 
 
@@ -59,8 +60,21 @@ $('input[type="text"]').each(function(){
     console.log(uid);
     document.getElementById("closeformbutton").removeAttribute('hidden');
     document.getElementById("updatebutton").setAttribute('hidden', 'true');
+    Swal.fire({
+      position: 'top',
+      icon:'success',
+      background: `rgb(0,0,0,9)`,
+      text: 'Congratulation! Profile updated! Please finish by click the complete and close button.',
+    })
   }
-
+  else{
+      Swal.fire({
+        position: 'top',
+        icon: 'warning',
+        background: `rgb(0,0,0,0.9)`,
+        text: 'Please fill in all the profile inputs ...',
+      })
+  }
 
 
 
