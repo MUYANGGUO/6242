@@ -68,22 +68,16 @@
       <div  id="user-container" class="mdl-layout__header-row">
         <!-- <button id = "user-profile" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Profile</button> -->
         <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span>
-        <div hidden id="user-pic">
-        </div>
-
-
+        <div hidden id="user-pic"></div>
         <div class="dropdown">
-        <button hidden id="user-name" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
-        </button>
-        
-        <b hidden id="dropdown-arrow">
-        </b>
-        <div class="dropdown-content">            
-            <a href="#" class="open-button" onclick="openForm()">Update Profile</a>
-            <a href="#" class="notification" onclick="openMessage()">
-                Message Box
-                <span class="badge">0</span>
-            </a> 
+          <button hidden id="user-name" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white"></button>
+          <b hidden id="dropdown-arrow"></b>
+          <div class="dropdown-content">            
+              <a href="#" class="open-button" onclick="openForm()">Update Profile</a>
+              <a href="#" class="notification" onclick="openMessage()">
+                  Message Box
+                  <span class="badge">0</span>
+              </a> 
           </div>
         </div>
 
@@ -93,14 +87,17 @@
         <button hidden id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
           <i class="material-icons">account_circle</i>Sign-in with Google
         </button>
-      </div>
 
+      </div>
 
     </div>
 
     <script type="text/javascript">!function(n,e){var t,o,i,c=[],f={passive:!0,capture:!0},r=new Date,a="pointerup",u="pointercancel";function p(n,c){t||(t=c,o=n,i=new Date,w(e),s())}function s(){o>=0&&o<i-r&&(c.forEach(function(n){n(o,t)}),c=[])}function l(t){if(t.cancelable){var o=(t.timeStamp>1e12?new Date:performance.now())-t.timeStamp;"pointerdown"==t.type?function(t,o){function i(){p(t,o),r()}function c(){r()}function r(){e(a,i,f),e(u,c,f)}n(a,i,f),n(u,c,f)}(o,t):p(o,t)}}function w(n){["click","mousedown","keydown","touchstart","pointerdown"].forEach(function(e){n(e,l,f)})}w(n),self.perfMetrics=self.perfMetrics||{},self.perfMetrics.onFirstInputDelay=function(n){c.push(n),s()}}(addEventListener,removeEventListener);</script>
 
   </head>
+
+
+
 
   <body>
 
@@ -149,21 +146,34 @@
     
     <!-- trying with message card -->
     <!-- Need to fix the problem for jquery empty input field conflicts -->
-    <div class="form-popup" id="message-profile-form" style="left: 5px;margin-left: 20px;">
-        <form  class="form-container" action ="" id = "message-form-field"> 
-            <button type="button" class="close" onclick="closeMessage()" style="left: 5px;margin-left: 262px;"></button>
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="top: 20px;">
-                <input class="mdl-textfield__input" type="text" id="message" autocomplete="off">
+    <div class="form-popup" id="message-profile-form" style="left: 20px;margin-left: 20px; width: 400px;">
+        <form  class="form-container" action ="" id = "message-form-field" style="max-width: 400px;"> 
+            <button type="button" class="close" onclick="closeMessage()" style="left: 5px;margin-left: 362px;"></button>
+
+            <div id="messages-card" class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--6-col-tablet mdl-cell--6-col-desktop">
+                <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                  <div id="messages">
+                  </div>
+                </div>
+            </div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="top: 20px; width: 400px !important; color:grey !important">
+                <input class="mdl-textfield__input" type="text" id="message" autocomplete="off" >
                 <label class="mdl-textfield__label" for="message">Message...</label>
             </div>
+            <button id="submit" disabled type="submit" class="btn" style="width: 80px !important;border-left-style: solid;top: 20px;left: 10px;border-left-width: 0px;background-color:
+            goldenrod !important;
+            color:
+            white; !important">
+                Send
+              </button>
         </form>
     </div>
     <!-- trying with message card end-->
 
 
     <!-- Deck.gl Container -->
-    <div id="container">
-    </div>
+    <div id="container"></div>
 
 
 
@@ -175,7 +185,6 @@
         <div class="mdl-mini-footer__left-section">
           <div class="mdl-logo">Project < " Hood --- Mate " > V1
           </div>
-          
           <ul class="mdl-mini-footer__link-list">
             <li><a href="https://github.com/MUYANGGUO/6242" class="fa fa-github"> @Github</a></li>
             <li><a href="#">Privacy & Terms</a></li>
@@ -184,42 +193,41 @@
     </footer>
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
-                          <script  src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
-                          <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-firestore.js"></script>
+  <script  src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-firestore.js"></script>
 
-                          <!-- TODO: Add SDKs for Firebase products that you want to use
-                              https://firebase.google.com/docs/web/setup#available-libraries -->
-                          <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-analytics.js"></script>
-                        <script src="/__/firebase/7.2.2/firebase-app.js"></script>
-                        <!-- include only the Firebase features as you need -->
-                        <script src="/__/firebase/7.2.2/firebase-auth.js"></script>
-                        <script src="/__/firebase/7.2.2/firebase-firestore.js"></script>
-                        <script src="/__/firebase/7.2.2/firebase-database.js"></script>
-                        <script defer src="/__/firebase/7.2.2/firebase-messaging.js"></script>
-                        <script defer src="/__/firebase/7.2.2/firebase-storage.js"></script>
-                        <!-- initialize the SDK after all desired features are loaded -->
-                        <script  def src="/__/firebase/init.js"></script>
-                          <script> 
+  <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-analytics.js"></script>
+  <script src="/__/firebase/7.2.2/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script src="/__/firebase/7.2.2/firebase-auth.js"></script>
+  <script src="/__/firebase/7.2.2/firebase-firestore.js"></script>
+  <script src="/__/firebase/7.2.2/firebase-database.js"></script>
+  <script defer src="/__/firebase/7.2.2/firebase-messaging.js"></script>
+  <script defer src="/__/firebase/7.2.2/firebase-storage.js"></script>
+  <!-- initialize the SDK after all desired features are loaded -->
+  <script  def src="/__/firebase/init.js"></script>
+  <script> 
 
-                            firebase.analytics();
-    
-                          </script>
+      firebase.analytics();
 
-                      <script src="/scripts/main.js"></script>
-                      <!-- <script src="/scripts/init-firebase.js"></script> -->
-                      <script> 
-                      var firebaseConfig = {
-                        apiKey: "AIzaSyAImL_fsxsMDetaRyT_7j8-QSMOOTKG63U",
-                        authDomain: "project-54404.firebaseapp.com",
-                        databaseURL: "https://project-54404.firebaseio.com",
-                        projectId: "project-54404",
-                        storageBucket: "project-54404.appspot.com",
-                        messagingSenderId: "996709414935",
-                        appId: "1:996709414935:web:19fde9d71dcf913a47c452",
-                        measurementId: "G-21L4CYX736"
-                      };
-                    // Initialize Firebase
-                    firebase.initializeApp(firebaseConfig);</script>
+  </script>
+
+  <script src="/scripts/main.js"></script>
+    <!-- <script src="/scripts/init-firebase.js"></script> -->
+  <script> 
+    var firebaseConfig = {
+      apiKey: "AIzaSyAImL_fsxsMDetaRyT_7j8-QSMOOTKG63U",
+      authDomain: "project-54404.firebaseapp.com",
+      databaseURL: "https://project-54404.firebaseio.com",
+      projectId: "project-54404",
+      storageBucket: "project-54404.appspot.com",
+      messagingSenderId: "996709414935",
+      appId: "1:996709414935:web:19fde9d71dcf913a47c452",
+      measurementId: "G-21L4CYX736"
+    };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  </script>
 </body>
 
 <script type="text/javascript">
@@ -237,7 +245,9 @@ const Neighborhoods =
   'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
 
 // console.log(Neighborhoods.length);
-
+// import React from 'React';
+// const MAPBOX_TOKEN = `${process.env.REACT_APP_MAPBOX_API_KEY}`
+// console.log(MAPBOX_TOKEN);
 
 
 // var rawbase = 'https://raw.githubusercontent.com/';

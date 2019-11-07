@@ -173,5 +173,8 @@ Thumbs.db
 ####raw data csv/xls etc.######
 .csv
 .xlsx
+.xls
+#######################
+.env
 
 

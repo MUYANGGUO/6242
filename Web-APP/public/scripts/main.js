@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
+
 var db = firebase.firestore();
 
 
@@ -55,9 +58,7 @@ function updateUserProfile() {
       username = user.displayName;
       useremail = user.email;
       userphotoUrl = user.photoURL;
-      useruid = user.uid;  // The user's ID, unique to the Firebase project. Do NOT use
-                       // this value to authenticate with your backend server, if
-                       // you have one. Use User.getToken() instead.
+      useruid = user.uid;  // The user's ID, unique to the Firebase project.
     }
     
     var userprofilename = $("#form-user-name").val();
