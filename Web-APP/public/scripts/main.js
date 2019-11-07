@@ -38,15 +38,13 @@ function updateUserProfile() {
 
   var empty = false;
   $('input[type="text"]').each(function(){
-    if($(this).val() ==""){
+    //check all the input text field except the message box text field
+    if($(this).val() =="" && (this.id != "message")){
         // $(this).addClass("alert-field");
         empty =true;
         return true;
-
       }
   });
-
-
 
   if(empty != true){
     console.log('all fields checked');
@@ -87,14 +85,7 @@ function updateUserProfile() {
           confirmButtonColor: `rgb(0,0,0)`,
         })
     });
-    // console.log(userprofilename);
-    // console.log(usergender);
-    // console.log(useridentity);
-    // console.log(userlocation);
-    // console.log(username);
-    // console.log(useremail);
-    // console.log(userphotoUrl);
-    // console.log(useruid);
+
     document.getElementById("closeformbutton").removeAttribute('hidden');
     document.getElementById("updatebutton").setAttribute('hidden', 'true');
     Swal.fire({
@@ -192,7 +183,7 @@ function yesnoCheck(that) {
 
 function openForm() {
     document.getElementById("user-profile-form").style.display = "block";
-    document.getElementById("message-profile-form").style.display = "none";
+
   }
 
   
@@ -208,7 +199,7 @@ function closeForm() {
 
 function openMessage() {
     document.getElementById("message-profile-form").style.display = "block";
-    document.getElementById("user-profile-form").style.display = "none";
+
 }
 
 function closeMessage() {

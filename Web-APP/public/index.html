@@ -133,7 +133,7 @@
         <label for="identitySelect" ><b>IDENTITY</b><br>
         <label for="tenant"><b>visitor / tenants</b>
         <input type="radio" name="identity" id="tenant" value="tenant" onchange="yesnoCheck(this);" required></label>
-        <label for="landlord" style="margin-left: 30px;"><b>host / landloard</b>
+        <label for="landlord" style="margin-left: 10px;"><b>host / landloard</b>
         <input type="radio" name="identity" id="landloard" value="landlord" onchange="yesnoCheck(this);" required></label><br></label>
         </div>
 
@@ -148,17 +148,14 @@
     </div>
     
     <!-- trying with message card -->
-
+    <!-- Need to fix the problem for jquery empty input field conflicts -->
     <div class="form-popup" id="message-profile-form" style="left: 5px;margin-left: 20px;">
         <form  class="form-container" action ="" id = "message-form-field"> 
-            <button type="button" class="close" onclick="closeMessage()" style="left: 5px;margin-left: 283px;"></button>
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <button type="button" class="close" onclick="closeMessage()" style="left: 5px;margin-left: 262px;"></button>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="top: 20px;">
                 <input class="mdl-textfield__input" type="text" id="message" autocomplete="off">
                 <label class="mdl-textfield__label" for="message">Message...</label>
             </div>
-            <!-- <button id="submit" disabled type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                Send
-            </button> -->
         </form>
     </div>
     <!-- trying with message card end-->
