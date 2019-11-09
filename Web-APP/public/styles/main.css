@@ -213,6 +213,7 @@
   border-bottom-style: solid;
   border-top-width: 0px;
   border-top-style: solid;
+  border-color: transparent;
 
 }
 .close:hover {
@@ -229,7 +230,7 @@
   margin-left: 4px;
 
 
-  background-color: #333;
+  background-color: black;
   /* bacground-color: blue; */
 
 }
