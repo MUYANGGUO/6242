@@ -205,6 +205,14 @@
   height: 32px;
   opacity: 0.5;
   margin-left: 4px;
+  border-left-style: solid;
+  border-left-width: 6px;
+  border-right-width: 6px;
+  border-right-style: solid;
+  border-bottom-width: 0px;
+  border-bottom-style: solid;
+  border-top-width: 0px;
+  border-top-style: solid;
 
 }
 .close:hover {
