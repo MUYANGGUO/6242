@@ -253,11 +253,11 @@ function saveMessage(messageText) {
 
 // Loads chat messages history and listens for upcoming ones.
 function loadMessages() {
-  // Create the query to load the last 12 messages and listen for new ones.
+  // Create the query to load the last 2 messages and listen for new ones.
   var query = firebase.firestore()
                   .collection('messages')
                   .orderBy('timestamp', 'desc')
-                  .limit(12);
+                  .limit(2);
 
   // Start listening to the query.
   query.onSnapshot(function(snapshot) {
@@ -330,7 +330,7 @@ function requestNotificationsPermissions() {
 //   }
 // }
 
-// // Triggered when the send new message form is submitted.
+// Triggered when the send new message form is submitted.
 function onMessageFormSubmit(e) {
   e.preventDefault();
   // Check that the user entered a message and is signed in.
@@ -431,7 +431,6 @@ function deleteMessage(id) {
   }
 }
 
-
 function createAndInsertMessage(id, timestamp) {
   const container = document.createElement('div');
   container.innerHTML = MESSAGE_TEMPLATE;
@@ -513,7 +512,6 @@ function toggleButton() {
   }
 }
 
-
 // Checks that the Firebase SDK has been correctly setup and configured.
 function checkSetup() {
   if (!window.firebase || !(firebase.app instanceof Function) || !firebase.app().options) {
@@ -523,13 +521,12 @@ function checkSetup() {
   }
 }
 
-
 // Checks that Firebase has been imported.
 checkSetup();
 
 // Shortcuts to DOM Elements.
 var messageListElement = document.getElementById('messages');
-var messageFormElement = document.getElementById('message-form');
+var messageFormElement = document.getElementById('message-form-field');
 var messageInputElement = document.getElementById('message');
 var submitButtonElement = document.getElementById('submit');
 var imageButtonElement = document.getElementById('submitImage');
@@ -544,24 +541,25 @@ var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 var profilepicbeforeuploadElement = document.getElementById("profile-pic-before-upload");
 
 
-// // Saves message on form submit.
-// messageFormElement.addEventListener('submit', onMessageFormSubmit);
-// ---  still need to figure out why this line makes the sign-bar disappeared on the topright corner ----
-
-
 signOutButtonElement.addEventListener('click', signOut);
 signInButtonElement.addEventListener('click', signIn);
+
+// Saves message on form submit.
+messageFormElement.addEventListener('submit', onMessageFormSubmit);
+
+// Toggle for the button.
+messageInputElement.addEventListener('keyup', toggleButton);
+messageInputElement.addEventListener('change', toggleButton);
 
 // initialize Firebase
 initFirebaseAuth();
 
-// Remove the warning about timstamps change.
+
 var firestore = firebase.firestore();
+
+
 var settings = {timestampsInSnapshots: true};
 firestore.settings(settings);
-
-// TODO: Enable Firebase Performance Monitoring.
-firebase.performance();
 
 // We load currently existing chat messages and listen to new ones.
 loadMessages();
