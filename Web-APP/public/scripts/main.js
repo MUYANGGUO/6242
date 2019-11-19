@@ -338,9 +338,10 @@ function authStateObserver(user) {
     dropdownArrowElement.removeAttribute('hidden');
     userPicElement.removeAttribute('hidden');
     signOutButtonElement.removeAttribute('hidden');
-    
-    //show if uid exit: then show the match function:
+
+    // if userid exist enable the match button
     enablematchButton();
+
 
     // Hide sign-in button.
     signInButtonElement.setAttribute('hidden', 'true');
