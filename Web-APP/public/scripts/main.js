@@ -35,6 +35,25 @@ var db = firebase.firestore();
 //   }
 // };
 
+function enablematchButton(){
+  var user = firebase.auth().currentUser;
+  var uid = user.uid;
+  var docRef = db.collection("users").doc(uid);
+
+    docRef.get().then(function(doc) {
+    if (doc.exists) {
+        console.log("Document data:", doc.data());
+        document.getElementById("match-button").removeAttribute('hidden');
+
+    } else {
+        console.log("User has not updated the profile in database!");
+    }
+}).catch(function(error) {
+    console.log("Error getting document:", error);
+});
+
+};
+
 
 
 function updateUserProfile() {
@@ -53,7 +72,7 @@ function updateUserProfile() {
     console.log('all fields checked');
     var user = firebase.auth().currentUser;
     var username, useremail, userphotoUrl, useruid;
-    
+
     if (user != null) {
       username = user.displayName;
       useremail = user.email;
@@ -75,6 +94,7 @@ function updateUserProfile() {
     })
     .then(function() {
         console.log("Document successfully written!");
+        
     })
     .catch(function(error) {
         console.error("Error writing document: ", error);
@@ -86,14 +106,14 @@ function updateUserProfile() {
           confirmButtonColor: `rgb(0,0,0)`,
         })
     });
-
+    enablematchButton();
     document.getElementById("closeformbutton").removeAttribute('hidden');
     document.getElementById("updatebutton").setAttribute('hidden', 'true');
     Swal.fire({
       position: 'top',
       icon:'success',
       background: `rgb(0,0,0,9)`,
-      text: 'Profile updated! Please finish by clicking the COMPLETE & CLOSE button.',
+      text: 'Profile updated! Please finish by clicking the CLOSE button.',
       confirmButtonColor: `rgb(0,0,0)`,
     })
   }
@@ -196,6 +216,7 @@ function closeForm() {
     document.getElementById("host-field").setAttribute('hidden', 'true');
     document.getElementById("destination-field").setAttribute('hidden', 'true');
     document.getElementById("location-input-field").setAttribute('hidden', 'true');
+
   }
 
 function openMessage() {
@@ -317,10 +338,14 @@ function authStateObserver(user) {
     dropdownArrowElement.removeAttribute('hidden');
     userPicElement.removeAttribute('hidden');
     signOutButtonElement.removeAttribute('hidden');
+    
+    //show if uid exit: then show the match function:
+    enablematchButton();
 
     // Hide sign-in button.
     signInButtonElement.setAttribute('hidden', 'true');
 
+  
 
     // We save the Firebase Messaging Device token and enable notifications.
     saveMessagingDeviceToken();
@@ -330,9 +355,12 @@ function authStateObserver(user) {
     dropdownArrowElement.setAttribute('hidden', 'true');
     userPicElement.setAttribute('hidden', 'true');
     signOutButtonElement.setAttribute('hidden', 'true');
+    document.getElementById("match-button").setAttribute('hidden', 'true');
+
 
     // Show sign-in button.
     signInButtonElement.removeAttribute('hidden');
+  
   }
 }
 
@@ -407,7 +435,6 @@ var signInButtonElement = document.getElementById('sign-in');
 var signOutButtonElement = document.getElementById('sign-out');
 var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 var profilepicbeforeuploadElement = document.getElementById("profile-pic-before-upload");
-
 
 signOutButtonElement.addEventListener('click', signOut);
 signInButtonElement.addEventListener('click', signIn);
