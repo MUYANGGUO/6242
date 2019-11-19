@@ -35,6 +35,25 @@ var db = firebase.firestore();
 //   }
 // };
 
+function enablematchButton(){
+  var user = firebase.auth().currentUser;
+  var uid = user.uid;
+  var docRef = db.collection("users").doc(uid);
+
+    docRef.get().then(function(doc) {
+    if (doc.exists) {
+        console.log("Document data:", doc.data());
+        document.getElementById("match-button").removeAttribute('hidden');
+
+    } else {
+        console.log("User has not updated the profile in database!");
+    }
+}).catch(function(error) {
+    console.log("Error getting document:", error);
+});
+
+};
+
 
 
 function updateUserProfile() {
@@ -75,6 +94,7 @@ function updateUserProfile() {
     })
     .then(function() {
         console.log("Document successfully written!");
+        
     })
     .catch(function(error) {
         console.error("Error writing document: ", error);
@@ -86,7 +106,7 @@ function updateUserProfile() {
           confirmButtonColor: `rgb(0,0,0)`,
         })
     });
-
+    enablematchButton();
     document.getElementById("closeformbutton").removeAttribute('hidden');
     document.getElementById("updatebutton").setAttribute('hidden', 'true');
     Swal.fire({
@@ -320,18 +340,12 @@ function authStateObserver(user) {
     signOutButtonElement.removeAttribute('hidden');
     
     //show if uid exit: then show the match function:
-
-  //   var userId = firebase.auth().currentUser.uid;
-  //   return firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) {
-  //   var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-  //   console.log(username);
-  // // ...
-  //   });
-  
+    enablematchButton();
 
     // Hide sign-in button.
     signInButtonElement.setAttribute('hidden', 'true');
 
+  
 
     // We save the Firebase Messaging Device token and enable notifications.
     saveMessagingDeviceToken();
@@ -341,9 +355,12 @@ function authStateObserver(user) {
     dropdownArrowElement.setAttribute('hidden', 'true');
     userPicElement.setAttribute('hidden', 'true');
     signOutButtonElement.setAttribute('hidden', 'true');
+    document.getElementById("match-button").setAttribute('hidden', 'true');
+
 
     // Show sign-in button.
     signInButtonElement.removeAttribute('hidden');
+  
   }
 }
 
