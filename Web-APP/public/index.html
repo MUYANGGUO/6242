@@ -68,6 +68,9 @@
       <div  id="user-container" class="mdl-layout__header-row">
         <!-- <button id = "user-profile" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Profile</button> -->
         <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span>
+        <button hidden id="match-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+          " MATCH ! "
+        </button>
         <div hidden id="user-pic"></div>
         <div class="dropdown">
           <button hidden id="user-name" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white"></button>
@@ -87,6 +90,7 @@
         <button hidden id="sign-in" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
           <i class="material-icons">account_circle</i>Sign-in with Google
         </button>
+
 
       </div>
 
@@ -140,7 +144,7 @@
         " name="destination" required>
         <!--  -->
         <button id="updatebutton" type="button" class="btn"  onclick="updateUserProfile()"><b>UPDATE !</b></button>
-        <button hidden id ="closeformbutton" type="button" class="btn cancel"  onclick="closeForm()"><b>COMPLETE & CLOSE</b></button>
+        <button hidden id ="closeformbutton" type="button" class="btn cancel"  onclick="closeForm()"><b>CLOSE</b></button>
       </form>
     </div>
     
