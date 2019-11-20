@@ -20,21 +20,52 @@ var db = firebase.firestore();
 
 
 
-function mapbox_geocoding(){
+function mapbox_geocoding(location){
+  mapboxgl.accessToken = 'pk.eyJ1IjoibXV5YW5nZ3VvIiwiYSI6ImNrMnA0b3VrNTAwamgzZW55YTUwZHY4MngifQ.3--4_yqwizMxOLnxtu0QSQ';
+  console.log(mapboxgl.accessToken);
+  var request = new XMLHttpRequest()
+  
+  request.open('GET', 'https://api.mapbox.com/geocoding/v5/mapbox.places/'+String(location)+'.json?access_token='+mapboxgl.accessToken+'&limit=3&types=address&autocomplete=true')
+  request.onload = function() {
+    // Begin accessing JSON data here
+    var data = JSON.parse(this.response)
+    if (request.status >= 200 && request.status < 400) {
+      var user = firebase.auth().currentUser;
+      var useruid;
+      if (user != null) {
+        useruid = user.uid;  // The user's ID, unique to the Firebase project.
+      }
+      console.log(useruid)
+      var coordinates = data['features'][0]['geometry']['coordinates']
+      var latitude = coordinates[1];
+      var longtitude = coordinates[0];
 
-var request = new XMLHttpRequest()
+      db.collection("users").doc(useruid).update({
+          coordinates:{
+            latitude:latitude,
+            longtitude,longtitude,
+          },
+          })
+          .then(function() {
+          console.log("Document successfully updated!");
+          })
+          .catch(function(error) {
+        // The document probably doesn't exist.
+          console.error("Error updating document: ", error);
+          });
+    } else {
+      console.log('XML HTTP request error');
+    }
+  }
 
-// Open a new connection, using the GET request on the URL endpoint
-request.open('GET', 'https://ghibliapi.herokuapp.com/films', true)
+  request.send()
 
-request.onload = function() {
-  // Begin accessing JSON data here
-}
-
-// Send request
-request.send()
 };
 
+// var loc= '579 20th st sf CA';
+// var loc_return1,loc_return2 = mapbox_geocoding(loc);
+// console.log('check')
+// console.log(loc_return1)
 // function updateUserAvatarImage(){
 //   $(document).ready(function() {
 	
@@ -100,6 +131,10 @@ function updateUserProfile() {
     var usergender = $("#radiodivgender input[type='radio']:checked").val();
     var useridentity = $("#radiodividentity input[type='radio']:checked").val();
     var userlocation = $("#location-input-field").val();
+
+    
+
+
     db.collection("users").doc(useruid).set({
       name: userprofilename,
       gender:usergender,
@@ -110,6 +145,7 @@ function updateUserProfile() {
     })
     .then(function() {
         console.log("Document successfully written!");
+        mapbox_geocoding(userlocation);
         
     })
     .catch(function(error) {
@@ -123,15 +159,16 @@ function updateUserProfile() {
         })
     });
     enablematchButton();
-    document.getElementById("closeformbutton").removeAttribute('hidden');
+    // document.getElementById("closeformbutton").removeAttribute('hidden');
     document.getElementById("updatebutton").setAttribute('hidden', 'true');
     Swal.fire({
       position: 'top',
       icon:'success',
       background: `rgb(0,0,0,9)`,
-      text: 'Profile updated! Please finish by clicking the CLOSE button.',
+      text: 'Profile updated!',
       confirmButtonColor: `rgb(0,0,0)`,
     })
+    closeForm();
   }
   else{
       Swal.fire({
@@ -227,7 +264,7 @@ function openForm() {
 function closeForm() {
     document.getElementById("user-profile-form").style.display = "none";
     document.getElementById("updatebutton").removeAttribute('hidden');
-    document.getElementById("closeformbutton").setAttribute('hidden', 'true');
+    // document.getElementById("closeformbutton").setAttribute('hidden', 'true');
     document.getElementById("user-profile-form-field").reset(); 
     document.getElementById("host-field").setAttribute('hidden', 'true');
     document.getElementById("destination-field").setAttribute('hidden', 'true');
