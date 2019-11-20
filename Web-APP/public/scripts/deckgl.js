@@ -18,7 +18,7 @@ const Neighborhoods =
 
 // const heatdata =
 //   'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/sf-bike-parking.json';
-mapboxgl.accessToken = 'pk.eyJ1IjoibXV5YW5nZ3VvIiwiYSI6ImNrMnA0b3VrNTAwamgzZW55YTUwZHY4MngifQ.3--4_yqwizMxOLnxtu0QSQ';
+mapboxgl.accessToken = '';
 
 // var map = new mapboxgl.Map({
 // container: 'container',
