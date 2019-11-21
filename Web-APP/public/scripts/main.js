@@ -14,54 +14,8 @@
  * limitations under the License.
  */
 
-
-
 var db = firebase.firestore();
 
-
-
-function mapbox_geocoding(location){
-  //add mapboxgl.accessToken
-  mapboxgl.accessToken = '';
-  console.log(mapboxgl.accessToken);
-  var request = new XMLHttpRequest()
-  
-  request.open('GET', 'https://api.mapbox.com/geocoding/v5/mapbox.places/'+String(location)+'.json?access_token='+mapboxgl.accessToken+'&limit=3&types=address&autocomplete=true')
-  request.onload = function() {
-    // Begin accessing JSON data here
-    var data = JSON.parse(this.response)
-    if (request.status >= 200 && request.status < 400) {
-      var user = firebase.auth().currentUser;
-      var useruid;
-      if (user != null) {
-        useruid = user.uid;  // The user's ID, unique to the Firebase project.
-      }
-      console.log(useruid)
-      var coordinates = data['features'][0]['geometry']['coordinates']
-      var latitude = coordinates[1];
-      var longtitude = coordinates[0];
-
-      db.collection("users").doc(useruid).update({
-          coordinates:{
-            latitude:latitude,
-            longtitude,longtitude,
-          },
-          })
-          .then(function() {
-          console.log("Document successfully updated!");
-          })
-          .catch(function(error) {
-        // The document probably doesn't exist.
-          console.error("Error updating document: ", error);
-          });
-    } else {
-      console.log('XML HTTP request error');
-    }
-  }
-
-  request.send()
-
-};
 
 // var loc= '579 20th st sf CA';
 // var loc_return1,loc_return2 = mapbox_geocoding(loc);
@@ -90,7 +44,7 @@ function enablematchButton(){
 
     docRef.get().then(function(doc) {
     if (doc.exists) {
-        console.log("Document data:", doc.data());
+        //console.log("Document data:", doc.data());
         document.getElementById("match-button").removeAttribute('hidden');
 
     } else {
@@ -145,7 +99,7 @@ function updateUserProfile() {
       email:useremail,
     })
     .then(function() {
-        console.log("Document successfully written!");
+        console.log("User basic info successfully written!");
         mapbox_geocoding(userlocation);
         
     })

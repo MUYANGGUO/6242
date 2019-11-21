@@ -22,7 +22,7 @@ const ICON_MAPPING = {
 
 // const heatdata =
 //   'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/sf-bike-parking.json';
-mapboxgl.accessToken = '';
+const mapboxgl_accessToken = 'pk.eyJ1IjoibXV5YW5nZ3VvIiwiYSI6ImNrMnA0b3VrNTAwamgzZW55YTUwZHY4MngifQ.3--4_yqwizMxOLnxtu0QSQ';
 //pk.eyJ1IjoibXV5YW5nZ3VvIiwiYSI6ImNrMnA0b3VrNTAwamgzZW55YTUwZHY4MngifQ.3--4_yqwizMxOLnxtu0QSQ
 // var map = new mapboxgl.Map({
 // container: 'container',
@@ -44,6 +44,101 @@ const INITIAL_VIEW_STATE = {
 };
 
 
+const mylayers = [
+  new deck.GeoJsonLayer({
+    id: 'Neighborhoods',
+    data: Neighborhoods,
+    // Styles
+    filled: true,
+    pointRadiusMinPixels: 2,
+    opacity: 1,
+    pointRadiusScale: 200,
+    getLineWidth: 20,
+    getLineColor: [128,128,128,200],
+    getElevation: 30,
+    getRadius: f => (11 - f.properties.scalerank),
+    getFillColor: [169, 169, 169, 180],
+    // Interactive props
+
+    //This is the props when you click on a region
+    pickable: true,
+    autoHighlight: true,
+    onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.city})`)
+  }),
+
+
+
+  //create scatter plot layer for proping the SFPD fetched data
+  new deck.ScatterplotLayer({
+    data: [
+      {position: [-122.402, 37.79], color: [250, 0, 0], radius: 1000}
+    ],
+    getPosition: d => d.position,
+    getRadius: d => d.radius,
+    getFillColor: d => d.color,
+    
+    opacity: 0.3
+  }),
+  new deck.TextLayer({
+    data: [
+      {position: [-122.402, 37.79], text: 'testing'}
+    ],
+    getPosition: d => d.position,
+    getText: d => d.text,
+    getSize: 28,
+    getAngle: 0,
+    getTextAnchor: 'middle',
+    getAlignmentBaseline: 'bottom'
+  }),
+  // new deck.IconLayer({
+  //   id: 'icon-layer',
+  //   data: icons,
+  //   pickable: true,
+  // // iconAtlas and iconMapping are required
+  // // getIcon: return a string
+  //   iconAtlas: 'images/icon-atlas.png',
+  //   iconMapping: ICON_MAPPING,
+  //   getIcon: d => 'marker',
+
+  //   sizeScale: 15,
+  //   getPosition: d => d.coordinates,
+  //   getSize: d => 5,
+  //   getColor: d => [Math.sqrt(d.exits), 140, 0],
+  //   // onHover: ({object, x, y}) => {
+  //   // const tooltip = `${object.name}\n${object.address}`;
+
+
+  // }),
+  // new deck.HeatmapLayer({
+  //   id: 'heatmapLayer',
+  //   data: heatdata,
+  //   getPosition: d => d.COORDINATES,
+  //   //-----// getWeight: d => d.WEIGHT    
+  // })
+
+  // new deck.IconLayer({
+  //   id: 'icon-layer',
+  //   data,
+  // pickable: true,
+  // // iconAtlas and iconMapping are required
+  // // getIcon: return a string
+  // iconAtlas: 'images/icon-atlas.png',
+  // iconMapping: ICON_MAPPING,
+  // getIcon: d => 'marker',
+
+  // sizeScale: 15,
+  // getPosition: d => d.coordinates,
+  // getSize: d => 5,
+  // getColor: d => [Math.sqrt(d.exits), 140, 0],
+  // onHover: ({object, x, y}) => {
+  //   const tooltip = `${object.name}\n${object.address}`;
+  //   /* Update tooltip
+  //      http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object
+  //   */
+  // }
+  // })
+
+];
 
 //const deckgl = new deck.DeckGL
 const deckgl = new deck.DeckGL({
@@ -52,7 +147,7 @@ const deckgl = new deck.DeckGL({
   // // Set your Mapbox access token here
   // //Extremely Important, Create your Mapbox account, and use the API KEY generated. Fees will occur if exceeding the free tier limits
   // //////////////////////////////////////////
-  mapboxApiAccessToken: mapboxgl.accessToken,
+  mapboxApiAccessToken: mapboxgl_accessToken,
   // //////////////////////////////////////////
 
   // //I have set the layer correctly with the geo info for SF, so in testing, no need to use MAPBOX to show the underlying map
@@ -62,100 +157,7 @@ const deckgl = new deck.DeckGL({
 //   bearing: 0,
 //   pitch: 30,
   initialViewState: INITIAL_VIEW_STATE,
-  layers: [
-    new deck.GeoJsonLayer({
-      id: 'Neighborhoods',
-      data: Neighborhoods,
-      // Styles
-      filled: true,
-      pointRadiusMinPixels: 2,
-      opacity: 1,
-      pointRadiusScale: 200,
-      getLineWidth: 20,
-      getLineColor: [128,128,128,200],
-      getElevation: 30,
-      getRadius: f => (11 - f.properties.scalerank),
-      getFillColor: [169, 169, 169, 180],
-      // Interactive props
-
-      //This is the props when you click on a region
-      pickable: true,
-      autoHighlight: true,
-      onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.city})`)
-    }),
-
-
-
-    //create scatter plot layer for proping the SFPD fetched data
-    new deck.ScatterplotLayer({
-      data: [
-        {position: [-122.402, 37.79], color: [250, 0, 0], radius: 1000}
-      ],
-      getPosition: d => d.position,
-      getRadius: d => d.radius,
-      getFillColor: d => d.color,
-      opacity: 0.3
-    }),
-    new deck.TextLayer({
-      data: [
-        {position: [-122.402, 37.79], text: 'testing'}
-      ],
-      getPosition: d => d.position,
-      getText: d => d.text,
-      getSize: 28,
-      getAngle: 0,
-      getTextAnchor: 'middle',
-      getAlignmentBaseline: 'bottom'
-    }),
-    new deck.IconLayer({
-      id: 'icon-layer',
-      data: icons,
-      pickable: true,
-    // iconAtlas and iconMapping are required
-    // getIcon: return a string
-      iconAtlas: 'images/icon-atlas.png',
-      iconMapping: ICON_MAPPING,
-      getIcon: d => 'marker',
-
-      sizeScale: 15,
-      getPosition: d => d.coordinates,
-      getSize: d => 5,
-      getColor: d => [Math.sqrt(d.exits), 140, 0],
-      // onHover: ({object, x, y}) => {
-      // const tooltip = `${object.name}\n${object.address}`;
-
-
-    }),
-    // new deck.HeatmapLayer({
-    //   id: 'heatmapLayer',
-    //   data: heatdata,
-    //   getPosition: d => d.COORDINATES,
-    //   //-----// getWeight: d => d.WEIGHT    
-    // })
-
-    // new deck.IconLayer({
-    //   id: 'icon-layer',
-    //   data,
-    // pickable: true,
-    // // iconAtlas and iconMapping are required
-    // // getIcon: return a string
-    // iconAtlas: 'images/icon-atlas.png',
-    // iconMapping: ICON_MAPPING,
-    // getIcon: d => 'marker',
-
-    // sizeScale: 15,
-    // getPosition: d => d.coordinates,
-    // getSize: d => 5,
-    // getColor: d => [Math.sqrt(d.exits), 140, 0],
-    // onHover: ({object, x, y}) => {
-    //   const tooltip = `${object.name}\n${object.address}`;
-    //   /* Update tooltip
-    //      http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object
-    //   */
-    // }
-    // })
-
-  ]
+  layers: mylayers,
 });
 
 
@@ -234,3 +236,140 @@ const deckgl = new deck.DeckGL({
 //   ]
 // });
 
+
+
+
+
+
+
+
+//--------------------------------------------------------//
+// utility functions//
+mysecondlayers = []
+function push_user_location(){
+  var user = firebase.auth().currentUser;
+  var useruid = user.uid;
+  var docRef = db.collection("users").doc(useruid);
+  docRef.get().then(function(doc) {
+    if (doc.exists) {
+        var data = doc.data();
+
+        var coords = [data["coordinates"]["longtitude"],data["coordinates"]["latitude"]];
+        mysecondlayers.push(
+          new deck.GeoJsonLayer({
+            id: 'Neighborhoods',
+            data: Neighborhoods,
+            // Styles
+            filled: true,
+            pointRadiusMinPixels: 2,
+            opacity: 1,
+            pointRadiusScale: 200,
+            getLineWidth: 20,
+            getLineColor: [128,128,128,200],
+            getElevation: 30,
+            getRadius: f => (11 - f.properties.scalerank),
+            getFillColor: [169, 169, 169, 180],
+            // Interactive props
+        
+            //This is the props when you click on a region
+            pickable: true,
+            autoHighlight: true,
+            onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.city})`)
+          }),
+      
+          new deck.ScatterplotLayer({
+          data: [
+            {position: coords, color: [250, 0, 0], radius: 150}
+          ],
+          getPosition: d => d.position,
+          getRadius: d => d.radius,
+          getFillColor: d => d.color,
+          
+          opacity: 0.3
+        }),
+      
+        new deck.IconLayer({
+          id: 'icon-layer',
+          // data: icons,
+          data: [
+            {position: coords,color: [250, 0, 0]}
+          ],
+          pickable: true,
+        // iconAtlas and iconMapping are required
+        // getIcon: return a string
+          iconAtlas: 'images/icon-atlas.png',
+          iconMapping: ICON_MAPPING,
+          getIcon: d => 'marker',
+      
+          sizeScale: 15,
+          getPosition: d => d.position,
+          getSize: d => 5,
+          getColor: d => d.color,
+          // onHover: ({object, x, y}) => {
+          // const tooltip = `${object.name}\n${object.address}`;
+      
+      
+        }),
+        )
+        deckgl.setProps({layers: mysecondlayers});
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+    }
+}).catch(function(error) {
+    console.log("Error getting document:", error);
+});
+
+  // console.log(useruid)
+  
+  // console.log(mysecondlayers)
+  
+};
+
+
+
+
+
+
+
+
+function mapbox_geocoding(location){
+  //add mapboxgl.accessToken
+  mapboxgl.accessToken = mapboxgl_accessToken;
+  var request = new XMLHttpRequest()
+  
+  request.open('GET', 'https://api.mapbox.com/geocoding/v5/mapbox.places/'+String(location)+'.json?access_token='+mapboxgl.accessToken+'&limit=3&types=address&autocomplete=true')
+  request.onload = function() {
+    // Begin accessing JSON data here
+    var data = JSON.parse(this.response)
+    if (request.status >= 200 && request.status < 400) {
+      var user = firebase.auth().currentUser;
+      var useruid;
+      if (user != null) {
+        useruid = user.uid;  // The user's ID, unique to the Firebase project.
+      }
+      var coordinates = data['features'][0]['geometry']['coordinates']
+      var latitude = coordinates[1];
+      var longtitude = coordinates[0];
+
+      db.collection("users").doc(useruid).update({
+          coordinates:{
+            latitude:latitude,
+            longtitude,longtitude,
+          },
+          })
+          .then(function() {
+          console.log("successfully updated user location lat/long to database!");
+          })
+          .catch(function(error) {
+        // The document probably doesn't exist.
+          console.error("Error updating document: ", error);
+          });
+    } else {
+      console.log('XML HTTP request error');
+    }
+  }
+
+  request.send()
+
+};

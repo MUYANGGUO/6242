@@ -72,7 +72,7 @@
       <div  id="user-container" class="mdl-layout__header-row">
         <!-- <button id = "user-profile" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Profile</button> -->
         <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span>
-        <button hidden id="match-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white" onclick="mapbox_geocoding()">
+        <button hidden id="match-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white" onclick="push_user_location()">
           " MATCH ! "
         </button>
         <div hidden id="user-pic"></div>
@@ -256,9 +256,11 @@
   </script>
 
   <!-- deckgl js -->
-  <script src='/scripts/deckgl.js'></script>
+  <script src='/scripts/deckgl.js'>
+  </script>
 
   <script src="/scripts/main.js"></script>
+
   <!-- <script src="/scripts/init-firebase.js"></script> -->
   <script> 
 
