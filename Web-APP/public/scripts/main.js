@@ -21,7 +21,8 @@ var db = firebase.firestore();
 
 
 function mapbox_geocoding(location){
-  mapboxgl.accessToken = 'pk.eyJ1IjoibXV5YW5nZ3VvIiwiYSI6ImNrMnA0b3VrNTAwamgzZW55YTUwZHY4MngifQ.3--4_yqwizMxOLnxtu0QSQ';
+  //add mapboxgl.accessToken
+  mapboxgl.accessToken = '';
   console.log(mapboxgl.accessToken);
   var request = new XMLHttpRequest()
   

@@ -1,7 +1,11 @@
-
 const Neighborhoods =
   'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
 
+const icons = 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
+
+const ICON_MAPPING = {
+    marker: {x: 0, y: 0, width: 128, height: 256, mask: true}
+  };
 // console.log(Neighborhoods.length);
 // import React from 'React';
 // const MAPBOX_TOKEN = `${process.env.REACT_APP_MAPBOX_API_KEY}`
@@ -18,8 +22,8 @@ const Neighborhoods =
 
 // const heatdata =
 //   'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/sf-bike-parking.json';
-mapboxgl.accessToken = 'pk.eyJ1IjoibXV5YW5nZ3VvIiwiYSI6ImNrMnA0b3VrNTAwamgzZW55YTUwZHY4MngifQ.3--4_yqwizMxOLnxtu0QSQ';
-
+mapboxgl.accessToken = '';
+//pk.eyJ1IjoibXV5YW5nZ3VvIiwiYSI6ImNrMnA0b3VrNTAwamgzZW55YTUwZHY4MngifQ.3--4_yqwizMxOLnxtu0QSQ
 // var map = new mapboxgl.Map({
 // container: 'container',
 // style: 'mapbox://styles/mapbox/streets-v11',
@@ -32,9 +36,9 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibXV5YW5nZ3VvIiwiYSI6ImNrMnA0b3VrNTAwamgzZW55Y
 // mapboxgl: deckgl
 // }));
 const INITIAL_VIEW_STATE = {
-    latitude: 37.7749,
+    latitude: 37.7549,
     longitude: -122.4194,
-    zoom: 11,
+    zoom: 12,
     bearing: 0,
     pitch: 30,
 };
@@ -103,7 +107,25 @@ const deckgl = new deck.DeckGL({
       getTextAnchor: 'middle',
       getAlignmentBaseline: 'bottom'
     }),
+    new deck.IconLayer({
+      id: 'icon-layer',
+      data: icons,
+      pickable: true,
+    // iconAtlas and iconMapping are required
+    // getIcon: return a string
+      iconAtlas: 'images/icon-atlas.png',
+      iconMapping: ICON_MAPPING,
+      getIcon: d => 'marker',
 
+      sizeScale: 15,
+      getPosition: d => d.coordinates,
+      getSize: d => 5,
+      getColor: d => [Math.sqrt(d.exits), 140, 0],
+      // onHover: ({object, x, y}) => {
+      // const tooltip = `${object.name}\n${object.address}`;
+
+
+    }),
     // new deck.HeatmapLayer({
     //   id: 'heatmapLayer',
     //   data: heatdata,
