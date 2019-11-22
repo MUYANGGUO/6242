@@ -242,12 +242,12 @@ const deckgl = new deck.DeckGL({
 
 
 
-
-
 //--------------------------------------------------------//
 // utility functions//
-const user_location_layers = []
+var layer_add_1 = [];
+var layer_add_2 = [];
 function push_user_location(){
+  const user_location_layers = [];
   var user = firebase.auth().currentUser;
   var useruid = user.uid;
   var docRef = db.collection("users").doc(useruid);
@@ -258,28 +258,7 @@ function push_user_location(){
         var data = doc.data();
 
         var coords = [data["coordinates"]["longtitude"],data["coordinates"]["latitude"]];
-        user_location_layers.push(
-          new deck.GeoJsonLayer({
-            id: 'Neighborhoods',
-            data: Neighborhoods,
-            // Styles
-            filled: true,
-            pointRadiusMinPixels: 2,
-            opacity: 1,
-            pointRadiusScale: 200,
-            getLineWidth: 20,
-            getLineColor: [128,128,128,200],
-            getElevation: 30,
-            getRadius: f => (11 - f.properties.scalerank),
-            getFillColor: [169, 169, 169, 180],
-            // Interactive props
-        
-            //This is the props when you click on a region
-            pickable: true,
-            autoHighlight: true,
-            onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.city})`)
-          }),
-      
+        user_location_layers.push(      
           new deck.ScatterplotLayer({
           data: [
             {position: coords, color: [250, 0, 0], radius: 150}
@@ -315,7 +294,11 @@ function push_user_location(){
         }),
 
         )
-        deckgl.setProps({layers: user_location_layers});
+        var new_layer = user_location_layers.concat(mylayers);
+        layer_add_1 = user_location_layers;
+        console.log(layer_add_1)
+        deckgl.setProps({layers: new_layer});
+        return true;
     } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -331,7 +314,40 @@ function push_user_location(){
 };
 
 
+const uber_data = 'https://raw.githubusercontent.com/MUYANGGUO/6242/master/Uber-DataClean/Uber_Speed_Data/uber_traffic_data.json'
+function push_uber_data(){
 
+const uber_layer = [];
+
+uber_layer.push(
+  new deck.LineLayer({
+    id: 'line-layer',
+    data: uber_data,
+    pickable: true,
+    getWidth: 2,
+    getSourcePosition: d => d.start,
+    getTargetPosition: d => d.end,
+    getColor:function(d){
+      if(d.speed>45)
+      return [255,0,0];     
+      else if(d.speed>35)  
+      return [255,64,0];
+      else if(d.speed>30)  
+      return[255,128,0]  
+      else if(d.speed>25)  
+      return[255,145,0]  
+      else if(d.speed>20)  
+      return[255,191,0]  
+      else if(d.speed>15)  
+      return[255,255,0]
+      else 
+      return[0,255,255]}  
+       }    // onHover: ({object, x, y}) => {      // const tooltip = `${object.from.name} to ${object.to.name}`;      /* Update tooltip         http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object      */    // }    }),
+))
+
+var new_layer = uber_layer.concat(mylayers).concat(layer_add_1);
+deckgl.setProps({layers: new_layer});
+};
 
 
 
