@@ -69,27 +69,28 @@ const mylayers = [
 
 
   //create scatter plot layer for proping the SFPD fetched data
-  new deck.ScatterplotLayer({
-    data: [
-      {position: [-122.402, 37.79], color: [250, 0, 0], radius: 1000}
-    ],
-    getPosition: d => d.position,
-    getRadius: d => d.radius,
-    getFillColor: d => d.color,
+  // new deck.ScatterplotLayer({
+  //   data: [
+  //     {position: [-122.402, 37.79], color: [250, 0, 0], radius: 1000}
+  //   ],
+  //   getPosition: d => d.position,
+  //   getRadius: d => d.radius,
+  //   getFillColor: d => d.color,
     
-    opacity: 0.3
-  }),
-  new deck.TextLayer({
-    data: [
-      {position: [-122.402, 37.79], text: 'testing'}
-    ],
-    getPosition: d => d.position,
-    getText: d => d.text,
-    getSize: 28,
-    getAngle: 0,
-    getTextAnchor: 'middle',
-    getAlignmentBaseline: 'bottom'
-  }),
+  //   opacity: 0.3
+  // }),
+  // new deck.TextLayer({
+  //   data: [
+  //     {position: [-122.402, 37.79], text: 'testing'}
+  //   ],
+  //   getPosition: d => d.position,
+  //   getText: d => d.text,
+  //   getSize: 28,
+  //   getAngle: 0,
+  //   getTextAnchor: 'middle',
+  //   getAlignmentBaseline: 'bottom'
+  // }),
+
   // new deck.IconLayer({
   //   id: 'icon-layer',
   //   data: icons,
@@ -245,17 +246,19 @@ const deckgl = new deck.DeckGL({
 
 //--------------------------------------------------------//
 // utility functions//
-mysecondlayers = []
+const user_location_layers = []
 function push_user_location(){
   var user = firebase.auth().currentUser;
   var useruid = user.uid;
   var docRef = db.collection("users").doc(useruid);
   docRef.get().then(function(doc) {
     if (doc.exists) {
+        // document.getElementById("match-button").removeAttribute('hidden');
+        console.log('pushing user location')
         var data = doc.data();
 
         var coords = [data["coordinates"]["longtitude"],data["coordinates"]["latitude"]];
-        mysecondlayers.push(
+        user_location_layers.push(
           new deck.GeoJsonLayer({
             id: 'Neighborhoods',
             data: Neighborhoods,
@@ -308,10 +311,11 @@ function push_user_location(){
           // onHover: ({object, x, y}) => {
           // const tooltip = `${object.name}\n${object.address}`;
       
-      
+          
         }),
+
         )
-        deckgl.setProps({layers: mysecondlayers});
+        deckgl.setProps({layers: user_location_layers});
     } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -322,9 +326,10 @@ function push_user_location(){
 
   // console.log(useruid)
   
-  // console.log(mysecondlayers)
+  // console.log(user_location_layers)
   
 };
+
 
 
 
@@ -360,6 +365,7 @@ function mapbox_geocoding(location){
           })
           .then(function() {
           console.log("successfully updated user location lat/long to database!");
+          push_user_location();
           })
           .catch(function(error) {
         // The document probably doesn't exist.

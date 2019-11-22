@@ -37,6 +37,9 @@ var db = firebase.firestore();
 //   }
 // };
 
+
+
+
 function enablematchButton(){
   var user = firebase.auth().currentUser;
   var uid = user.uid;
@@ -46,7 +49,8 @@ function enablematchButton(){
     if (doc.exists) {
         //console.log("Document data:", doc.data());
         document.getElementById("match-button").removeAttribute('hidden');
-
+        // push_user_location();
+        
     } else {
         console.log("User has not updated the profile in database!");
     }
@@ -101,6 +105,7 @@ function updateUserProfile() {
     .then(function() {
         console.log("User basic info successfully written!");
         mapbox_geocoding(userlocation);
+     
         
     })
     .catch(function(error) {
@@ -114,6 +119,7 @@ function updateUserProfile() {
         })
     });
     enablematchButton();
+    // push_user_location();
     // document.getElementById("closeformbutton").removeAttribute('hidden');
     document.getElementById("updatebutton").setAttribute('hidden', 'true');
     Swal.fire({
@@ -349,6 +355,7 @@ function authStateObserver(user) {
 
     // if userid exist enable the match button
     enablematchButton();
+    // push_user_location();
 
 
     // Hide sign-in button.
