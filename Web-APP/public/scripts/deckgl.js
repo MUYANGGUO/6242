@@ -44,7 +44,7 @@ const INITIAL_VIEW_STATE = {
 };
 
 
-const mylayers = [
+const base_layer = [
   new deck.GeoJsonLayer({
     id: 'Neighborhoods',
     data: Neighborhoods,
@@ -138,7 +138,6 @@ const mylayers = [
   //   */
   // }
   // })
-
 ];
 
 //const deckgl = new deck.DeckGL
@@ -158,7 +157,7 @@ const deckgl = new deck.DeckGL({
 //   bearing: 0,
 //   pitch: 30,
   initialViewState: INITIAL_VIEW_STATE,
-  layers: mylayers,
+  layers: base_layer,
 });
 
 
@@ -244,10 +243,12 @@ const deckgl = new deck.DeckGL({
 
 //--------------------------------------------------------//
 // utility functions//
-var layer_add_1 = [];
-var layer_add_2 = [];
+var uber_layer_flag = false;
+var my_location_layer_flag = false;
+
+var update_layer = [];
 function push_user_location(){
-  const user_location_layers = [];
+  const my_location_layer = [];
   var user = firebase.auth().currentUser;
   var useruid = user.uid;
   var docRef = db.collection("users").doc(useruid);
@@ -258,7 +259,7 @@ function push_user_location(){
         var data = doc.data();
 
         var coords = [data["coordinates"]["longtitude"],data["coordinates"]["latitude"]];
-        user_location_layers.push(      
+        my_location_layer.push(      
           new deck.ScatterplotLayer({
           data: [
             {position: coords, color: [250, 0, 0], radius: 150}
@@ -294,11 +295,18 @@ function push_user_location(){
         }),
 
         )
-        var new_layer = user_location_layers.concat(mylayers);
-        layer_add_1 = user_location_layers;
-        console.log(layer_add_1)
+        // var new_layer = my_location_layer.concat(base_layer).concat(update_layer);
+        if (my_location_layer_flag != true){
+          var new_layer = my_location_layer.concat(base_layer).concat(update_layer);
+          update_layer = my_location_layer;
+        console.log(update_layer)
         deckgl.setProps({layers: new_layer});
-        return true;
+        my_location_layer_flag = true;
+        }
+        // update_layer = my_location_layer;
+        // console.log(update_layer)
+        // deckgl.setProps({layers: new_layer});
+        // return true;
     } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -309,7 +317,7 @@ function push_user_location(){
 
   // console.log(useruid)
   
-  // console.log(user_location_layers)
+  // console.log(my_location_layer)
   
 };
 
@@ -345,8 +353,14 @@ uber_layer.push(
        }    // onHover: ({object, x, y}) => {      // const tooltip = `${object.from.name} to ${object.to.name}`;      /* Update tooltip         http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object      */    // }    }),
 ))
 
-var new_layer = uber_layer.concat(mylayers).concat(layer_add_1);
-deckgl.setProps({layers: new_layer});
+//var new_layer = uber_layer.concat(base_layer).concat(update_layer);
+if (uber_layer_flag != true){
+  var new_layer = uber_layer.concat(base_layer).concat(update_layer);
+  update_layer = update_layer.concat(uber_layer);
+  deckgl.setProps({layers: new_layer});
+  uber_layer_flag = true;
+}
+
 };
 
 
@@ -394,4 +408,12 @@ function mapbox_geocoding(location){
 
   request.send()
 
+};
+
+function reset_layers(){
+update_layer = [];
+uber_layer_flag = false;
+my_location_layer_flag = false;
+var reset_layers = base_layer;
+deckgl.setProps({layers: reset_layers});
 };

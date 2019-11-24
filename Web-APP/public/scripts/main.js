@@ -373,9 +373,12 @@ function authStateObserver(user) {
     signOutButtonElement.setAttribute('hidden', 'true');
     document.getElementById("match-button").setAttribute('hidden', 'true');
 
-
+    // var backtomylayers = mylayers;
+    // deckgl.setProps({layers: backtomylayers});
+    
     // Show sign-in button.
     signInButtonElement.removeAttribute('hidden');
+    // deckgl.setProps({layers: mylayers});
   
   }
 }
