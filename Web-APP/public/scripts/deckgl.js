@@ -417,3 +417,36 @@ my_location_layer_flag = false;
 var reset_layers = base_layer;
 deckgl.setProps({layers: reset_layers});
 };
+
+function match(){
+  var user = firebase.auth().currentUser;
+  var useruid = user.uid;
+  var UserRef = db.collection("users").doc(useruid);
+  UserRef.get().then(function(doc) {
+    if (doc.exists) {
+      
+
+
+
+
+    }
+    else {
+  
+    console.log("No such document!");
+  }
+    }).catch(function(error) {
+    console.log("Error getting document:", error);
+  });
+
+
+};
+
+function click_user(){
+  Swal.fire({
+    position: 'top',
+    icon:'success',
+    background: `rgb(0,0,0,9)`,
+    text: 'testingmyclick',
+    confirmButtonColor: `rgb(0,0,0)`,
+  })
+};
