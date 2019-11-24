@@ -119,6 +119,7 @@ function updateUserProfile() {
         })
     });
     enablematchButton();
+
     // push_user_location();
     // document.getElementById("closeformbutton").removeAttribute('hidden');
     document.getElementById("updatebutton").setAttribute('hidden', 'true');
@@ -375,7 +376,7 @@ function authStateObserver(user) {
 
     // var backtomylayers = mylayers;
     // deckgl.setProps({layers: backtomylayers});
-    
+
     // Show sign-in button.
     signInButtonElement.removeAttribute('hidden');
     // deckgl.setProps({layers: mylayers});
