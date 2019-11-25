@@ -1,6 +1,7 @@
 <html>
   <head>
 
+
     <link rel="stylesheet" href="styles/main.css">
     <!-- media icon dependencies --> <!-- User Profile Card -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -16,6 +17,7 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <!-- deck.gl standalone bundle -->
     <script src="https://unpkg.com/deck.gl@^7.0.0/dist.min.js"></script>
+
     <!-- <script src="https://unpkg.com/@deck.gl/core@^7.0.0/dist.min.js"></script>
     <script src="https://unpkg.com/@deck.gl/layers@^7.0.0/dist.min.js"></script> -->
 
@@ -23,6 +25,9 @@
     <!-- Mapbox dependencies -->
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css" rel="stylesheet" />
+    <script type="text/javascript">
+      const {MapboxLayer} = deck;
+    </script>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -63,11 +68,29 @@
         <a class="mdl-navigation__link" href="">Link</a>
         <a class="mdl-navigation__link" href="">Link</a>
       </nav> -->
-
+      
        <!-- User Container -->
       <div  id="user-container" class="mdl-layout__header-row">
         <!-- <button id = "user-profile" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Profile</button> -->
         <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span>
+        <!-- <button id="demo-menu-lower-right"
+        class="mdl-button mdl-js-button mdl-button--icon" style="margin-right: 16px; color:white;">
+        <i class="material-icons">more_vert</i>
+        </button>
+          <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+              for="demo-menu-lower-right">
+            <li class="mdl-menu__item" onclick="push_user_location()">show my profile location</li>
+            <li class="mdl-menu__item">View Traffic Layer</li>
+            <li disabled class="mdl-menu__item">Disabled Action</li>
+            <li class="mdl-menu__item">Yet Another Action</li>
+          </ul> -->
+
+        <button hidden id="match-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white" onclick="openNav()">
+          " START ! "
+        </button>
+
+  
+
         <div hidden id="user-pic"></div>
         <div class="dropdown">
           <button hidden id="user-name" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white"></button>
@@ -88,6 +111,7 @@
           <i class="material-icons">account_circle</i>Sign-in with Google
         </button>
 
+
       </div>
 
     </div>
@@ -100,6 +124,40 @@
 
 
   <body>
+ 
+      <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js'></script>
+      <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css' type='text/css' />
+      <!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+      <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+      <style>
+      .geocoder {
+      position:absolute;
+      z-index:1;
+      width:30%;
+      left:50%;
+      margin-left:-25%;
+      top:20px;
+      }
+      .mapboxgl-ctrl-geocoder { min-width:100%; }
+      </style>
+       
+
+       
+
+
+  
+        
+
+
+
+
+
+
+
+
+
+
 
   <div class="form-popup" id="user-profile-form">
       <form  class="form-container" action ="" id = "user-profile-form-field"> 
@@ -140,7 +198,7 @@
         " name="destination" required>
         <!--  -->
         <button id="updatebutton" type="button" class="btn"  onclick="updateUserProfile()"><b>UPDATE !</b></button>
-        <button hidden id ="closeformbutton" type="button" class="btn cancel"  onclick="closeForm()"><b>COMPLETE & CLOSE</b></button>
+        <!-- <button hidden id ="closeformbutton" type="button" class="btn cancel"  onclick="closeForm()"><b>CLOSE</b></button> -->
       </form>
     </div>
     
@@ -173,9 +231,32 @@
 
 
     <!-- Deck.gl Container -->
-    <div id="container"></div>
+    <div id="mySidenav" class="sidenav">
+        <label class ="title">Control Panel</label>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
 
+        <a href="#" onclick="push_user_location()">show my location</a>
+        <a href="#" onclick="push_uber_data()">show traffic layer</a>
+        <a href="#" id="matchbutton" style="color:yellow" onclick="clear_previous_user_region_logs()">" test ! "</a>
+        <a href="#" id="matchbutton" style="color:green" onclick="click_user()">" Match ! "</a>
+        <a href="#" id="resetlayermbutton" style="color:lightseagreen" onclick="reset_layers()">reset</a>
+    </div>
+
+    <div id="container">
+    </div>
+
+    <script>
+        function openNav() {
+          document.getElementById("mySidenav").style.width = "250px";
+          document.getElementById("message-profile-form").style.marginLeft = "250px";
+        }
+        
+        function closeNav() {
+          document.getElementById("mySidenav").style.width = "0";
+          document.getElementById("message-profile-form").style.marginLeft = "0";
+        }
+        </script>
 
 
 
@@ -183,11 +264,11 @@
     <!-- Footer -->
     <footer id = "footercontainer" class="mdl-mini-footer">
         <div class="mdl-mini-footer__left-section">
-          <div class="mdl-logo">Project < " Hood --- Mate " > V1
+          <div class="mdl-logo" style="margin-left: 32px;margin-right: 32px;">Project < " Hood --- Mate " > V1
           </div>
           <ul class="mdl-mini-footer__link-list">
-            <li><a href="https://github.com/MUYANGGUO/6242" class="fa fa-github"> @Github</a></li>
             <li><a href="#">Privacy & Terms</a></li>
+            <li><a href="https://github.com/MUYANGGUO/6242" class="fa fa-github"> @Github</a></li>
           </ul>
         </div>
     </footer>
@@ -212,9 +293,15 @@
 
   </script>
 
+  <!-- deckgl js -->
+  <script src='/scripts/deckgl.js'>
+  </script>
+
   <script src="/scripts/main.js"></script>
-    <!-- <script src="/scripts/init-firebase.js"></script> -->
+  <script src="/scripts/pointinpolygon.js"></script>
+  <!-- <script src="/scripts/init-firebase.js"></script> -->
   <script> 
+
     var firebaseConfig = {
       apiKey: "AIzaSyAImL_fsxsMDetaRyT_7j8-QSMOOTKG63U",
       authDomain: "project-54404.firebaseapp.com",
@@ -230,129 +317,6 @@
   </script>
 </body>
 
-<script type="text/javascript">
-
-// var datacheck = d3.json(" https://data.sfgov.org/resource/wg3w-h783.json?$where=within_circle(point, 37.79, -122.45, 1000)").then(function(datacheck) {
-//     console.log(datacheck);
-//   });
-// const SFPD_json = fetch('https://data.sfgov.org/resource/wg3w-h783.json?$where=within_circle(point, 37.79, -122.45, 1000)')
-//       .then(response => response.json())
-//       .then(SFPD_json => alert(SFPD_json[10].point['coordinates']));
-
-// source: github user content raw link
-
-const Neighborhoods =
-  'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
-
-// console.log(Neighborhoods.length);
-// import React from 'React';
-// const MAPBOX_TOKEN = `${process.env.REACT_APP_MAPBOX_API_KEY}`
-// console.log(MAPBOX_TOKEN);
-
-
-// var rawbase = 'https://raw.githubusercontent.com/';
-// var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
-
-// $.getJSON(rawbase + jsonloc, function( data ) {
-//    console.log(data);
-//   //do what you want with data
-// });
-
-// const heatdata =
-//   'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/sf-bike-parking.json';
-
-const deckgl = new deck.DeckGL({
-  container: 'container',
-  // Set your Mapbox access token here
-  //Extremely Important, Create your Mapbox account, and use the API KEY generated. Fees will occur if exceeding the free tier limits
-  //////////////////////////////////////////
-  mapboxApiAccessToken: '',
-  //////////////////////////////////////////
-
-  //I have set the layer correctly with the geo info for SF, so in testing, no need to use MAPBOX to show the underlying map
-  latitude: 37.7749,
-  longitude: -122.4194,
-  zoom: 11,
-  bearing: 0,
-  pitch: 30,
-  layers: [
-    new deck.GeoJsonLayer({
-      id: 'Neighborhoods',
-      data: Neighborhoods,
-      // Styles
-      filled: true,
-      pointRadiusMinPixels: 2,
-      opacity: 1,
-      pointRadiusScale: 200,
-      getLineWidth: 20,
-      getLineColor: [128,128,128,200],
-      getElevation: 30,
-      getRadius: f => (11 - f.properties.scalerank),
-      getFillColor: [169, 169, 169, 180],
-      // Interactive props
-
-      //This is the props when you click on a region
-      pickable: true,
-      autoHighlight: true,
-      onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.city})`)
-    }),
-
-
-
-    //create scatter plot layer for proping the SFPD fetched data
-    new deck.ScatterplotLayer({
-      data: [
-        {position: [-122.402, 37.79], color: [250, 0, 0], radius: 1000}
-      ],
-      getPosition: d => d.position,
-      getRadius: d => d.radius,
-      getFillColor: d => d.color,
-      opacity: 0.3
-    }),
-    new deck.TextLayer({
-      data: [
-        {position: [-122.402, 37.79], text: 'testing'}
-      ],
-      getPosition: d => d.position,
-      getText: d => d.text,
-      getSize: 28,
-      getAngle: 0,
-      getTextAnchor: 'middle',
-      getAlignmentBaseline: 'bottom'
-    }),
-
-    // new deck.HeatmapLayer({
-    //   id: 'heatmapLayer',
-    //   data: heatdata,
-    //   getPosition: d => d.COORDINATES,
-    //   //-----// getWeight: d => d.WEIGHT    
-    // })
-
-    // new deck.IconLayer({
-    //   id: 'icon-layer',
-    //   data,
-    // pickable: true,
-    // // iconAtlas and iconMapping are required
-    // // getIcon: return a string
-    // iconAtlas: 'images/icon-atlas.png',
-    // iconMapping: ICON_MAPPING,
-    // getIcon: d => 'marker',
-
-    // sizeScale: 15,
-    // getPosition: d => d.coordinates,
-    // getSize: d => 5,
-    // getColor: d => [Math.sqrt(d.exits), 140, 0],
-    // onHover: ({object, x, y}) => {
-    //   const tooltip = `${object.name}\n${object.address}`;
-    //   /* Update tooltip
-    //      http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object
-    //   */
-    // }
-    // })
-
-  ]
-});
-</script>
 
 
 

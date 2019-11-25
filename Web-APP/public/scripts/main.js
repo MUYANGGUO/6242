@@ -19,6 +19,10 @@
 var db = firebase.firestore();
 
 
+// var loc= '579 20th st sf CA';
+// var loc_return1,loc_return2 = mapbox_geocoding(loc);
+// console.log('check')
+// console.log(loc_return1)
 // function updateUserAvatarImage(){
 //   $(document).ready(function() {
 	
@@ -37,8 +41,32 @@ var db = firebase.firestore();
 
 
 
-function updateUserProfile() {
 
+function enablematchButton(){
+  var user = firebase.auth().currentUser;
+  var uid = user.uid;
+  var docRef = db.collection("users").doc(uid);
+
+    docRef.get().then(function(doc) {
+    if (doc.exists) {
+        //console.log("Document data:", doc.data());
+        document.getElementById("match-button").removeAttribute('hidden');
+        // push_user_location();
+        
+    } else {
+        console.log("User has not updated the profile in database!");
+    }
+}).catch(function(error) {
+    console.log("Error getting document:", error);
+});
+
+};
+
+
+
+async function updateUserProfile() {
+  var result = await clear_previous_user_region_logs();
+  console.log(result);
   var empty = false;
   $('input[type="text"]').each(function(){
     //check all the input text field except the message box text field
@@ -53,7 +81,7 @@ function updateUserProfile() {
     console.log('all fields checked');
     var user = firebase.auth().currentUser;
     var username, useremail, userphotoUrl, useruid;
-    
+
     if (user != null) {
       username = user.displayName;
       useremail = user.email;
@@ -65,6 +93,7 @@ function updateUserProfile() {
     var usergender = $("#radiodivgender input[type='radio']:checked").val();
     var useridentity = $("#radiodividentity input[type='radio']:checked").val();
     var userlocation = $("#location-input-field").val();
+
     db.collection("users").doc(useruid).set({
       name: userprofilename,
       gender:usergender,
@@ -74,7 +103,11 @@ function updateUserProfile() {
       email:useremail,
     })
     .then(function() {
-        console.log("Document successfully written!");
+        console.log("User basic info successfully written!");
+        mapbox_geocoding(userlocation);
+
+     
+        
     })
     .catch(function(error) {
         console.error("Error writing document: ", error);
@@ -86,16 +119,19 @@ function updateUserProfile() {
           confirmButtonColor: `rgb(0,0,0)`,
         })
     });
+    enablematchButton();
 
-    document.getElementById("closeformbutton").removeAttribute('hidden');
+    // push_user_location();
+    // document.getElementById("closeformbutton").removeAttribute('hidden');
     document.getElementById("updatebutton").setAttribute('hidden', 'true');
     Swal.fire({
       position: 'top',
       icon:'success',
       background: `rgb(0,0,0,9)`,
-      text: 'Profile updated! Please finish by clicking the COMPLETE & CLOSE button.',
+      text: 'Profile updated!',
       confirmButtonColor: `rgb(0,0,0)`,
     })
+    closeForm();
   }
   else{
       Swal.fire({
@@ -191,11 +227,12 @@ function openForm() {
 function closeForm() {
     document.getElementById("user-profile-form").style.display = "none";
     document.getElementById("updatebutton").removeAttribute('hidden');
-    document.getElementById("closeformbutton").setAttribute('hidden', 'true');
+    // document.getElementById("closeformbutton").setAttribute('hidden', 'true');
     document.getElementById("user-profile-form-field").reset(); 
     document.getElementById("host-field").setAttribute('hidden', 'true');
     document.getElementById("destination-field").setAttribute('hidden', 'true');
     document.getElementById("location-input-field").setAttribute('hidden', 'true');
+
   }
 
 function openMessage() {
@@ -361,9 +398,15 @@ function authStateObserver(user) {
     userPicElement.removeAttribute('hidden');
     signOutButtonElement.removeAttribute('hidden');
 
+    // if userid exist enable the match button
+    enablematchButton();
+    // push_user_location();
+
+
     // Hide sign-in button.
     signInButtonElement.setAttribute('hidden', 'true');
 
+  
 
     // We save the Firebase Messaging Device token and enable notifications.
     saveMessagingDeviceToken();
@@ -373,9 +416,15 @@ function authStateObserver(user) {
     dropdownArrowElement.setAttribute('hidden', 'true');
     userPicElement.setAttribute('hidden', 'true');
     signOutButtonElement.setAttribute('hidden', 'true');
+    document.getElementById("match-button").setAttribute('hidden', 'true');
+
+    // var backtomylayers = mylayers;
+    // deckgl.setProps({layers: backtomylayers});
 
     // Show sign-in button.
     signInButtonElement.removeAttribute('hidden');
+    // deckgl.setProps({layers: mylayers});
+  
   }
 }
 
@@ -539,7 +588,6 @@ var signInButtonElement = document.getElementById('sign-in');
 var signOutButtonElement = document.getElementById('sign-out');
 var signInSnackbarElement = document.getElementById('must-signin-snackbar');
 var profilepicbeforeuploadElement = document.getElementById("profile-pic-before-upload");
-
 
 signOutButtonElement.addEventListener('click', signOut);
 signInButtonElement.addEventListener('click', signIn);
