@@ -395,8 +395,9 @@ function mapbox_geocoding(location){
           })
           .then(function() {
           console.log("successfully updated user location lat/long to database!");
-          push_user_location();
           update_user_region(longtitude,latitude)
+          my_location_layer_flag = false;
+          push_user_location();
           })
           .catch(function(error) {
         // The document probably doesn't exist.
@@ -408,6 +409,7 @@ function mapbox_geocoding(location){
   }
 
   request.send()
+
 
 };
 

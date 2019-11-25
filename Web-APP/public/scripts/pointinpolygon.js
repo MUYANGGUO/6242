@@ -1,3 +1,21 @@
+// function resolveAfter2Seconds() {
+//     return new Promise(resolve => {
+//       setTimeout(() => {
+//         resolve('resolved');
+//       }, 2000);
+//     });
+//   }
+  
+// async function asyncCall() {
+//     console.log('calling');
+//     var result = await get_user_identity();
+//     console.log(result);
+//     // expected output: 'resolved'
+//   }
+  
+ 
+  
+
 //write region data to database
 // Note this script is only run by once, to automatically load the regions to firestore datase
 // var rawbase = 'https://raw.githubusercontent.com/';
@@ -46,11 +64,51 @@
 // });
 
 
+function clear_previous_user_region_logs(){
+    var user = firebase.auth().currentUser;
+    var useruid;
+    
+    if (user != null) {
+      useruid = user.uid;  // The user's ID, unique to the Firebase project.
+    }
+    var docRef = db.collection("users").doc(useruid);
+
+    docRef.get().then(function(doc) {
+        if (doc.exists) {
+            console.log("Document data:", doc.data());
+            var data = doc.data();
+            var regionid = data["region"];
+            var useridentity = data["type"]
+            
+            var regionRef = db.collection("regions").doc(regionid).collection(useridentity).doc(useruid);
+            regionRef.delete().then(function() {
+                console.log("Document successfully deleted!");
+
+
+            }).catch(function(error) {
+                console.error("Error removing document: ", error);
+            });
+            
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
+
+    return new Promise(resolve => {
+        setTimeout(() => {
+          resolve('resolved');
+        }, 1000);
+      });
+};
 
 
 // The deploying codes here:
 
 function update_user_region (long,lat) {  
+    // clear_previous_user_region_logs();
     var rawbase = 'https://raw.githubusercontent.com/';
     var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
 
@@ -78,10 +136,11 @@ function update_user_region (long,lat) {
             var user = firebase.auth().currentUser;
             var useruid;
             if (user != null) {
-            useruid = user.uid;  // The user's ID, unique to the Firebase project.
+            useruid = user.uid; 
+            // The user's ID, unique to the Firebase project.
             }
             var regionRef = db.collection("regions").doc(regionid);
-            regionRef.collection("hosts").doc(useruid).set({
+            regionRef.collection("landlord").doc(useruid).set({
             uid: useruid,
         })
         .then(function() {

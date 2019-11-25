@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+
+
 var db = firebase.firestore();
 
 
@@ -62,8 +64,9 @@ function enablematchButton(){
 
 
 
-function updateUserProfile() {
-
+async function updateUserProfile() {
+  var result = await clear_previous_user_region_logs();
+  console.log(result);
   var empty = false;
   $('input[type="text"]').each(function(){
     //check all the input text field except the message box text field
@@ -91,9 +94,6 @@ function updateUserProfile() {
     var useridentity = $("#radiodividentity input[type='radio']:checked").val();
     var userlocation = $("#location-input-field").val();
 
-    
-
-
     db.collection("users").doc(useruid).set({
       name: userprofilename,
       gender:usergender,
@@ -105,6 +105,7 @@ function updateUserProfile() {
     .then(function() {
         console.log("User basic info successfully written!");
         mapbox_geocoding(userlocation);
+
      
         
     })
