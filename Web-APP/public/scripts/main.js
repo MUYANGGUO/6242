@@ -13,9 +13,238 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
 
-// Signs-in Friendly Chat.
+
+
+var db = firebase.firestore();
+
+
+// var loc= '579 20th st sf CA';
+// var loc_return1,loc_return2 = mapbox_geocoding(loc);
+// console.log('check')
+// console.log(loc_return1)
+// function updateUserAvatarImage(){
+//   $(document).ready(function() {
+	
+//   var readURL = function(input) {
+//       if (input.files && input.files[0]) {
+//           var reader = new FileReader();
+
+//           reader.onload = function (e) {
+//               $('.profile-pic').attr('src', e.target.result);
+//           }
+  
+//           reader.readAsDataURL(input.files[0]);
+//       }
+//   }
+// };
+
+
+
+
+function enablematchButton(){
+  var user = firebase.auth().currentUser;
+  var uid = user.uid;
+  var docRef = db.collection("users").doc(uid);
+
+    docRef.get().then(function(doc) {
+    if (doc.exists) {
+        //console.log("Document data:", doc.data());
+        document.getElementById("match-button").removeAttribute('hidden');
+        // push_user_location();
+        
+    } else {
+        console.log("User has not updated the profile in database!");
+    }
+}).catch(function(error) {
+    console.log("Error getting document:", error);
+});
+
+};
+
+
+
+async function updateUserProfile() {
+  var result = await clear_previous_user_region_logs();
+  console.log(result);
+  var empty = false;
+  $('input[type="text"]').each(function(){
+    //check all the input text field except the message box text field
+    if($(this).val() =="" && (this.id != "message")){
+        // $(this).addClass("alert-field");
+        empty =true;
+        return true;
+      }
+  });
+
+  if(empty != true){
+    console.log('all fields checked');
+    var user = firebase.auth().currentUser;
+    var username, useremail, userphotoUrl, useruid;
+
+    if (user != null) {
+      username = user.displayName;
+      useremail = user.email;
+      userphotoUrl = user.photoURL;
+      useruid = user.uid;  // The user's ID, unique to the Firebase project.
+    }
+    
+    var userprofilename = $("#form-user-name").val();
+    var usergender = $("#radiodivgender input[type='radio']:checked").val();
+    var useridentity = $("#radiodividentity input[type='radio']:checked").val();
+    var userlocation = $("#location-input-field").val();
+
+    db.collection("users").doc(useruid).set({
+      name: userprofilename,
+      gender:usergender,
+      id: useruid,
+      type: useridentity,
+      location: userlocation,
+      email:useremail,
+    })
+    .then(function() {
+        console.log("User basic info successfully written!");
+        mapbox_geocoding(userlocation);
+
+     
+        
+    })
+    .catch(function(error) {
+        console.error("Error writing document: ", error);
+        Swal.fire({
+          position: 'top',
+          icon:'error',
+          background: `rgb(0,0,0,9)`,
+          text: 'Server Error',
+          confirmButtonColor: `rgb(0,0,0)`,
+        })
+    });
+    enablematchButton();
+
+    // push_user_location();
+    // document.getElementById("closeformbutton").removeAttribute('hidden');
+    document.getElementById("updatebutton").setAttribute('hidden', 'true');
+    Swal.fire({
+      position: 'top',
+      icon:'success',
+      background: `rgb(0,0,0,9)`,
+      text: 'Profile updated!',
+      confirmButtonColor: `rgb(0,0,0)`,
+    })
+    closeForm();
+  }
+  else{
+      Swal.fire({
+        position: 'top',
+        icon: 'warning',
+        background: `rgb(0,0,0,0.9)`,
+        text: 'Please fill in all the profile inputs ...',
+        confirmButtonColor: `rgb(0,0,0)`,
+      })
+  }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+'use strict';
+//drag and drop
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+  console.log('check');
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+  console.log("check");
+}
+//drag and drop//
+
+
+// user avatar image
+$(document).ready(function() {
+	
+  var readURL = function(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $('.profile-pic').attr('src', e.target.result);
+          }
+  
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+ 
+  $(".file-upload").on('change', function(){
+      readURL(this);
+  });
+  
+  $(".upload-button").on('click', function() {
+     $(".file-upload").click();
+  });
+});
+// user avatar image//
+
+
+
+// identity selection check//
+
+function yesnoCheck(that) {
+    if (that.value == "tenant") {
+        document.getElementById("destination-field").removeAttribute('hidden');
+        document.getElementById("host-field").setAttribute('hidden', 'true');
+        document.getElementById("location-input-field").removeAttribute('hidden');
+        
+    } else {
+        document.getElementById("host-field").removeAttribute('hidden');
+        document.getElementById("destination-field").setAttribute('hidden', 'true');
+        document.getElementById("location-input-field").removeAttribute('hidden');
+
+    }
+}
+
+function openForm() {
+    document.getElementById("user-profile-form").style.display = "block";
+
+  }
+
+  
+function closeForm() {
+    document.getElementById("user-profile-form").style.display = "none";
+    document.getElementById("updatebutton").removeAttribute('hidden');
+    // document.getElementById("closeformbutton").setAttribute('hidden', 'true');
+    document.getElementById("user-profile-form-field").reset(); 
+    document.getElementById("host-field").setAttribute('hidden', 'true');
+    document.getElementById("destination-field").setAttribute('hidden', 'true');
+    document.getElementById("location-input-field").setAttribute('hidden', 'true');
+
+  }
+
+function openMessage() {
+    document.getElementById("message-profile-form").style.display = "block";
+
+}
+
+function closeMessage() {
+  document.getElementById("message-profile-form").style.display = "none";
+}
+
+
 function signIn() {
   // Sign into Firebase using popup auth & Google as the identity provider.
   var provider = new firebase.auth.GoogleAuthProvider();
@@ -24,6 +253,7 @@ function signIn() {
 // Signs-out of Friendly Chat.
 function signOut() {
   // Sign out of Firebase.
+  document.getElementById("user-profile-form").style.display = "none";
   firebase.auth().signOut();
 }
 // Initiate firebase auth.
@@ -71,41 +301,41 @@ function requestNotificationsPermissions() {
   // TODO 11: Request permissions to send notifications.
 }
 
-// Triggered when a file is selected via the media picker.
-function onMediaFileSelected(event) {
-  event.preventDefault();
-  var file = event.target.files[0];
+// // Triggered when a file is selected via the media picker.
+// function onMediaFileSelected(event) {
+//   event.preventDefault();
+//   var file = event.target.files[0];
 
-  // Clear the selection in the file picker input.
-  imageFormElement.reset();
+//   // Clear the selection in the file picker input.
+//   imageFormElement.reset();
 
-  // Check if the file is an image.
-  if (!file.type.match('image.*')) {
-    var data = {
-      message: 'You can only share images',
-      timeout: 2000
-    };
-    signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
-    return;
-  }
-  // Check if the user is signed-in
-  if (checkSignedInWithMessage()) {
-    saveImageMessage(file);
-  }
-}
+//   // Check if the file is an image.
+//   if (!file.type.match('image.*')) {
+//     var data = {
+//       message: 'You can only share images',
+//       timeout: 2000
+//     };
+//     signInSnackbarElement.MaterialSnackbar.showSnackbar(data);
+//     return;
+//   }
+//   // Check if the user is signed-in
+//   if (checkSignedInWithMessage()) {
+//     saveImageMessage(file);
+//   }
+// }
 
-// Triggered when the send new message form is submitted.
-function onMessageFormSubmit(e) {
-  e.preventDefault();
-  // Check that the user entered a message and is signed in.
-  if (messageInputElement.value && checkSignedInWithMessage()) {
-    saveMessage(messageInputElement.value).then(function() {
-      // Clear message text field and re-enable the SEND button.
-      resetMaterialTextfield(messageInputElement);
-      toggleButton();
-    });
-  }
-}
+// // Triggered when the send new message form is submitted.
+// function onMessageFormSubmit(e) {
+//   e.preventDefault();
+//   // Check that the user entered a message and is signed in.
+//   if (messageInputElement.value && checkSignedInWithMessage()) {
+//     saveMessage(messageInputElement.value).then(function() {
+//       // Clear message text field and re-enable the SEND button.
+//       resetMaterialTextfield(messageInputElement);
+//       toggleButton();
+//     });
+//   }
+// }
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
 function authStateObserver(user) {
@@ -116,26 +346,42 @@ function authStateObserver(user) {
 
     // Set the user's profile pic and name.
     userPicElement.style.backgroundImage = 'url(' + addSizeToGoogleProfilePic(profilePicUrl) + ')';
+    profilepicbeforeuploadElement.style.backgroundImage = 'url(' +profilePicUrl + ')';
     userNameElement.textContent = userName;
 
     // Show user's profile and sign-out button.
     userNameElement.removeAttribute('hidden');
+    dropdownArrowElement.removeAttribute('hidden');
     userPicElement.removeAttribute('hidden');
     signOutButtonElement.removeAttribute('hidden');
 
+    // if userid exist enable the match button
+    enablematchButton();
+    // push_user_location();
+
+
     // Hide sign-in button.
     signInButtonElement.setAttribute('hidden', 'true');
+
+  
 
     // We save the Firebase Messaging Device token and enable notifications.
     saveMessagingDeviceToken();
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
     userNameElement.setAttribute('hidden', 'true');
+    dropdownArrowElement.setAttribute('hidden', 'true');
     userPicElement.setAttribute('hidden', 'true');
     signOutButtonElement.setAttribute('hidden', 'true');
+    document.getElementById("match-button").setAttribute('hidden', 'true');
+
+    // var backtomylayers = mylayers;
+    // deckgl.setProps({layers: backtomylayers});
 
     // Show sign-in button.
     signInButtonElement.removeAttribute('hidden');
+    // deckgl.setProps({layers: mylayers});
+  
   }
 }
 
@@ -177,98 +423,11 @@ function addSizeToGoogleProfilePic(url) {
   return url;
 }
 
+
+
 // A loading image URL.
 var LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
 
-// Delete a Message from the UI.
-// function deleteMessage(id) {
-//   var div = document.getElementById(id);
-//   // If an element for that message exists we delete it.
-//   if (div) {
-//     div.parentNode.removeChild(div);
-//   }
-// }
-
-// function createAndInsertMessage(id, timestamp) {
-//   const container = document.createElement('div');
-//   container.innerHTML = MESSAGE_TEMPLATE;
-//   const div = container.firstChild;
-//   div.setAttribute('id', id);
-
-  // If timestamp is null, assume we've gotten a brand new message.
-  // https://stackoverflow.com/a/47781432/4816918
-//   timestamp = timestamp ? timestamp.toMillis() : Date.now();
-//   div.setAttribute('timestamp', timestamp);
-
-  // figure out where to insert new message
-//   const existingMessages = messageListElement.children;
-//   if (existingMessages.length === 0) {
-//     messageListElement.appendChild(div);
-//   } else {
-//     let messageListNode = existingMessages[0];
-
-//     while (messageListNode) {
-//       const messageListNodeTime = messageListNode.getAttribute('timestamp');
-
-//       if (!messageListNodeTime) {
-//         throw new Error(
-//           `Child ${messageListNode.id} has no 'timestamp' attribute`
-//         );
-//       }
-
-//       if (messageListNodeTime > timestamp) {
-//         break;
-//       }
-
-//       messageListNode = messageListNode.nextSibling;
-//     }
-
-//     messageListElement.insertBefore(div, messageListNode);
-//   }
-
-//   return div;
-// }
-
-// Displays a Message in the UI.
-// function displayMessage(id, timestamp, name, text, picUrl, imageUrl) {
-//   var div = document.getElementById(id) || createAndInsertMessage(id, timestamp);
-
-//   // profile picture
-//   if (picUrl) {
-//     div.querySelector('.pic').style.backgroundImage = 'url(' + addSizeToGoogleProfilePic(picUrl) + ')';
-//   }
-
-//   div.querySelector('.name').textContent = name;
-//   var messageElement = div.querySelector('.message');
-
-//   if (text) { // If the message is text.
-//     messageElement.textContent = text;
-//     // Replace all line breaks by <br>.
-//     messageElement.innerHTML = messageElement.innerHTML.replace(/\n/g, '<br>');
-//   } else if (imageUrl) { // If the message is an image.
-//     var image = document.createElement('img');
-//     image.addEventListener('load', function() {
-//       messageListElement.scrollTop = messageListElement.scrollHeight;
-//     });
-//     image.src = imageUrl + '&' + new Date().getTime();
-//     messageElement.innerHTML = '';
-//     messageElement.appendChild(image);
-//   }
-//   // Show the card fading-in and scroll to view the new message.
-//   setTimeout(function() {div.classList.add('visible')}, 1);
-//   messageListElement.scrollTop = messageListElement.scrollHeight;
-//   messageInputElement.focus();
-// }
-
-// // Enables or disables the submit button depending on the values of the input
-// // fields.
-// function toggleButton() {
-//   if (messageInputElement.value) {
-//     submitButtonElement.removeAttribute('disabled');
-//   } else {
-//     submitButtonElement.setAttribute('disabled', 'true');
-//   }
-// }
 
 // Checks that the Firebase SDK has been correctly setup and configured.
 function checkSetup() {
@@ -292,35 +451,22 @@ var imageFormElement = document.getElementById('image-form');
 var mediaCaptureElement = document.getElementById('mediaCapture');
 var userPicElement = document.getElementById('user-pic');
 var userNameElement = document.getElementById('user-name');
+var dropdownArrowElement = document.getElementById('dropdown-arrow');
 var signInButtonElement = document.getElementById('sign-in');
 var signOutButtonElement = document.getElementById('sign-out');
 var signInSnackbarElement = document.getElementById('must-signin-snackbar');
+var profilepicbeforeuploadElement = document.getElementById("profile-pic-before-upload");
 
-// Saves message on form submit.
-//messageFormElement.addEventListener('submit', onMessageFormSubmit);
 signOutButtonElement.addEventListener('click', signOut);
 signInButtonElement.addEventListener('click', signIn);
-
-// Toggle for the button.
-// messageInputElement.addEventListener('keyup', toggleButton);
-// messageInputElement.addEventListener('change', toggleButton);
-
-// Events for image upload.
-// imageButtonElement.addEventListener('click', function(e) {
-//   e.preventDefault();
-//   mediaCaptureElement.click();
-// });
-// mediaCaptureElement.addEventListener('change', onMediaFileSelected);
 
 // initialize Firebase
 initFirebaseAuth();
 
-// Remove the warning about timstamps change. 
-var firestore = firebase.firestore();
-var settings = {timestampsInSnapshots: true};
-firestore.settings(settings);
 
-// TODO: Enable Firebase Performance Monitoring.
+// var firestore = firebase.firestore();
 
-// We load currently existing chat messages and listen to new ones.
-loadMessages();
+
+// var settings = {timestampsInSnapshots: true};
+// firestore.settings(settings);
+

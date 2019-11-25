@@ -13,10 +13,359 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ body {margin: 0; padding: 0;background-color:grey;}
+ #container {width: 100vw; height:88vh;}
+ 
+ #footercontainer{ position: absolute;
+  bottom: 0;
+  right: 0px;
 
+  width: 100%;
+  height: 30px;
+  background-color:black;
+  opacity: 0.7;
+  padding-top: 4 !important;
+  padding-bottom: 16 !important;
+}
+
+#header-title{
+  color:white;
+}
  html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
 }
+#user-container {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  top: 4px;
+  width: 100%;
+  right: 0;
+  padding-left: 10px;
+  justify-content: flex-end;
+  padding-right: 30px;
+  background-color:rgba(0, 0, 0, 0.7) !important;
+}
+#user-container #header-title {
+  top: -3px;
+  position: absolute;
+  display: inline-block;
+  background-repeat: no-repeat;
+  margin-left:0;
+  left:16;
+  background-position-x: 0%;
+}
+#user-container #user-pic {
+  top: -3px;
+  position: relative;
+  display: inline-block;
+  background-image: url('/images/profile_placeholder.png');
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: 40px;
+  border-radius: 20px;
+}
+#user-container #user-name {
+  font-size: 18px;
+  line-height: 36px;
+  padding-right: 10px;
+  padding-left: 20px;
+}
+
+#user-container #match-button {
+  font-size: 18px;
+  line-height: 36px;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-right: 40px;
+  background-color: green !important;
+}
+#user-container #sign-in {
+  font-size: 18px;
+  line-height: 36px;
+  padding-right: 10px;
+  padding-left: 20px;
+}
+#user-container #sign-out {
+  font-size: 18px;
+  line-height: 36px;
+  padding-right: 10px;
+  padding-left: 20px;
+  color: darkgrey !important;
+}
+
+
+/*Dropdown class settings */
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown b{
+  display: -webkit-inline-box;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 12px solid white;
+}
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color:#191919;
+  opacity: 0.8;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: black;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+/* popup form settings */
+.alert-field {
+  color: red;
+  border-color: red;
+}
+
+
+
+.form-popup {
+  display: none;
+  position: fixed;float:right;;
+  bottom: 60;
+  top:60;
+  right: 30;
+  border: none;
+  z-index: 1;
+  margin-left:100px;
+  margin-top: 100px;
+  margin-right:0px;
+  width: 300px;
+
+}
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: black;
+  opacity: 0.8;
+  color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: white;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  font-size: 14px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.7;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: cornflowerblue;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+
+.close {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.5;
+  margin-left: 4px;
+  border-left-style: solid;
+  border-left-width: 6px;
+  border-right-width: 6px;
+  border-right-style: solid;
+  border-bottom-width: 0px;
+  border-bottom-style: solid;
+  border-top-width: 0px;
+  border-top-style: solid;
+  border-color: transparent;
+
+}
+.close:hover {
+  opacity: 1;
+}
+.close:before, .close:after {
+  position: absolute;
+  left: 4px;
+  content: ' ';
+  height: 32px;
+  width: 2px;
+  top: 0px;
+  bottom:0px;
+  margin-left: 4px;
+
+
+  background-color: black;
+  /* bacground-color: blue; */
+
+}
+.close:before {
+  
+  transform: rotate(45deg);
+}
+.close:after {
+ 
+  transform: rotate(-45deg);
+}
+
+
+
+.notification {
+  text-decoration: none;
+  padding: 15px 32px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  opacity: 0.9;
+  color: white;
+}
+
+
+
+
+/* alert text CSS */
+.swal2-content{
+  color:white !important;
+}
+
+
+
+
+
+
+
+
+.avatar-wrapper :hover{
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.avatar-wrapper{
+	position: relative;
+	height: 150px;
+	width: 150px;
+	margin: 10px auto;
+	border-radius: 50%;
+	overflow: hidden;
+	box-shadow: 1px 1px 15px -5px black;
+  transition: all .3s ease;
+
+  }
+  
+	:hover .profile-pic{
+		opacity: .5;
+  }
+  .profile-pic :after{
+    content: "\f007";
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    font-size: 190px;
+    background: black;
+    color: black;
+    text-align: center;
+  }
+	.profile-pic {
+    top: 0; left: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    font-size: 150px;
+    transition: all .3s ease;
+    background-size:cover;
+  }
+  .upload-button:hover .fa-arrow-circle-up{
+    opacity: .9;
+  }
+  .upload-button .fa-arrow-circle-up{
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    font-size: 150px;
+    top: 0;
+    left: 0;
+    text-align: center;
+    opacity: 0;
+    transition: all .3s ease;
+    color:white;
+  }
+	.upload-button {
+		position: absolute;
+		top: 0; left: 0;
+		height: 100%;
+		width: 100%;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 main, #messages-card {
   height: 100%;
   padding-bottom: 0;
@@ -29,8 +378,8 @@ main, #messages-card {
   margin-top: 15px;
 }
 .mdl-layout__header-row span {
-  margin-left: 15px;
-  margin-top: 17px;
+  margin-left: 16px;
+  margin-top: 16px;
 }
 .mdl-grid {
   max-width: 1024px;
@@ -134,34 +483,7 @@ main, #messages-card {
   right: 0;
   font-size: 40px !important;
 }
-#user-container {
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-  top: 4px;
-  width: 100%;
-  right: 0;
-  padding-left: 10px;
-  justify-content: flex-end;
-  padding-right: 30px;
-}
-#user-container #user-pic {
-  top: -3px;
-  position: relative;
-  display: inline-block;
-  background-image: url('/images/profile_placeholder.png');
-  background-repeat: no-repeat;
-  width: 40px;
-  height: 40px;
-  background-size: 40px;
-  border-radius: 20px;
-}
-#user-container #user-name {
-  font-size: 18px;
-  line-height: 36px;
-  padding-right: 10px;
-  padding-left: 20px;
-}
+
 #image-form #submitImage {
   width: auto;
   padding: 0 6px 0 1px;
@@ -205,4 +527,53 @@ main, #messages-card {
 .mdl-button .material-icons {
   top: -1px;
   margin-right: 5px;
+}
+
+
+.sidenav {
+  height: 40%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 80;
+  left: 0;
+  background-color: black;
+  overflow-x: hidden;
+  transition: 0.1s;
+  padding-top: 60px;
+  opacity: 0.8;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  transition: 0.1s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.sidenav .title {
+  position: absolute;
+  top: 12;
+  left: 10px;
+  font-size: 24px;
+  margin-right: 10px;
+  color:white;
+}
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
 }
