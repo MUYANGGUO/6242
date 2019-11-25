@@ -6,16 +6,33 @@
 //     });
 //   }
   
-// async function asyncCall() {
-//     console.log('calling');
-//     var result = await get_user_identity();
-//     console.log(result);
-//     // expected output: 'resolved'
-//   }
-  
- 
+async function asyncCall() {
+    console.log('calling');
+    var result = await get_user_identity();
+    console.log(result);
+    // expected output: 'resolved'
+  }
   
 
+function get_user_identity(){
+    var user = firebase.auth().currentUser;
+    var useruid;
+
+    if (user != null) {
+      useruid = user.uid; 
+      var docRef = db.collection("users").doc(useruid); // The user's ID, unique to the Firebase project.
+      console.log(useruid)
+      
+    }
+
+
+    return new Promise(resolve => {
+        setTimeout(() => {
+          resolve("resolved");
+        }, 1000);
+      });
+}
+// asyncCall();
 //write region data to database
 // Note this script is only run by once, to automatically load the regions to firestore datase
 // var rawbase = 'https://raw.githubusercontent.com/';
@@ -70,6 +87,7 @@ function clear_previous_user_region_logs(){
     
     if (user != null) {
       useruid = user.uid;  // The user's ID, unique to the Firebase project.
+    
     }
     var docRef = db.collection("users").doc(useruid);
 
