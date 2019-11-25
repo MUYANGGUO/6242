@@ -1,6 +1,7 @@
 <html>
   <head>
-    
+
+
     <link rel="stylesheet" href="styles/main.css">
     <!-- media icon dependencies --> <!-- User Profile Card -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -67,14 +68,29 @@
         <a class="mdl-navigation__link" href="">Link</a>
         <a class="mdl-navigation__link" href="">Link</a>
       </nav> -->
-
+      
        <!-- User Container -->
       <div  id="user-container" class="mdl-layout__header-row">
         <!-- <button id = "user-profile" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Profile</button> -->
         <span id ="header-title" class="mdl-layout-title">"Hood---Mate"</span>
-        <button hidden id="match-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
-          " MATCH ! "
+        <!-- <button id="demo-menu-lower-right"
+        class="mdl-button mdl-js-button mdl-button--icon" style="margin-right: 16px; color:white;">
+        <i class="material-icons">more_vert</i>
         </button>
+          <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+              for="demo-menu-lower-right">
+            <li class="mdl-menu__item" onclick="push_user_location()">show my profile location</li>
+            <li class="mdl-menu__item">View Traffic Layer</li>
+            <li disabled class="mdl-menu__item">Disabled Action</li>
+            <li class="mdl-menu__item">Yet Another Action</li>
+          </ul> -->
+
+        <button hidden id="match-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white" onclick="openNav()">
+          " START ! "
+        </button>
+
+  
+
         <div hidden id="user-pic"></div>
         <div class="dropdown">
           <button hidden id="user-name" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white"></button>
@@ -130,7 +146,8 @@
        
 
 
-
+  
+        
 
 
 
@@ -181,7 +198,7 @@
         " name="destination" required>
         <!--  -->
         <button id="updatebutton" type="button" class="btn"  onclick="updateUserProfile()"><b>UPDATE !</b></button>
-        <button hidden id ="closeformbutton" type="button" class="btn cancel"  onclick="closeForm()"><b>CLOSE</b></button>
+        <!-- <button hidden id ="closeformbutton" type="button" class="btn cancel"  onclick="closeForm()"><b>CLOSE</b></button> -->
       </form>
     </div>
     
@@ -214,11 +231,32 @@
 
 
     <!-- Deck.gl Container -->
-    <div id="container">
-    
+    <div id="mySidenav" class="sidenav">
+        <label class ="title">Control Panel</label>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+
+        <a href="#" onclick="push_user_location()">show my location</a>
+        <a href="#" onclick="push_uber_data()">show traffic layer</a>
+        <a href="#" id="matchbutton" style="color:yellow" onclick="clear_previous_user_region_logs()">" test ! "</a>
+        <a href="#" id="matchbutton" style="color:green" onclick="click_user()">" Match ! "</a>
+        <a href="#" id="resetlayermbutton" style="color:lightseagreen" onclick="reset_layers()">reset</a>
     </div>
 
+    <div id="container">
+    </div>
 
+    <script>
+        function openNav() {
+          document.getElementById("mySidenav").style.width = "250px";
+          document.getElementById("message-profile-form").style.marginLeft = "250px";
+        }
+        
+        function closeNav() {
+          document.getElementById("mySidenav").style.width = "0";
+          document.getElementById("message-profile-form").style.marginLeft = "0";
+        }
+        </script>
 
 
 
@@ -256,9 +294,11 @@
   </script>
 
   <!-- deckgl js -->
-  <script src='/scripts/deckgl.js'></script>
+  <script src='/scripts/deckgl.js'>
+  </script>
 
   <script src="/scripts/main.js"></script>
+  <script src="/scripts/pointinpolygon.js"></script>
   <!-- <script src="/scripts/init-firebase.js"></script> -->
   <script> 
 

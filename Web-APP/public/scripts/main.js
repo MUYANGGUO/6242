@@ -19,22 +19,10 @@
 var db = firebase.firestore();
 
 
-
-function mapbox_geocoding(){
-
-var request = new XMLHttpRequest()
-
-// Open a new connection, using the GET request on the URL endpoint
-request.open('GET', 'https://ghibliapi.herokuapp.com/films', true)
-
-request.onload = function() {
-  // Begin accessing JSON data here
-}
-
-// Send request
-request.send()
-};
-
+// var loc= '579 20th st sf CA';
+// var loc_return1,loc_return2 = mapbox_geocoding(loc);
+// console.log('check')
+// console.log(loc_return1)
 // function updateUserAvatarImage(){
 //   $(document).ready(function() {
 	
@@ -51,6 +39,9 @@ request.send()
 //   }
 // };
 
+
+
+
 function enablematchButton(){
   var user = firebase.auth().currentUser;
   var uid = user.uid;
@@ -58,9 +49,10 @@ function enablematchButton(){
 
     docRef.get().then(function(doc) {
     if (doc.exists) {
-        console.log("Document data:", doc.data());
+        //console.log("Document data:", doc.data());
         document.getElementById("match-button").removeAttribute('hidden');
-
+        // push_user_location();
+        
     } else {
         console.log("User has not updated the profile in database!");
     }
@@ -72,8 +64,9 @@ function enablematchButton(){
 
 
 
-function updateUserProfile() {
-
+async function updateUserProfile() {
+  var result = await clear_previous_user_region_logs();
+  console.log(result);
   var empty = false;
   $('input[type="text"]').each(function(){
     //check all the input text field except the message box text field
@@ -100,6 +93,7 @@ function updateUserProfile() {
     var usergender = $("#radiodivgender input[type='radio']:checked").val();
     var useridentity = $("#radiodividentity input[type='radio']:checked").val();
     var userlocation = $("#location-input-field").val();
+
     db.collection("users").doc(useruid).set({
       name: userprofilename,
       gender:usergender,
@@ -109,7 +103,10 @@ function updateUserProfile() {
       email:useremail,
     })
     .then(function() {
-        console.log("Document successfully written!");
+        console.log("User basic info successfully written!");
+        mapbox_geocoding(userlocation);
+
+     
         
     })
     .catch(function(error) {
@@ -123,15 +120,18 @@ function updateUserProfile() {
         })
     });
     enablematchButton();
-    document.getElementById("closeformbutton").removeAttribute('hidden');
+
+    // push_user_location();
+    // document.getElementById("closeformbutton").removeAttribute('hidden');
     document.getElementById("updatebutton").setAttribute('hidden', 'true');
     Swal.fire({
       position: 'top',
       icon:'success',
       background: `rgb(0,0,0,9)`,
-      text: 'Profile updated! Please finish by clicking the CLOSE button.',
+      text: 'Profile updated!',
       confirmButtonColor: `rgb(0,0,0)`,
     })
+    closeForm();
   }
   else{
       Swal.fire({
@@ -227,7 +227,7 @@ function openForm() {
 function closeForm() {
     document.getElementById("user-profile-form").style.display = "none";
     document.getElementById("updatebutton").removeAttribute('hidden');
-    document.getElementById("closeformbutton").setAttribute('hidden', 'true');
+    // document.getElementById("closeformbutton").setAttribute('hidden', 'true');
     document.getElementById("user-profile-form-field").reset(); 
     document.getElementById("host-field").setAttribute('hidden', 'true');
     document.getElementById("destination-field").setAttribute('hidden', 'true');
@@ -357,6 +357,7 @@ function authStateObserver(user) {
 
     // if userid exist enable the match button
     enablematchButton();
+    // push_user_location();
 
 
     // Hide sign-in button.
@@ -374,9 +375,12 @@ function authStateObserver(user) {
     signOutButtonElement.setAttribute('hidden', 'true');
     document.getElementById("match-button").setAttribute('hidden', 'true');
 
+    // var backtomylayers = mylayers;
+    // deckgl.setProps({layers: backtomylayers});
 
     // Show sign-in button.
     signInButtonElement.removeAttribute('hidden');
+    // deckgl.setProps({layers: mylayers});
   
   }
 }

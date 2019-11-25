@@ -528,3 +528,52 @@ main, #messages-card {
   top: -1px;
   margin-right: 5px;
 }
+
+
+.sidenav {
+  height: 40%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 80;
+  left: 0;
+  background-color: black;
+  overflow-x: hidden;
+  transition: 0.1s;
+  padding-top: 60px;
+  opacity: 0.8;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  transition: 0.1s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.sidenav .title {
+  position: absolute;
+  top: 12;
+  left: 10px;
+  font-size: 24px;
+  margin-right: 10px;
+  color:white;
+}
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
