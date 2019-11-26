@@ -11,8 +11,6 @@ from pprint import pprint
 from geojson import Point, Feature, FeatureCollection, dump
 with open('zillow-neighborhoods.geojson') as f:
     data=json.load(f)
-    
-print(json.dumps(data, indent=4, sort_keys=True))
 
 allHomes = [] 
 with open("allHome.csv", 'r') as csvfile: 
@@ -149,3 +147,73 @@ for i in range(1,len(fourBedrooms)):
 
 with open('zillowDataCleaned.geojson', 'w') as f:
     dump(data, f)
+
+missing=[]
+for t in data['features']:
+    if (len(t['properties'])==6):
+        missing.append(t)
+        print(t['properties']['name'])
+
+for k in range(len(data['features'])):
+    data['features'][k]['properties']['flag']=1
+    if data['features'][k]['properties']['name']=='Yerba Buena Island':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Central Waterfront - Dogpatch':
+        data['features'][k]['properties']['studio']=3100
+        data['features'][k]['properties']['one_bedroom']=3700
+        data['features'][k]['properties']['two_bedroom']=4500
+    elif data['features'][k]['properties']['name']=='Jordan Park - Laurel Heights':
+        data['features'][k]['properties']['studio']=2500
+        data['features'][k]['properties']['one_bedroom']=2800
+        data['features'][k]['properties']['two_bedroom']=3500
+        data['features'][k]['properties']['four_bedroom']=8000
+    elif data['features'][k]['properties']['name']=='Lakeside':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Van Ness - Civic Center':
+        data['features'][k]['properties']['studio']=3300
+        data['features'][k]['properties']['one_bedroom']=3500
+        data['features'][k]['properties']['two_bedroom']=4000
+    elif data['features'][k]['properties']['name']=='Pine Lake Park':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Alkatraz Island':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Twin Peaks':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Inner Parkside':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Central Richmond':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Forest Hill Extension':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Treasure Island':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Eureka Valley - Dolores Heights - Castro':
+        data['features'][k]['properties']['one_bedroom']=3000
+        data['features'][k]['properties']['two_bedroom']=4500
+        data['features'][k]['properties']['four_bedroom']=9000
+    elif data['features'][k]['properties']['name']=='Outer Parkside':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Parnassus - Ashbury':
+        data['features'][k]['properties']['one_bedroom']=2800
+        data['features'][k]['properties']['two_bedroom']=3500
+        data['features'][k]['properties']['four_bedroom']=6500
+    elif data['features'][k]['properties']['name']=='Central Sunset':
+        data['features'][k]['properties']['one_bedroom']=3100
+    elif data['features'][k]['properties']['name']=='Merced Heights':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='Yerba Buena':
+        data['features'][k]['properties']['flag']=0
+    elif data['features'][k]['properties']['name']=='West Portal':
+        data['features'][k]['properties']['one_bedroom']=2000
+        data['features'][k]['properties']['two_bedroom']=3200
+        data['features'][k]['properties']['four_bedroom']=5800
+    elif data['features'][k]['properties']['name']=='North Panhandle':
+        data['features'][k]['properties']['flag']=0
+
+#with open('zillowDataCleanedv2.geojson', 'w') as f:
+ #   dump(data, f)
+    
+        
+    
+        
+        
