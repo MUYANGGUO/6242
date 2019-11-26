@@ -431,13 +431,15 @@ function match(){
     input: 'text',
     confirmButtonText: 'Next &rarr;',
     showCancelButton: true,
+    showConfirmButton: true,
     position: 'top',
-    background: `rgb(0,0,0,9)`,
-    confirmButtonColor: `rgb(0,0,0)`,
+    background: `rgb(0,0,0,0.9)`,
+    // confirmButtonColor: `rgb(0,0,0)`,
+    // cancelButtonColor:`rgb(0,250,0)`,
     progressSteps: ['1', '2', '3']
   }).queue([
     {
-      title: 'Which type of apartment do you want to live in?',
+      text: 'Which type of apartment do you want to live in?',
       input: 'select',
       inputOptions: {
         'all_home':'All Home',
@@ -454,11 +456,11 @@ function match(){
       } 
     },
     {
-      title: "What's the maximum monthly rental",
+      text: "What's the maximum monthly rental",
       input: 'number'
     },
     {
-      title: "What's the minimum monthly rental",
+      text: "What's the minimum monthly rental",
       input: 'number'
     }
   ]).then((result) => {
