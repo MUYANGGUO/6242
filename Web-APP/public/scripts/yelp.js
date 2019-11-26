@@ -45,7 +45,7 @@
 
 // var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-function TestYelpAPI(){
+function getyelp(){
 
     var data = null;
     var xhr = new XMLHttpRequest();
@@ -92,9 +92,5 @@ function TestYelpAPI(){
 
 
 
-
-
-
-TestYelpAPI();
 
  
