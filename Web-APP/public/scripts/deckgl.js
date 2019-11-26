@@ -257,6 +257,7 @@ function push_user_location(){
         // document.getElementById("match-button").removeAttribute('hidden');
         console.log('pushing user location')
         var data = doc.data();
+        
 
         var coords = [data["coordinates"]["longtitude"],data["coordinates"]["latitude"]];
         my_location_layer.push(      
@@ -275,7 +276,7 @@ function push_user_location(){
           id: 'icon-layer',
           // data: icons,
           data: [
-            {position: coords,color: [250, 0, 0]}
+            {position: coords,color: [250, 0, 0], }
           ],
           pickable: true,
         // iconAtlas and iconMapping are required
@@ -426,26 +427,114 @@ deckgl.setProps({layers: reset_layers});
 
 
 function match(){
-  var user = firebase.auth().currentUser;
-  var useruid = user.uid;
-  var UserRef = db.collection("users").doc(useruid);
-  UserRef.get().then(function(doc) {
-    if (doc.exists) {
+  Swal.mixin({
+    input: 'text',
+    confirmButtonText: 'Next &rarr;',
+    showCancelButton: true,
+    showConfirmButton: true,
+    position: 'top',
+    background: `rgb(0,0,0,0.9)`,
+    // confirmButtonColor: `rgb(0,0,0)`,
+    // cancelButtonColor:`rgb(0,250,0)`,
+    progressSteps: ['1', '2', '3']
+  }).queue([
+    {
+      text: 'Which type of apartment do you want to live in?',
+      input: 'select',
+      inputOptions: {
+        'all_home':'All Home',
+        'single_family':'Single Family',
+        'condo':'Condo',
+        'top_tier':'Top Tier',
+        'middle_tier':'Middle Tier',
+        'bottom_tier':'Bottom Tier',
+        'studio':'Studio',
+        'one_bedroom':'One Bedroom',
+        'two_bedroom':'Two Bedroom',
+        'three_bedroom':'Three Bedroom',
+        'four_bedroom':'Four Bedroom'
+      } 
+    },
+    {
+      text: "What's the maximum monthly rental",
+      input: 'number'
+    },
+    {
+      text: "What's the minimum monthly rental",
+      input: 'number'
+    }
+  ]).then((result) => {
+    if (result.value) {
+      const answers = JSON.stringify(result.value)
+      Swal.fire({
+        title: 'All done!',
+        html: `
+          Your answers:
+          <pre><code>${answers}</code></pre>
+        `,
+        position: 'top',
+        background: `rgb(0,0,0,9)`,
+        confirmButtonColor: `rgb(0,0,0)`,
+        confirmButtonText: 'Finish!'
+      })
+    }
+    var rawbase = 'https://raw.githubusercontent.com/';
+    var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillowDataCleanedv2.geojson';
+    $.getJSON(rawbase + jsonloc, function( data ) {
+      var regions=data['features']
+      var matchedRegions=[]
+      for (region of regions){
+        var regionId=region["properties"]["regionid"]
+        var regionPrice=region['properties'][result.value[0]] 
+        if (regionPrice!=null && regionPrice<=result.value[1] && regionPrice>=result.value[2]){
+          matchedRegions.push(regionId)
+        }
+      }
+      var user = firebase.auth().currentUser;
+      var useruid;
+      var usertype;
+      if (user != null) {
+        useruid = user.uid  // The user's ID, unique to the Firebase project.
+      }
+      db.collection("users").doc(useruid).get().then(function(doc){
+        var data=doc.data()
+        console.log(doc.data())
+        usertype=data['type']
+        console.log(usertype)
+        for (matchedRegion of matchedRegions){
+          db.collection('regions').doc(matchedRegion).collection('users').doc(useruid).set(
+            {
+              uid: useruid,
+              type: usertype,
+              flag:1
+            }
+          )
+        }
+      })
+      db.collection("users").doc(useruid).update({
+        matchedRegions: matchedRegions
+      }) 
+    });
+    
+  })
+  // var user = firebase.auth().currentUser;
+  // var useruid = user.uid;
+  // var UserRef = db.collection("users").doc(useruid);
+  // UserRef.get().then(function(doc) {
+  //   if (doc.exists) {
       
 
 
 
 
-    }
-    else {
+  //   }
+  //   else {
   
-    console.log("No such document!");
-  }
-    }).catch(function(error) {
-    console.log("Error getting document:", error);
-  });
-
-
+  //   console.log("No such document!");
+  // }
+  //   }).catch(function(error) {
+  //   console.log("Error getting document:", error);
+  // });
 };
 
 function click_user(){

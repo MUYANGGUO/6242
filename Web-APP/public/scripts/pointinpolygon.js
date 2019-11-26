@@ -13,9 +13,26 @@
 //     // expected output: 'resolved'
 //   }
   
- 
-  
 
+// function get_user_identity(){
+//     var user = firebase.auth().currentUser;
+//     var useruid;
+
+//     if (user != null) {
+//       useruid = user.uid; 
+//       var docRef = db.collection("users").doc(useruid); // The user's ID, unique to the Firebase project.
+//       console.log(useruid)
+      
+//     }
+
+
+//     return new Promise(resolve => {
+//         setTimeout(() => {
+//           resolve("resolved");
+//         }, 1000);
+//       });
+// }
+// asyncCall();
 //write region data to database
 // Note this script is only run by once, to automatically load the regions to firestore datase
 // var rawbase = 'https://raw.githubusercontent.com/';
@@ -70,6 +87,7 @@ function clear_previous_user_region_logs(){
     
     if (user != null) {
       useruid = user.uid;  // The user's ID, unique to the Firebase project.
+    
     }
     var docRef = db.collection("users").doc(useruid);
 
@@ -80,7 +98,7 @@ function clear_previous_user_region_logs(){
             var regionid = data["region"];
             var useridentity = data["type"]
             
-            var regionRef = db.collection("regions").doc(regionid).collection(useridentity).doc(useruid);
+            var regionRef = db.collection("regions").doc(regionid).collection("users").doc(useruid);
             regionRef.delete().then(function() {
                 console.log("Document successfully deleted!");
 
@@ -139,20 +157,65 @@ function update_user_region (long,lat) {
             useruid = user.uid; 
             // The user's ID, unique to the Firebase project.
             }
-            var regionRef = db.collection("regions").doc(regionid);
-            regionRef.collection("landlord").doc(useruid).set({
-            uid: useruid,
-        })
-        .then(function() {
-            console.log("assign the userid to regions profile!");
+
             
-                   
-            
-        })
-        .catch(function(error) {
-            console.error("Error writing document: ", error);
-            })
+
+
+            var docRef = db.collection("users").doc(useruid);
+
+            docRef.get().then(function(doc) {
+                if (doc.exists) {
+                    console.log("Document data:", doc.data());
+                    var data = doc.data();
+                    var regionid = data["region"];
+                    var useridentity = data["type"]
+                    var regionRef = db.collection("regions").doc(regionid);
+                    regionRef.collection("users").doc(useruid).set({
+                        uid: useruid,
+                        type: useridentity,
+                        })
+                    .then(function() {
+                        console.log("assign the userid to regions profile!");
+                    })
+                    .catch(function(error) {
+                    console.error("Error writing document: ", error);
+                    })
          
+                    
+                    
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such document!");
+                }
+            }).catch(function(error) {
+                console.log("Error getting document:", error);
+            });
+
+
+
+
+
+
+
+
+
+
+        //     var regionRef = db.collection("regions").doc(regionid);
+        //     regionRef.collection("users").doc(useruid).set({
+        //     uid: useruid,
+            
+        // })
+        // .then(function() {
+        //     console.log("assign the userid to regions profile!");
+        // })
+        // .catch(function(error) {
+        //     console.error("Error writing document: ", error);
+        //     })
+         
+
+
+
+
         var UserRef = db.collection("users").doc(useruid);
             UserRef.update({
             region: regionid,
