@@ -257,6 +257,7 @@ function push_user_location(){
         // document.getElementById("match-button").removeAttribute('hidden');
         console.log('pushing user location')
         var data = doc.data();
+        
 
         var coords = [data["coordinates"]["longtitude"],data["coordinates"]["latitude"]];
         my_location_layer.push(      
@@ -275,7 +276,7 @@ function push_user_location(){
           id: 'icon-layer',
           // data: icons,
           data: [
-            {position: coords,color: [250, 0, 0]}
+            {position: coords,color: [250, 0, 0], }
           ],
           pickable: true,
         // iconAtlas and iconMapping are required
