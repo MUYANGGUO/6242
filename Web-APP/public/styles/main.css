@@ -14,12 +14,16 @@
  * limitations under the License.
  */
  body {margin: 0; padding: 0;background-color:grey;}
- #container {width: 100vw; height: 85vh;}
+ #container {width: 100vw; height:88vh;}
+ 
  #footercontainer{ position: absolute;
   bottom: 0;
+  right: 0px;
+
   width: 100%;
   height: 30px;
-  background-color:grey;
+  background-color:black;
+  opacity: 0.7;
   padding-top: 4 !important;
   padding-bottom: 16 !important;
 }
@@ -40,8 +44,7 @@
   padding-left: 10px;
   justify-content: flex-end;
   padding-right: 30px;
-  
-  background-color: grey !important;
+  background-color:rgba(0, 0, 0, 0.7) !important;
 }
 #user-container #header-title {
   top: -3px;
@@ -70,6 +73,14 @@
   padding-left: 20px;
 }
 
+#user-container #match-button {
+  font-size: 18px;
+  line-height: 36px;
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-right: 40px;
+  background-color: green !important;
+}
 #user-container #sign-in {
   font-size: 18px;
   line-height: 36px;
@@ -97,8 +108,6 @@
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-top: 12px solid white;
-  
-  
 }
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
@@ -120,7 +129,7 @@
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: black}
+.dropdown-content a:hover {background-color: black;}
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
@@ -129,6 +138,12 @@
 
 
 /* popup form settings */
+.alert-field {
+  color: red;
+  border-color: red;
+}
+
+
 
 .form-popup {
   display: none;
@@ -140,6 +155,8 @@
   z-index: 1;
   margin-left:100px;
   margin-top: 100px;
+  margin-right:0px;
+  width: 300px;
 
 }
 /* Add styles to the form container */
@@ -168,6 +185,7 @@
 
 /* Set a style for the submit/login button */
 .form-container .btn {
+  font-size: 14px;
   background-color: #4CAF50;
   color: white;
   padding: 16px 20px;
@@ -175,12 +193,12 @@
   cursor: pointer;
   width: 100%;
   margin-bottom:10px;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 /* Add a red background color to the cancel button */
 .form-container .cancel {
-  background-color: red;
+  background-color: cornflowerblue;
 }
 
 /* Add some hover effects to buttons */
@@ -195,7 +213,17 @@
   top: 0px;
   width: 32px;
   height: 32px;
-  opacity: 0.3;
+  opacity: 0.5;
+  margin-left: 4px;
+  border-left-style: solid;
+  border-left-width: 6px;
+  border-right-width: 6px;
+  border-right-style: solid;
+  border-bottom-width: 0px;
+  border-bottom-style: solid;
+  border-top-width: 0px;
+  border-top-style: solid;
+  border-color: transparent;
 
 }
 .close:hover {
@@ -203,29 +231,85 @@
 }
 .close:before, .close:after {
   position: absolute;
-  left: 8px;
+  left: 4px;
   content: ' ';
-  height: 33px;
+  height: 32px;
   width: 2px;
-  background-color: #333;
+  top: 0px;
+  bottom:0px;
+  margin-left: 4px;
+
+
+  background-color: black;
+  /* bacground-color: blue; */
 
 }
 .close:before {
-  top: 0px;
+  
   transform: rotate(45deg);
 }
 .close:after {
-  top: 0px;
+ 
   transform: rotate(-45deg);
 }
 
 
 
+.notification {
+  text-decoration: none;
+  padding: 15px 32px;
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  opacity: 0.9;
+  color: white;
+}
 
 
 
 
+/* alert text CSS */
+.swal2-content{
+  color:white !important;
+}
 
+.swal2-styled.swal2-confirm {
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-left-color:black !important;
+  border-right-color:black !important;
+  border-radius: .35em !important;
+  border: 1 !important;
+  background: black !important;
+  border-color: white !important;
+  background-color: black!important;
+  color:  #fff !important;
+
+}
+
+.swal2-progress-steps .swal2-progress-step {
+  background: grey !important;
+}
+
+.swal2-progress-steps .swal2-progress-step ~ .swal2-progress-step-line {
+  background: grey !important;
+}
+
+.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{
+  background:green !important;
+}
+.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step-line {
+  background: grey !important;
+}
 
 
 
@@ -256,7 +340,7 @@
     height: 100%;
     position: absolute;
     font-size: 190px;
-    background: grey;
+    background: black;
     color: black;
     text-align: center;
   }
@@ -467,4 +551,53 @@ main, #messages-card {
 .mdl-button .material-icons {
   top: -1px;
   margin-right: 5px;
+}
+
+
+.sidenav {
+  height: 40%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 80;
+  left: 0;
+  background-color: black;
+  overflow-x: hidden;
+  transition: 0.1s;
+  padding-top: 60px;
+  opacity: 0.8;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  transition: 0.1s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.sidenav .title {
+  position: absolute;
+  top: 12;
+  left: 10px;
+  font-size: 24px;
+  margin-right: 10px;
+  color:white;
+}
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
 }
