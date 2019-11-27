@@ -65,8 +65,7 @@ function enablematchButton(){
 
 
 async function updateUserProfile() {
-  var result = await clear_previous_user_region_logs();
-  console.log(result);
+
   var empty = false;
   $('input[type="text"]').each(function(){
     //check all the input text field except the message box text field
@@ -81,7 +80,8 @@ async function updateUserProfile() {
     console.log('all fields checked');
     var user = firebase.auth().currentUser;
     var username, useremail, userphotoUrl, useruid;
-
+    var result = await clear_previous_user_region_logs();
+    console.log(result);
     if (user != null) {
       username = user.displayName;
       useremail = user.email;
@@ -340,6 +340,7 @@ function saveImageMessage(file) {
 // }
 
 // Requests permissions to show notifications.
+
 // function requestNotificationsPermissions() {
 //   console.log('Requesting notifications permission...');
 //   firebase.messaging().requestPermission().then(function() {
@@ -349,6 +350,7 @@ function saveImageMessage(file) {
 //     console.error('Unable to get permission to notify.', error);
 //   });
 // }
+
 
 // // Triggered when a file is selected via the media picker.
 // function onMediaFileSelected(event) {
@@ -415,7 +417,7 @@ function authStateObserver(user) {
   
 
     // We save the Firebase Messaging Device token and enable notifications.
-    saveMessagingDeviceToken();
+    // saveMessagingDeviceToken();
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
     userNameElement.setAttribute('hidden', 'true');
