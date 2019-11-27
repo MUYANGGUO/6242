@@ -257,7 +257,6 @@ function push_user_location(){
         // document.getElementById("match-button").removeAttribute('hidden');
         console.log('pushing user location')
         var data = doc.data();
-        
 
         var coords = [data["coordinates"]["longtitude"],data["coordinates"]["latitude"]];
         my_location_layer.push(      
@@ -276,7 +275,8 @@ function push_user_location(){
           id: 'icon-layer',
           // data: icons,
           data: [
-            {position: coords,color: [250, 0, 0], }
+            {position: coords,color: [250, 0, 0],id:userinfo}
+
           ],
           pickable: true,
         // iconAtlas and iconMapping are required
@@ -291,7 +291,11 @@ function push_user_location(){
           getColor: d => d.color,
           // onHover: ({object, x, y}) => {
           // const tooltip = `${object.name}\n${object.address}`;
-      
+          onClick: (event) => {
+            icon_event(data);
+            console.log(data.id);
+          },
+
           
         }),
 
@@ -333,24 +337,38 @@ uber_layer.push(
     id: 'line-layer',
     data: uber_data,
     pickable: true,
-    getWidth: 2,
+
+    getWidth: 4,
     getSourcePosition: d => d.start,
     getTargetPosition: d => d.end,
     getColor:function(d){
+      // var percent=100*d.speed/65
+      // var red=(percent>50?1-2*(percent-50)/100.0:1.0)*255
+      // var green=(percent>50?1.0:2*percent/100.0)*255
+      // return[red*1.1,green,0]
+      // console.log(color(d.speed))
+
+      // return color(d.speed)
       if(d.speed>45)
-      return [255,0,0];     
+      return  [0,255,0] ;   
       else if(d.speed>35)  
-      return [255,64,0];
+      return [75,255,0];
       else if(d.speed>30)  
-      return[255,128,0]  
+      return  [125,255,0];
       else if(d.speed>25)  
-      return[255,145,0]  
+      return  [255,255,0];
       else if(d.speed>20)  
-      return[255,191,0]  
+      return [255,191,0];
       else if(d.speed>15)  
-      return[255,255,0]
-      else 
-      return[0,255,255]}  
+      return [255,125,0];
+      else if(d.speed>10)
+      return [255,45,0];
+      else if(d.speed>5)
+      return [255,0,0];
+      else return [54.5,0,0];
+      
+        }  
+
        }    // onHover: ({object, x, y}) => {      // const tooltip = `${object.from.name} to ${object.to.name}`;      /* Update tooltip         http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object      */    // }    }),
 ))
 
@@ -427,6 +445,7 @@ deckgl.setProps({layers: reset_layers});
 
 
 function match(){
+
   Swal.mixin({
     input: 'text',
     confirmButtonText: 'Next &rarr;',
@@ -522,7 +541,9 @@ function match(){
   // var UserRef = db.collection("users").doc(useruid);
   // UserRef.get().then(function(doc) {
   //   if (doc.exists) {
+
       
+
 
 
 
@@ -535,6 +556,7 @@ function match(){
   //   }).catch(function(error) {
   //   console.log("Error getting document:", error);
   // });
+
 };
 
 function click_user(){
@@ -542,9 +564,34 @@ function click_user(){
     position: 'top',
     icon:'success',
     background: `rgb(0,0,0,9)`,
-    text: 'testingmyclick',
+    text:"success",
     confirmButtonColor: `rgb(0,0,0)`,
   })
 };
 
+
+
+function icon_event(d){
+  Swal.fire({
+    position: 'middle',
+    // icon:'success',
+    showCancelButton: true,
+    background: `rgb(0,0,0)`,
+    title:"User Info",
+    html: "User id: "+ d.id+"<br>User name: "+d.name+"<br>User email: "+d.email+"<br>User gender: "+d.gender+"<br>Visitor or Landloar: "+d.types,
+    //"the userid: "+d.id,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: "message",
+    cancelButtonText: "cancel",
+  }).then((result) => {
+    if (result.value) {
+      Swal.fire(
+        'communcation starting',
+        'success'
+      )
+    }
+  })
+  
+}
 
