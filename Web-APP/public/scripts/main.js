@@ -237,6 +237,7 @@ function closeForm() {
 
 function openMessage() {
     document.getElementById("message-profile-form").style.display = "block";
+    loadMessages();
 
 }
 
@@ -278,9 +279,12 @@ function isUserSignedIn() {
 // Saves a new message on the Firebase DB.
 function saveMessage(messageText) {
   // Add a new message entry to the database.
-  return firebase.firestore().collection('messages').add({
+  var senderuid = firebase.auth().currentUser.uid;
+  return firebase.firestore().collection('messages').doc(senderuid).collection('usermessages').doc().set({
     name: getUserName(),
     text: messageText,
+    senderuid: senderuid,
+    receiveruid: senderuid,
     profilePicUrl: getProfilePicUrl(),
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   }).catch(function(error) {
@@ -290,11 +294,13 @@ function saveMessage(messageText) {
 
 // Loads chat messages history and listens for upcoming ones.
 function loadMessages() {
-  // Create the query to load the last 2 messages and listen for new ones.
+  // Create the query to load the last 5 messages and listen for new ones.
+  var currentuid = firebase.auth().currentUser.uid;
+  console.log(currentuid)
   var query = firebase.firestore()
-                  .collection('messages')
+                  .collection('messages').doc(currentuid).collection('usermessages')
                   .orderBy('timestamp', 'desc')
-                  .limit(2);
+                  .limit(5);
 
   // Start listening to the query.
   query.onSnapshot(function(snapshot) {
@@ -317,32 +323,32 @@ function saveImageMessage(file) {
 }
 
 // Saves the messaging device token to the datastore.
-function saveMessagingDeviceToken() {
-  firebase.messaging().getToken().then(function(currentToken) {
-    if (currentToken) {
-      console.log('Got FCM device token:', currentToken);
-      // Saving the Device Token to the datastore.
-      firebase.firestore().collection('fcmTokens').doc(currentToken)
-          .set({uid: firebase.auth().currentUser.uid});
-    } else {
-      // Need to request permissions to show notifications.
-      requestNotificationsPermissions();
-    }
-  }).catch(function(error){
-    console.error('Unable to get messaging token.', error);
-  });
-}
+// function saveMessagingDeviceToken() {
+//   firebase.messaging().getToken().then(function(currentToken) {
+//     if (currentToken) {
+//       console.log('Got FCM device token:', currentToken);
+//       // Saving the Device Token to the datastore.
+//       firebase.firestore().collection('fcmTokens').doc(currentToken)
+//           .set({uid: firebase.auth().currentUser.uid});
+//     } else {
+//       // Need to request permissions to show notifications.
+//       requestNotificationsPermissions();
+//     }
+//   }).catch(function(error){
+//     console.error('Unable to get messaging token.', error);
+//   });
+// }
 
 // Requests permissions to show notifications.
-function requestNotificationsPermissions() {
-  console.log('Requesting notifications permission...');
-  firebase.messaging().requestPermission().then(function() {
-    // Notification permission granted.
-    saveMessagingDeviceToken();
-  }).catch(function(error) {
-    console.error('Unable to get permission to notify.', error);
-  });
-}
+// function requestNotificationsPermissions() {
+//   console.log('Requesting notifications permission...');
+//   firebase.messaging().requestPermission().then(function() {
+//     // Notification permission granted.
+//     saveMessagingDeviceToken();
+//   }).catch(function(error) {
+//     console.error('Unable to get permission to notify.', error);
+//   });
+// }
 
 // // Triggered when a file is selected via the media picker.
 // function onMediaFileSelected(event) {
@@ -610,5 +616,5 @@ var settings = {timestampsInSnapshots: true};
 firestore.settings(settings);
 
 // We load currently existing chat messages and listen to new ones.
-loadMessages();
+// loadMessages();
 
