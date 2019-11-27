@@ -263,7 +263,7 @@ function push_user_location(){
         my_location_layer.push(      
           new deck.ScatterplotLayer({
           data: [
-            {position: coords, color: [250, 0, 0], radius: 150}
+            {position: coords, color: [65,105,225], radius: 150}
           ],
           getPosition: d => d.position,
           getRadius: d => d.radius,
@@ -276,7 +276,7 @@ function push_user_location(){
           id: 'icon-layer',
           // data: icons,
           data: [
-            {position: coords,color: [250,128,114],id:userinfo}
+            {position: coords,color: [65,105,225],id:userinfo}
 
           ],
           pickable: true,
