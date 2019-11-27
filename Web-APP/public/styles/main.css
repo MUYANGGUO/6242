@@ -282,10 +282,34 @@
   color:white !important;
 }
 
+.swal2-styled.swal2-confirm {
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-left-color:black !important;
+  border-right-color:black !important;
+  border-radius: .35em !important;
+  border: 1 !important;
+  background: black !important;
+  border-color: white !important;
+  background-color: black!important;
+  color:  #fff !important;
 
+}
 
+.swal2-progress-steps .swal2-progress-step {
+  background: grey !important;
+}
 
+.swal2-progress-steps .swal2-progress-step ~ .swal2-progress-step-line {
+  background: grey !important;
+}
 
+.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{
+  background:green !important;
+}
+.swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step-line {
+  background: grey !important;
+}
 
 
 

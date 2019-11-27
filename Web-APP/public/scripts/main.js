@@ -65,8 +65,7 @@ function enablematchButton(){
 
 
 async function updateUserProfile() {
-  var result = await clear_previous_user_region_logs();
-  console.log(result);
+
   var empty = false;
   $('input[type="text"]').each(function(){
     //check all the input text field except the message box text field
@@ -81,7 +80,8 @@ async function updateUserProfile() {
     console.log('all fields checked');
     var user = firebase.auth().currentUser;
     var username, useremail, userphotoUrl, useruid;
-
+    var result = await clear_previous_user_region_logs();
+    console.log(result);
     if (user != null) {
       username = user.displayName;
       useremail = user.email;
@@ -237,6 +237,7 @@ function closeForm() {
 
 function openMessage() {
     document.getElementById("message-profile-form").style.display = "block";
+    loadMessages();
 
 }
 
@@ -317,28 +318,28 @@ function saveImageMessage(file) {
 }
 
 // Saves the messaging device token to the datastore.
-function saveMessagingDeviceToken() {
-  firebase.messaging().getToken().then(function(currentToken) {
-    if (currentToken) {
-      console.log('Got FCM device token:', currentToken);
-      // Saving the Device Token to the datastore.
-      firebase.firestore().collection('fcmTokens').doc(currentToken)
-          .set({uid: firebase.auth().currentUser.uid});
-    } else {
-      // Need to request permissions to show notifications.
-      requestNotificationsPermissions();
-    }
-  }).catch(function(error){
-    console.error('Unable to get messaging token.', error);
-  });
-}
+// function saveMessagingDeviceToken() {
+//   firebase.messaging().getToken().then(function(currentToken) {
+//     if (currentToken) {
+//       console.log('Got FCM device token:', currentToken);
+//       // Saving the Device Token to the datastore.
+//       firebase.firestore().collection('fcmTokens').doc(currentToken)
+//           .set({uid: firebase.auth().currentUser.uid});
+//     } else {
+//       // Need to request permissions to show notifications.
+//       requestNotificationsPermissions();
+//     }
+//   }).catch(function(error){
+//     console.error('Unable to get messaging token.', error);
+//   });
+// }
 
 // Requests permissions to show notifications.
 function requestNotificationsPermissions() {
   console.log('Requesting notifications permission...');
   firebase.messaging().requestPermission().then(function() {
     // Notification permission granted.
-    saveMessagingDeviceToken();
+    // saveMessagingDeviceToken();
   }).catch(function(error) {
     console.error('Unable to get permission to notify.', error);
   });
@@ -409,7 +410,7 @@ function authStateObserver(user) {
   
 
     // We save the Firebase Messaging Device token and enable notifications.
-    saveMessagingDeviceToken();
+    // saveMessagingDeviceToken();
   } else { // User is signed out!
     // Hide user's profile and sign-out button.
     userNameElement.setAttribute('hidden', 'true');
@@ -610,5 +611,5 @@ var settings = {timestampsInSnapshots: true};
 firestore.settings(settings);
 
 // We load currently existing chat messages and listen to new ones.
-loadMessages();
+// loadMessages();
 
