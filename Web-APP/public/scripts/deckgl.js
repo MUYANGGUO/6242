@@ -257,6 +257,7 @@ function push_user_location(){
         // document.getElementById("match-button").removeAttribute('hidden');
         console.log('pushing user location')
         var data = doc.data();
+        var userinfo = [data["id"]];
 
         var coords = [data["coordinates"]["longtitude"],data["coordinates"]["latitude"]];
         my_location_layer.push(      
@@ -275,17 +276,18 @@ function push_user_location(){
           id: 'icon-layer',
           // data: icons,
           data: [
-            {position: coords,color: [250, 0, 0],id:userinfo}
+            {position: coords,color: [250,128,114],id:userinfo}
 
           ],
           pickable: true,
+          autoHighlight: true,
         // iconAtlas and iconMapping are required
         // getIcon: return a string
           iconAtlas: 'images/icon-atlas.png',
           iconMapping: ICON_MAPPING,
           getIcon: d => 'marker',
       
-          sizeScale: 15,
+          sizeScale: 20,
           getPosition: d => d.position,
           getSize: d => 5,
           getColor: d => d.color,
@@ -578,7 +580,7 @@ function icon_event(d){
     showCancelButton: true,
     background: `rgb(0,0,0)`,
     title:"User Info",
-    html: "User id: "+ d.id+"<br>User name: "+d.name+"<br>User email: "+d.email+"<br>User gender: "+d.gender+"<br>Visitor or Landloar: "+d.types,
+    html: "User id: "+ d.id+"<br>Name: "+d.name+"<br>Email: "+d.email+"<br>Gender: "+d.gender+"<br>Role: "+d.type,
     //"the userid: "+d.id,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
