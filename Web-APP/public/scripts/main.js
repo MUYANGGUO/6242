@@ -280,11 +280,14 @@ function isUserSignedIn() {
 function saveMessage(messageText) {
   // Add a new message entry to the database.
   var senderuid = firebase.auth().currentUser.uid;
-  return firebase.firestore().collection('messages').doc(senderuid).collection('usermessages').doc().set({
+  var receiveruid = firebase.auth().currentUser.uid;
+  //console.log(senderuid + receiveruid);
+  return firebase.firestore().collection('messages').doc(senderuid + receiveruid).collection('usermessages').doc().set({
     name: getUserName(),
     text: messageText,
-    senderuid: senderuid,
-    receiveruid: senderuid,
+    // senderuid: senderuid,
+    // receiveruid: receiveruid,
+    messagepair: [senderuid, receiveruid],
     profilePicUrl: getProfilePicUrl(),
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   }).catch(function(error) {
@@ -295,12 +298,15 @@ function saveMessage(messageText) {
 // Loads chat messages history and listens for upcoming ones.
 function loadMessages() {
   // Create the query to load the last 5 messages and listen for new ones.
+  var senderuid = firebase.auth().currentUser.uid;
+  var receiveruid = firebase.auth().currentUser.uid;
   var currentuid = firebase.auth().currentUser.uid;
-  console.log(currentuid)
+  //console.log(currentuid)
   var query = firebase.firestore()
-                  .collection('messages').doc(currentuid).collection('usermessages')
+                  .collection('messages').doc(senderuid + receiveruid).collection('usermessages')
+                  .where("messagepair", "array-contains", currentuid)
                   .orderBy('timestamp', 'desc')
-                  .limit(5);
+                  .limit(4);
 
   // Start listening to the query.
   query.onSnapshot(function(snapshot) {
