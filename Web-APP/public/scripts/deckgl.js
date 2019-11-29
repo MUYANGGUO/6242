@@ -587,12 +587,14 @@ function icon_event(d){
     confirmButtonText: "message",
     cancelButtonText: "cancel",
   }).then((result) => {
-    if (result.value) {
-      Swal.fire(
-        'communcation starting',
-        'success'
-      )
-    }
+    openMessage(d.id)
+    // console.log(d.id)
+    // if (result.value) {
+    //   Swal.fire(
+    //     'communcation starting',
+    //     'success'
+    //   )
+    // }
   })
   
 }

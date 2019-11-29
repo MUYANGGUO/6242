@@ -235,10 +235,9 @@ function closeForm() {
 
   }
 
-function openMessage() {
+function openMessage(d) {
     document.getElementById("message-profile-form").style.display = "block";
-    loadMessages();
-
+    loadMessages(d);
 }
 
 function closeMessage() {
@@ -281,13 +280,16 @@ function saveMessage(messageText) {
   // Add a new message entry to the database.
   var senderuid = firebase.auth().currentUser.uid;
   var receiveruid = firebase.auth().currentUser.uid;
-  //console.log(senderuid + receiveruid);
-  return firebase.firestore().collection('messages').doc(senderuid + receiveruid).collection('usermessages').doc().set({
+  var uidpair = [senderuid, receiveruid];
+  var sortuid = uidpair.sort();
+  var loweruid = sortuid[0];
+  var upperuid = sortuid[1];
+  console.log("uid1save: " + loweruid);
+  console.log("uid2save: " + upperuid);
+  return firebase.firestore().collection('messages').doc().set({
     name: getUserName(),
     text: messageText,
-    // senderuid: senderuid,
-    // receiveruid: receiveruid,
-    messagepair: [senderuid, receiveruid],
+    messagepair: [loweruid, upperuid],
     profilePicUrl: getProfilePicUrl(),
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   }).catch(function(error) {
@@ -296,15 +298,19 @@ function saveMessage(messageText) {
 }
 
 // Loads chat messages history and listens for upcoming ones.
-function loadMessages() {
-  // Create the query to load the last 5 messages and listen for new ones.
-  var senderuid = firebase.auth().currentUser.uid;
-  var receiveruid = firebase.auth().currentUser.uid;
+function loadMessages(d) {
+  // Create the query to load the last 4 messages and listen for new ones.
+  var targetuid = d;
   var currentuid = firebase.auth().currentUser.uid;
-  //console.log(currentuid)
+  var uidpair = [currentuid, targetuid];
+  var sortuid = uidpair.sort();
+  var loweruid = sortuid[0];
+  var upperuid = sortuid[1];
+  console.log("uid1load: " + loweruid);
+  console.log("uid2load: " + upperuid);
   var query = firebase.firestore()
-                  .collection('messages').doc(senderuid + receiveruid).collection('usermessages')
-                  .where("messagepair", "array-contains", currentuid)
+                  .collection('messages')
+                  .where("messagepair", "==", [loweruid, upperuid])            
                   .orderBy('timestamp', 'desc')
                   .limit(4);
 
