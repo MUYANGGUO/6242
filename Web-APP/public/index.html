@@ -130,17 +130,7 @@
       <!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
       <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
-      <style>
-      .geocoder {
-      position:absolute;
-      z-index:1;
-      width:30%;
-      left:50%;
-      margin-left:-25%;
-      top:20px;
-      }
-      .mapboxgl-ctrl-geocoder { min-width:100%; }
-      </style>
+
        
 
        
@@ -238,15 +228,29 @@
 
         <a href="#" onclick="push_user_location()">show my location</a>
         <a href="#" onclick="push_uber_data()">show traffic layer</a>
-        <a href="#" id="yelptestbutton" style="color:red" onclick="getyelp()">" test yelp "</a>
-        <a href="#" id="testbutton" style="color:yellow" onclick="testsfpd()">" test sfpd layer! "</a>
         <a href="#" id="matchbutton" style="color:green" onclick="match()">" Match ! "</a>
 
-        <a href="#" id="resetlayermbutton" style="color:lightseagreen" onclick="reset_layers()">reset</a>
+        <a href="#" id="resetlayermbutton" style="color:lightseagreen" onclick="reset_layers()">Reset</a>
     </div>
+
+
+
+    <div id="layerpicker" class="sidenav_picker">
+        <label class ="title">View Stats</label>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav_picker()">&times;</a>
+        <a href="#" onclick="show_sfpd_layer()">show safety</a>
+        <a href="#" onclick="show_yelp_layer()">show poi</a>
+        <a href="#" id="resetlayermbutton" style="color:lightseagreen" onclick="reset_picker_layers()">Clear Stats</a>
+    </div>
+
 
     <div id="container">
     </div>
+<!-- deck gl tool tip -->
+    <div id="tooltip" style="position: absolute; z-index: 1; pointer-events: none; font-size: 12px; padding: 8px; background: #000; color: #fff; min-width: 160px; max-height: 240px;">
+    </div>
+
+
 
     <script>
         function openNav() {
@@ -256,6 +260,15 @@
         
         function closeNav() {
           document.getElementById("mySidenav").style.width = "0";
+          document.getElementById("message-profile-form").style.marginLeft = "0";
+        }
+        function openNav_picker() {
+          document.getElementById("layerpicker").style.width = "250px";
+          document.getElementById("message-profile-form").style.marginLeft = "250px";
+        }
+        
+        function closeNav_picker() {
+          document.getElementById("layerpicker").style.width = "0";
           document.getElementById("message-profile-form").style.marginLeft = "0";
         }
         </script>

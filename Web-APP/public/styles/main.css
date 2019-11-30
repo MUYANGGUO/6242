@@ -296,6 +296,21 @@
 
 }
 
+.swal2-styled.swal2-cancel {
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-left-color:black !important;
+  border-right-color:black !important;
+  border-radius: .35em !important;
+  border: 1 !important;
+  background: black !important;
+  border-color: white !important;
+  background-color: black!important;
+  color:  #fff !important;
+
+}
+
+
 .swal2-progress-steps .swal2-progress-step {
   background: grey !important;
 }
@@ -555,7 +570,7 @@ main, #messages-card {
 
 
 .sidenav {
-  height: 40%;
+  height: 25%;
   width: 0;
   position: fixed;
   z-index: 1;
@@ -600,4 +615,50 @@ main, #messages-card {
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
+  .sidenav_picker {padding-top: 15px;}
+  .sidenav_picker a {font-size: 18px;}
+}
+
+.sidenav_picker {
+  height: 25%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 450;
+  left: 0;
+  background-color: black;
+  overflow-x: hidden;
+  transition: 0.1s;
+  padding-top: 60px;
+  opacity: 0.8;
+}
+
+.sidenav_picker a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  transition: 0.1s;
+}
+
+.sidenav_picker a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav_picker .closebtn {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.sidenav_picker .title {
+  position: absolute;
+  top: 12;
+  left: 10px;
+  font-size: 24px;
+  margin-right: 10px;
+  color:white;
 }

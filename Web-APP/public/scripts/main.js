@@ -101,6 +101,7 @@ async function updateUserProfile() {
       type: useridentity,
       location: userlocation,
       email:useremail,
+      photoURL:userphotoUrl,
     })
     .then(function() {
         console.log("User basic info successfully written!");

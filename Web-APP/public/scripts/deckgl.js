@@ -1,10 +1,12 @@
+
+
 const Neighborhoods =
   'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
 
 const icons = 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
 
 const ICON_MAPPING = {
-    marker: {x: 0, y: 0, width: 128, height: 256, mask: true}
+    marker: {x: 0, y: 0, width: 128, height: 256, mask: true,anchorY:200}
   };
 // console.log(Neighborhoods.length);
 // import React from 'React';
@@ -40,7 +42,7 @@ const INITIAL_VIEW_STATE = {
     longitude: -122.4194,
     zoom: 12,
     bearing: 0,
-    pitch: 30,
+    pitch: 60,
 };
 
 
@@ -48,7 +50,6 @@ const base_layer = [
   new deck.GeoJsonLayer({
     id: 'Neighborhoods',
     data: Neighborhoods,
-    // Styles
     filled: true,
     pointRadiusMinPixels: 2,
     opacity: 1,
@@ -286,10 +287,11 @@ function push_user_location(){
           iconAtlas: 'images/icon-atlas.png',
           iconMapping: ICON_MAPPING,
           getIcon: d => 'marker',
-      
-          sizeScale: 20,
+          
+          sizeScale: 3,
+          sizeMinPixels: 100,
           getPosition: d => d.position,
-          getSize: d => 5,
+          getSize: d => 80,
           getColor: d => d.color,
           // onHover: ({object, x, y}) => {
           // const tooltip = `${object.name}\n${object.address}`;
@@ -572,28 +574,56 @@ function click_user(){
 };
 
 
-
+var global_lat;
+var global_long;
 function icon_event(d){
+  console.log(update_layer);
+  var user_lat = d.coordinates.latitude;
+  var user_long = d.coordinates.longtitude;
+  global_lat = user_lat;
+  global_long= user_long;
+  console.log(d);
+  // push_sfpd_layer(user_lat,user_long);
   Swal.fire({
     position: 'middle',
+    imageUrl: d.photoURL,
+    imageWidth: 300,
+    imageHeight: 300,
     // icon:'success',
+    showCloseButton: true,
     showCancelButton: true,
     background: `rgb(0,0,0)`,
-    title:"User Info",
-    html: "User id: "+ d.id+"<br>Name: "+d.name+"<br>Email: "+d.email+"<br>Gender: "+d.gender+"<br>Role: "+d.type,
+    title: d.name,
+    html: "User id: "+ d.id+"<br>Email: "+d.email+"<br>Gender: "+d.gender+"<br>Role: "+d.type,
     //"the userid: "+d.id,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: "message",
-    cancelButtonText: "cancel",
+
+    confirmButtonText: "View Stats",
+    cancelButtonText: "Messages",
   }).then((result) => {
     if (result.value) {
+      openNav_picker();
+      push_sfpd_layer(user_lat,user_long);
+    // push_sfpd_layer(user_lat,user_long);
+    }
+    else if (
+      /* Read more about handling dismissals below */
+      result.dismiss === Swal.DismissReason.cancel
+    ) {
       Swal.fire(
         'communcation starting',
         'success'
       )
+
+      
+
+
+
+
+
+
+        // push_sfpd_layer(user_lat,user_long);
     }
   })
   
-}
+};
 
