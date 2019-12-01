@@ -48,7 +48,8 @@ console.log(status);
             sizeScale: 2,
             sizeMinPixels: 100,
             getSize: d => 50,
-            getColor:[255,255,0],
+            // getColor:[255,255,0],
+            getColor: d => [1+(d.rating/5)*249, 50, 0],
             getPosition: d=>[d.coordinates.longitude,d.coordinates.latitude],
             onHover: info => yelpTooltip(info.object, info.x, info.y),
             
@@ -85,7 +86,7 @@ Swal.mixin({
   input: 'text',
   confirmButtonText: 'Look Up &rarr;',
   showCancelButton: true,
-  progressSteps: ['1'],
+  // progressSteps: ['1'],
   background: `rgb(0,0,0)`,
 }).queue([
   {
