@@ -2,8 +2,11 @@
 var match_layer = [];
 var count = 0;
 const trial_data ='https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
-function match(){
-
+async function match(){
+  var checkresult = await clear_previous_matched_logs();
+  console.log(checkresult)
+  match_layer = [];
+  
   Swal.mixin({
     input: 'text',
     confirmButtonText: 'Next &rarr;',
@@ -52,8 +55,10 @@ function match(){
         position: 'top',
         background: `rgb(0,0,0,9)`,
         confirmButtonColor: `rgb(0,0,0)`,
-        confirmButtonText: 'Finish!'
+        confirmButtonText: 'Click Side Bar to Show Your Match'
       })
+      // document.getElementById("match_button").setAttribute('hidden', 'true');
+      document.getElementById("show_match_button").removeAttribute('hidden');
     }
     var rawbase = 'https://raw.githubusercontent.com/';
     var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillowDataCleanedv2.geojson';
@@ -91,8 +96,12 @@ function match(){
         }
         matched.delete(useruid)
         console.log(matched)
+       /////// async here
         var matchedresults = db.collection("matchedresults").doc(useruid);
-        matchedresults.set({});
+
+
+
+      /////// async here
         for (matchId of matched){
           docRef = db.collection("users").doc(matchId)
           docRef.get().then(function(doc) {
@@ -134,12 +143,13 @@ function match(){
   
       db.collection("users").doc(useruid).update({
         matchedRegions: matchedRegions
-      }) 
+      })
 
-      push_match_data()
+      
     })
-  })
 
+  })
+  
 
 
   function get_match_user(matchedRegion){
@@ -155,7 +165,15 @@ function match(){
         resolve(matchedUid);
       }, 1000);
     });
-  }
+  };
+
+
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve('clean and pushed data to matched results');
+    }, 1000);
+  });
+
 };
 
 function click_user(){
@@ -169,18 +187,24 @@ function click_user(){
 };
 
 function push_match_data(){
+    document.getElementById("show_match_button").setAttribute('hidden','true');
     var user = firebase.auth().currentUser;
     var useruid;
     if (user != null) {
       useruid = user.uid  // The user's ID, unique to the Firebase project.
+      // var test = await clear_previous_matched_logs();
+      // console.log(test)
     }
     var docRef = db.collection("matchedresults").doc(useruid);
-    docRef.get().then(function(doc) {
+    docRef.get().then(async function(doc) {
+
       if (doc.exists) {
+  
           // document.getElementById("match-button").removeAttribute('hidden');
           console.log('fetching matched results')
           var data = doc.data();
           var data_final = data.datacollection;
+         
 
           match_layer.push(     
             new deck.IconLayer({
@@ -227,7 +251,7 @@ function push_match_data(){
                   global_long= user_long;
                   Swal.fire({
                     position: 'middle',
-                    imageUrl: d.photoURL,
+                    imageUrl: userinfo.photoURL,
                     imageWidth: 300,
                     imageHeight: 300,
                     // icon:'success',
@@ -261,9 +285,94 @@ function push_match_data(){
                 },
 
             }),
+
+// 
+            new deck.IconLayer({
+              id: 'icon-layer-image-matched'+JSON.stringify(count),
+              // data: icons,
+              data: data_final,
+              pickable: true,
+              autoHighlight: true,
+            // iconAtlas and iconMapping are required
+            // getIcon: return a string
+              // iconAtlas: 'images/icon-atlas.png',
+              // iconMapping: ICON_MAPPING,
+              // getIcon: d => 'marker',
+              getIcon: d => ({
+           
+                url: d.photoURL,
+                width: 128,
+                height: 128,
+                anchorY: 220,
+                anchorX: -50,
+              }),
+              
+              sizeScale: 1,
+              sizeMinPixels: 80,
+              getPosition: d => [d.coordinates.longtitude,d.coordinates.latitude],
+              getSize: d => 40,
+              // getColor: d => d.color,
+              // onHover: ({object, x, y}) => {
+              // const tooltip = `${object.name}\n${object.address}`;
+              onClick: function(d){
+                var userinfo = d.object;
+                console.log(userinfo)
+                var user_lat = userinfo.coordinates.latitude;
+                var user_long = userinfo.coordinates.longtitude;
+                global_lat = user_lat;
+                global_long= user_long;
+                Swal.fire({
+                  position: 'middle',
+                  imageUrl: userinfo.photoURL,
+                  imageWidth: 300,
+                  imageHeight: 300,
+                  // icon:'success',
+                  showCloseButton: true,
+                  showCancelButton: true,
+                  background: `rgb(0,0,0)`,
+                  title: d.name,
+                  html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
+                  //"the userid: "+d.id,
+              
+                  confirmButtonText: "View Location Stats",
+                  cancelButtonText: "Messages",
+                }).then((result) => {
+                  if (result.value) {
+                    openNav_picker();
+                    push_sfpd_layer(user_lat,user_long);
+                  // push_sfpd_layer(user_lat,user_long);
+                  }
+                  else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                  ) {
+                    Swal.fire(
+                      'communcation starting',
+                      'success'
+                    )
+
+                  }
+                })
+                
+              },
+
+          }),
+
+// 
+
+
+
+
+
+
+
+
             )
+    
             var matched_finalized_layer = match_layer.concat(update_layer).concat(base_layer);
+       
             update_layer.push(match_layer);
+            count = count +1;
 
             deckgl.setProps({layers:matched_finalized_layer});
   
