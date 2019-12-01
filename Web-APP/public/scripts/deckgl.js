@@ -1,11 +1,17 @@
+
+
 const Neighborhoods =
   'https://raw.githubusercontent.com/muyangguo/6242/master/Zillow-DataClean/zillow-neighborhoods.geojson';
 
 const icons = 'https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
 
 const ICON_MAPPING = {
-    marker: {x: 0, y: 0, width: 128, height: 256, mask: true}
+    marker: {x: 0, y: 0, width: 128, height: 256, mask: true, anchorY:200}
   };
+
+const POSITION_ICON_MAPPING = {
+    marker: {x: 0, y: 0, width: 512, height: 512, mask: true, anchorY:800}
+};
 // console.log(Neighborhoods.length);
 // import React from 'React';
 // const MAPBOX_TOKEN = `${process.env.REACT_APP_MAPBOX_API_KEY}`
@@ -40,7 +46,7 @@ const INITIAL_VIEW_STATE = {
     longitude: -122.4194,
     zoom: 12,
     bearing: 0,
-    pitch: 30,
+    pitch: 60,
 };
 
 
@@ -48,7 +54,6 @@ const base_layer = [
   new deck.GeoJsonLayer({
     id: 'Neighborhoods',
     data: Neighborhoods,
-    // Styles
     filled: true,
     pointRadiusMinPixels: 2,
     opacity: 1,
@@ -257,12 +262,15 @@ function push_user_location(){
         // document.getElementById("match-button").removeAttribute('hidden');
         console.log('pushing user location')
         var data = doc.data();
+        console.log(data)
+        var userinfo = [data["id"]];
+        photo_URL = data["photoURL"];
 
         var coords = [data["coordinates"]["longtitude"],data["coordinates"]["latitude"]];
         my_location_layer.push(      
           new deck.ScatterplotLayer({
           data: [
-            {position: coords, color: [250, 0, 0], radius: 150}
+            {position: coords, color: [65,105,225], radius: 150}
           ],
           getPosition: d => d.position,
           getRadius: d => d.radius,
@@ -270,30 +278,77 @@ function push_user_location(){
           
           opacity: 0.3
         }),
-      
+        
         new deck.IconLayer({
-          id: 'icon-layer',
+          id: 'icon-layer-pointer',
           // data: icons,
           data: [
-            {position: coords,color: [250, 0, 0],id:userinfo}
+            {position: coords,color: [65,105,225],id:userinfo}
 
           ],
           pickable: true,
+          autoHighlight: true,
         // iconAtlas and iconMapping are required
         // getIcon: return a string
-          iconAtlas: 'images/icon-atlas.png',
-          iconMapping: ICON_MAPPING,
+          // iconAtlas: 'images/icon-atlas.png',
+          iconAtlas: 'images/icon_position.png',
+          iconMapping: POSITION_ICON_MAPPING,
           getIcon: d => 'marker',
-      
-          sizeScale: 15,
+          // getIcon: d => ({
+       
+          //   url: photo_URL,
+          //   width: 128,
+          //   height: 128,
+          //   anchorY: 200,
+          // }),
+          
+          sizeScale: 1,
+          sizeMinPixels: 100,
           getPosition: d => d.position,
-          getSize: d => 5,
+          getSize: d => 80,
           getColor: d => d.color,
           // onHover: ({object, x, y}) => {
           // const tooltip = `${object.name}\n${object.address}`;
           onClick: (event) => {
             icon_event(data);
-            console.log(data.id);
+            // console.log(data.id);
+          },
+        }),
+
+
+        new deck.IconLayer({
+          id: 'icon-layer-image',
+          // data: icons,
+          data: [
+            {position: coords,color: [65,105,225],id:userinfo}
+
+          ],
+          pickable: true,
+          autoHighlight: true,
+        // iconAtlas and iconMapping are required
+        // getIcon: return a string
+          // iconAtlas: 'images/icon-atlas.png',
+          // iconMapping: ICON_MAPPING,
+          // getIcon: d => 'marker',
+          getIcon: d => ({
+       
+            url: photo_URL,
+            width: 128,
+            height: 128,
+            anchorY: 220,
+            anchorX: -50,
+          }),
+          
+          sizeScale: 1,
+          sizeMinPixels: 100,
+          getPosition: d => d.position,
+          getSize: d => 80,
+          // getColor: d => d.color,
+          // onHover: ({object, x, y}) => {
+          // const tooltip = `${object.name}\n${object.address}`;
+          onClick: (event) => {
+            icon_event(data);
+            // console.log(data.id);
           },
 
           
@@ -350,35 +405,38 @@ uber_layer.push(
 
       // return color(d.speed)
       if(d.speed>45)
-      return  [0,255,0] ;   
+      return  [60,179,63] ;  
+      if(d.speed>40)
+      return [50,205,50]; 
       else if(d.speed>35)  
-      return [75,255,0];
+      return [173,255,47];
       else if(d.speed>30)  
-      return  [125,255,0];
-      else if(d.speed>25)  
       return  [255,255,0];
+      else if(d.speed>25)  
+      return  [255,191,0];
       else if(d.speed>20)  
-      return [255,191,0];
-      else if(d.speed>15)  
       return [255,125,0];
+      else if(d.speed>15)  
+      return [255,69,0];
       else if(d.speed>10)
-      return [255,45,0];
+      return [220,20,60];
       else if(d.speed>5)
-      return [255,0,0];
-      else return [54.5,0,0];
-      
-        }  
+      return [178,34,34];
+      else return [127,255,0];
+    }
 
        }    // onHover: ({object, x, y}) => {      // const tooltip = `${object.from.name} to ${object.to.name}`;      /* Update tooltip         http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object      */    // }    }),
 ))
 
 //var new_layer = uber_layer.concat(base_layer).concat(update_layer);
-if (uber_layer_flag != true){
+// if (uber_layer_flag != true){
   var new_layer = uber_layer.concat(base_layer).concat(update_layer);
-  update_layer = update_layer.concat(uber_layer);
+  // update_layer = update_layer.concat(uber_layer);
+  update_layer.push(uber_layer)
   deckgl.setProps({layers: new_layer});
   uber_layer_flag = true;
-}
+  document.getElementById("legend").removeAttribute('hidden');
+// }
 
 };
 
@@ -409,7 +467,7 @@ function mapbox_geocoding(location){
       db.collection("users").doc(useruid).update({
           coordinates:{
             latitude:latitude,
-            longtitude,longtitude,
+            longtitude:longtitude,
           },
           })
           .then(function() {
@@ -438,126 +496,20 @@ uber_layer_flag = false;
 my_location_layer_flag = false;
 var reset_layers = base_layer;
 deckgl.setProps({layers: reset_layers});
+document.getElementById("legend").setAttribute("hidden", true);
 };
 
 
 
 
 
-function match(){
 
-  Swal.mixin({
-    input: 'text',
-    confirmButtonText: 'Next &rarr;',
-    showCancelButton: true,
-    showConfirmButton: true,
-    position: 'top',
-    background: `rgb(0,0,0,0.9)`,
-    // confirmButtonColor: `rgb(0,0,0)`,
-    // cancelButtonColor:`rgb(0,250,0)`,
-    progressSteps: ['1', '2', '3']
-  }).queue([
-    {
-      text: 'Which type of apartment do you want to live in?',
-      input: 'select',
-      inputOptions: {
-        'all_home':'All Home',
-        'single_family':'Single Family',
-        'condo':'Condo',
-        'top_tier':'Top Tier',
-        'middle_tier':'Middle Tier',
-        'bottom_tier':'Bottom Tier',
-        'studio':'Studio',
-        'one_bedroom':'One Bedroom',
-        'two_bedroom':'Two Bedroom',
-        'three_bedroom':'Three Bedroom',
-        'four_bedroom':'Four Bedroom'
-      } 
-    },
-    {
-      text: "What's the maximum monthly rental",
-      input: 'number'
-    },
-    {
-      text: "What's the minimum monthly rental",
-      input: 'number'
-    }
-  ]).then((result) => {
-    if (result.value) {
-      const answers = JSON.stringify(result.value)
-      Swal.fire({
-        title: 'All done!',
-        html: `
-          Your answers:
-          <pre><code>${answers}</code></pre>
-        `,
-        position: 'top',
-        background: `rgb(0,0,0,9)`,
-        confirmButtonColor: `rgb(0,0,0)`,
-        confirmButtonText: 'Finish!'
-      })
-    }
-    var rawbase = 'https://raw.githubusercontent.com/';
-    var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillowDataCleanedv2.geojson';
-    $.getJSON(rawbase + jsonloc, function( data ) {
-      var regions=data['features']
-      var matchedRegions=[]
-      for (region of regions){
-        var regionId=region["properties"]["regionid"]
-        var regionPrice=region['properties'][result.value[0]] 
-        if (regionPrice!=null && regionPrice<=result.value[1] && regionPrice>=result.value[2]){
-          matchedRegions.push(regionId)
-        }
-      }
-      var user = firebase.auth().currentUser;
-      var useruid;
-      var usertype;
-      if (user != null) {
-        useruid = user.uid  // The user's ID, unique to the Firebase project.
-      }
-      db.collection("users").doc(useruid).get().then(function(doc){
-        var data=doc.data()
-        console.log(doc.data())
-        usertype=data['type']
-        console.log(usertype)
-        for (matchedRegion of matchedRegions){
-          db.collection('regions').doc(matchedRegion).collection('users').doc(useruid).set(
-            {
-              uid: useruid,
-              type: usertype,
-              flag:1
-            }
-          )
-        }
-      })
-      db.collection("users").doc(useruid).update({
-        matchedRegions: matchedRegions
-      }) 
-    });
-    
-  })
-  // var user = firebase.auth().currentUser;
-  // var useruid = user.uid;
-  // var UserRef = db.collection("users").doc(useruid);
-  // UserRef.get().then(function(doc) {
-  //   if (doc.exists) {
+
 
       
 
 
 
-
-
-  //   }
-  //   else {
-  
-  //   console.log("No such document!");
-  // }
-  //   }).catch(function(error) {
-  //   console.log("Error getting document:", error);
-  // });
-
-};
 
 function click_user(){
   Swal.fire({
@@ -570,28 +522,58 @@ function click_user(){
 };
 
 
+var global_lat;
+var global_long;
 
 function icon_event(d){
+  console.log(d)
+  console.log(update_layer);
+  var user_lat = d.coordinates.latitude;
+  var user_long = d.coordinates.longtitude;
+  global_lat = user_lat;
+  global_long= user_long;
+  console.log(d);
+  // push_sfpd_layer(user_lat,user_long);
   Swal.fire({
     position: 'middle',
+    imageUrl: d.photoURL,
+    imageWidth: 300,
+    imageHeight: 300,
     // icon:'success',
+    showCloseButton: true,
     showCancelButton: true,
     background: `rgb(0,0,0)`,
-    title:"User Info",
-    html: "User id: "+ d.id+"<br>User name: "+d.name+"<br>User email: "+d.email+"<br>User gender: "+d.gender+"<br>Visitor or Landloar: "+d.types,
+    title: d.name,
+    html: "User id: "+ d.id+"<br>Email: "+d.email+"<br>Gender: "+d.gender+"<br>Role: "+d.type,
     //"the userid: "+d.id,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: "message",
-    cancelButtonText: "cancel",
+
+    confirmButtonText: "View Location Stats",
+    cancelButtonText: "Messages",
   }).then((result) => {
     if (result.value) {
+      openNav_picker();
+      push_sfpd_layer(user_lat,user_long);
+    // push_sfpd_layer(user_lat,user_long);
+    }
+    else if (
+      /* Read more about handling dismissals below */
+      result.dismiss === Swal.DismissReason.cancel
+    ) {
       Swal.fire(
         'communcation starting',
         'success'
       )
+
+      
+
+
+
+
+
+
+        // push_sfpd_layer(user_lat,user_long);
     }
   })
   
-}
+};
 
