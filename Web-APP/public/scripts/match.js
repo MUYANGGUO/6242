@@ -1,9 +1,11 @@
 var match_layer_flag = false;
 var match_data_global =[];
 var match_data_obj = {datakey:[],color:[65,105,225]};
+var match_layer = [];
+var count = 0;
 const trial_data ='https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
 function match(){
-var match_layer = [];
+
   Swal.mixin({
     input: 'text',
     confirmButtonText: 'Next &rarr;',
@@ -93,24 +95,36 @@ var match_layer = [];
         console.log(matched)
         var match_data=[];
         var match_data_obj = {datakey:[],color:[65,105,225]};
+        var matchedresults = db.collection("matchedresults").doc(useruid);
+        matchedresults.set({});
         for (matchId of matched){
           docRef = db.collection("users").doc(matchId)
-          docRef.get().then(async function(doc) {
+          docRef.get().then(function(doc) {
           if (doc.exists) {
               // document.getElementById("match-button").removeAttribute('hidden');
             //   console.log('pushing match location')
+
+
+
+
+
               var data = doc.data();
-              await match_data_obj.datakey.push(data);
-            //   console.log(data)
-            //   var userinfo = [data["id"]];
-            //   var coords = [data["coordinates"]["longtitude"],data["coordinates"]["latitude"]];
-            //   match_data.push({"position": coords, "color": [65,105,225],"id":userinfo});
+
+              count = count +1;
+
+              
+              matchedresults.update({
+                datacollection: firebase.firestore.FieldValue.arrayUnion(data)
+            });
+            
           } else {
             console.log("No such document!");
          }}).catch(function(error) {
           console.log("Error getting document:", error);
           });
         }
+
+       
         // console.log(match_data)
         // match_data_global = match_data;
         // console.log(match_data["position"])
@@ -118,51 +132,21 @@ var match_layer = [];
 
 
         // console.log(check.coordinates)
-        match_layer.push(     
-        new deck.IconLayer({
-          id: 'match-layer',
-          // data: icons,
-          data: check,
-          pickable: true,
-          autoHighlight: true,
-        // iconAtlas and iconMapping are required
-        // getIcon: return a string
-          iconAtlas: 'images/icon-atlas.png',
-          iconMapping: ICON_MAPPING,
-          getIcon: d => 'marker',
-          sizeMinPixels: 100,
-          sizeScale: 20,
-          getPosition: d => [d.coordinates.longtitude,d.coordinates.latitude],
-          getSize: d => 10,
-          getColor: [65,105,225],
-          // onHover: ({object, x, y}) => {
-          // const tooltip = `${object.name}\n${object.address}`;
-          onClick: (event) => {
-            icon_event(data);
-            // console.log(data.id);
-          },
-          
-        }),
-        )
-        if (match_layer_flag != true){
-          
-          //var new_layer = match_layer.concat(base_layer).concat(update_layer);
-          //update_layer = update_layer.concat(match_layer);
-          //deckgl.setProps({layers: new_layer});
-          deckgl.setProps({layers:match_layer});
-          match_layer_flag = true;
-        //   console.log(match_layer);
-        //   console.log(match_data);
-        //   console.log("check");
-        }    
+        
+  
     })
     var check = match_data_obj.datakey;
     console.log(check.length);
       db.collection("users").doc(useruid).update({
         matchedRegions: matchedRegions
       }) 
+
+      push_match_data()
     })
   })
+
+
+
   function get_match_user(matchedRegion){
     var matchedUid=new Set()
     db.collection('regions').doc(matchedRegion).collection('users').get().then(function(querySnapshot){
@@ -188,3 +172,60 @@ function click_user(){
     confirmButtonColor: `rgb(0,0,0)`,
   })
 };
+
+function push_match_data(){
+    var user = firebase.auth().currentUser;
+    var useruid;
+    if (user != null) {
+      useruid = user.uid  // The user's ID, unique to the Firebase project.
+    }
+    var docRef = db.collection("matchedresults").doc(useruid);
+    docRef.get().then(function(doc) {
+      if (doc.exists) {
+          // document.getElementById("match-button").removeAttribute('hidden');
+          console.log('fetching matched results')
+          var data = doc.data();
+          var data_final = data.datacollection;
+
+          match_layer.push(     
+            new deck.IconLayer({
+              id: 'match-layer'+JSON.stringify(count),
+              // data: icons,
+              data: data_final,
+              pickable: true,
+              autoHighlight: true,
+            // iconAtlas and iconMapping are required
+            // getIcon: return a string
+              iconAtlas: 'images/icon-atlas.png',
+              iconMapping: ICON_MAPPING,
+              getIcon: d => 'marker',
+              sizeMinPixels: 100,
+              sizeScale: 20,
+              getPosition: d => [d.coordinates.longtitude,d.coordinates.latitude],
+              getSize: d => 10,
+              getColor: [65,105,225],
+              // onHover: ({object, x, y}) => {
+              // const tooltip = `${object.name}\n${object.address}`;
+              onClick: (event) => {
+                icon_event(data);
+                // console.log(data.id);
+              },
+              
+            }),
+            )
+            
+            deckgl.setProps({layers:match_layer})
+  
+          
+
+      } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+      }
+  }).catch(function(error) {
+      console.log("Error getting document:", error);
+  });
+    // console.log(match_layer)
+    // deckgl.setProps({layers:match_layer})
+}
+
