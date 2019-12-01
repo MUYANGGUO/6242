@@ -405,25 +405,24 @@ uber_layer.push(
 
       // return color(d.speed)
       if(d.speed>45)
-      return  [60,179,63] ;  
-      if(d.speed>40)
-      return [50,205,50]; 
+      return  [0,255,0] ;   
       else if(d.speed>35)  
-      return [173,255,47];
+      return [75,255,0];
       else if(d.speed>30)  
-      return  [255,255,0];
+      return  [125,255,0];
       else if(d.speed>25)  
-      return  [255,191,0];
+      return  [255,255,0];
       else if(d.speed>20)  
-      return [255,125,0];
+      return [255,191,0];
       else if(d.speed>15)  
-      return [255,69,0];
+      return [255,125,0];
       else if(d.speed>10)
-      return [220,20,60];
+      return [255,45,0];
       else if(d.speed>5)
-      return [178,34,34];
-      else return [127,255,0];
-    }
+      return [255,0,0];
+      else return [54.5,0,0];
+      
+        }  
 
        }    // onHover: ({object, x, y}) => {      // const tooltip = `${object.from.name} to ${object.to.name}`;      /* Update tooltip         http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object      */    // }    }),
 ))
@@ -435,7 +434,6 @@ uber_layer.push(
   update_layer.push(uber_layer)
   deckgl.setProps({layers: new_layer});
   uber_layer_flag = true;
-  document.getElementById("legend").removeAttribute('hidden');
 // }
 
 };
@@ -496,7 +494,6 @@ uber_layer_flag = false;
 my_location_layer_flag = false;
 var reset_layers = base_layer;
 deckgl.setProps({layers: reset_layers});
-document.getElementById("legend").setAttribute("hidden", true);
 };
 
 
