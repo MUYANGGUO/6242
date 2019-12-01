@@ -1,96 +1,135 @@
-// function YelpAPI(location){
-//     //add mapboxgl.accessToken
-//     mapboxgl.accessToken = mapboxgl_accessToken;
-//     var request = new XMLHttpRequest()
-    
-//     request.open('GET', 'https://api.mapbox.com/geocoding/v5/mapbox.places/'+String(location)+'.json?access_token='+mapboxgl.accessToken+'&limit=3&types=address&autocomplete=true')
-//     request.onload = function() {
-//       // Begin accessing JSON data here
-//       var data = JSON.parse(this.response)
-//       if (request.status >= 200 && request.status < 400) {
-//         var user = firebase.auth().currentUser;
-//         var useruid;
-//         if (user != null) {
-//           useruid = user.uid;  // The user's ID, unique to the Firebase project.
-//         }
-//         var coordinates = data['features'][0]['geometry']['coordinates']
-//         var latitude = coordinates[1];
-//         var longtitude = coordinates[0];
+
+
+var yelp_controller_layer= [];
+
+
+
+function startyelpfinding(interesteditem,user_lat,user_long) {
+var yelp_layer = [];
+var lat = JSON.stringify(user_lat);
+var long = JSON.stringify(user_long);
+// var lat = JSON.stringify(37.786882);
+// var long = JSON.stringify(-122.399972);
+// var interesteditem = JSON.stringify("print center");
+// var interesteditem = JSON.stringify(interest);
+var limitnumofresults = JSON.stringify(20);
+console.log(status);
+
   
-//         db.collection("users").doc(useruid).update({
-//             coordinates:{
-//               latitude:latitude,
-//               longtitude,longtitude,
-//             },
-//             })
-//             .then(function() {
-//             console.log("successfully updated user location lat/long to database!");
-//             update_user_region(longtitude,latitude)
-//             my_location_layer_flag = false;
-//             push_user_location();
-//             })
-//             .catch(function(error) {
-//           // The document probably doesn't exist.
-//             console.error("Error updating document: ", error);
-//             });
-//       } else {
-//         console.log('XML HTTP request error');
-//       }
-//     }
-  
-//     request.send()
-  
-  
-//   };
 
-// var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+  $(function (){
+    $.ajax({
+      url: "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?radius=2000&latitude="+ lat + "&longitude="+ long +"&sort_by=rating&term="+ interesteditem +"&limit="+ limitnumofresults,
+      type: "GET",
+      beforeSend: function(request) {
+        request.setRequestHeader("Authorization", "Bearer Dk_NngRSHCj1zE1iQ_dgZLTADj7cn3_2JW4dKKFaOmPt9Eqd4feBLXN3Er7xu5TXeSOZjc5VVxFDmYKFLy_QGlm_95vOp5REw33EwoYvMu6MYrre-bPaCH8XhFvcXXYx");
 
-function getyelp(){
+      },
 
-    var data = null;
-    var xhr = new XMLHttpRequest();
-// // See this website:  https://medium.com/@dtkatz/3-ways-to-fix-the-cors-error-and-how-access-control-allow-origin-works-d97d55946d9
+      success: function(data){
+        // console.log('success',data);
+        // console.log('success',data.businesses[0].coordinates.longitude);
 
-// // see the following example:
+        var data_parsed = data["businesses"];
 
-// // https://cors-anywhere.herokuapp.com/https://joke-api-strict-cors.appspot.com/jokes/random
+        console.log(data_parsed)
 
-    xhr.open("GET", "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?radius=2000&latitude=37.786882&longitude=-122.399972&sort_by=rating&term=print center&limit=50");
-    xhr.setRequestHeader("Authorization", "Bearer Dk_NngRSHCj1zE1iQ_dgZLTADj7cn3_2JW4dKKFaOmPt9Eqd4feBLXN3Er7xu5TXeSOZjc5VVxFDmYKFLy_QGlm_95vOp5REw33EwoYvMu6MYrre-bPaCH8XhFvcXXYx");
-    // xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+        yelp_layer.push(
+           new deck.IconLayer({
+            data: data_parsed,
+            pickable: true,
+            autoHighlight: true,
+        // iconAtlas and iconMapping are required
+        // getIcon: return a string
+            iconAtlas: 'images/icon-atlas.png',
+            iconMapping: ICON_MAPPING,
+            getIcon: d => 'marker',
+          
+            sizeScale: 3,
+            sizeMinPixels: 100,
+            getSize: d => 50,
+            getColor:[255,255,0],
+            getPosition: d=>[d.coordinates.longitude,d.coordinates.latitude],
+            onHover: info => yelpTooltip(info.object, info.x, info.y),
+            
 
-    console.log(xhr.status);
+          }),
+        
+        
+        )
+        var yelp_layer_finalized = yelp_layer.concat(update_layer).concat(base_layer);
+        deckgl.setProps({layers: yelp_layer_finalized});
+      },
+    })
 
 
 
 
 
-    xhr.addEventListener("readystatechange", function () {
-      if (this.readyState === 4) {
-        data = JSON.parse(this.responseText);
-        console.log(data);
-      }
-    });
-    xhr.send(data);
-    // $.ajax({
-    //     url: "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search",
-    //     type: "GET",
-    //     data: {
-    //         "$latitude" : 37.786882,
-    //         "$longitude" : -122.399972,
-    //         "$Authorization" : "Bearer Dk_NngRSHCj1zE1iQ_dgZLTADj7cn3_2JW4dKKFaOmPt9Eqd4feBLXN3Er7xu5TXeSOZjc5VVxFDmYKFLy_QGlm_95vOp5REw33EwoYvMu6MYrre-bPaCH8XhFvcXXYx",
-    //         "$limit" : 10,
-    //     }
+  });
 
-    // }).done(function(data) {
-    //     alert("retrieved " + data.length + " records from the dataset!");
-    //     console.log(data);
-    // });
+
+
+
+
+
 
 
 };
 
 
 
+function show_yelp_layer(){
+
+Swal.mixin({
+  input: 'text',
+  confirmButtonText: 'Look Up &rarr;',
+  showCancelButton: true,
+  progressSteps: ['1'],
+  background: `rgb(0,0,0)`,
+}).queue([
+  {
+    title: 'Which points of interest do you want to find?',
+  },
+]).then((result) => {
+  if (result.value) {
+    const user_typed_interest = JSON.stringify(result.value)
+    startyelpfinding(user_typed_interest,global_lat, global_long);
+  }
+})
+
+
+
+
+};
 
  
+
+
+
+
+function yelpTooltip(object, x, y) {
+  console.log(object)
+  const el = document.getElementById('tooltip');
+
+  if (object) {
+
+
+    el.innerHTML =  
+    '<img src='+object.image_url+' width="100" height="100">'+
+      '<pre style="color:white;font-size: 18px;">'+
+    'Place Name : '+object.name+ '</pre>'+'<pre style="color:white;font-size: 16px;">Cateogry : '+ object.categories[0].title+'</pre>'
+    +'<pre style="color:white;font-size: 16px;">Rating : '+ object.rating+';  Review Count : '+ object.review_count +'</pre>' +'<pre style="color:orange;font-size: 16px;">Price : '+ object.price+'</pre>'
+    +'<pre style="color:white;font-size: 16px;">Location : '+ object.location.display_address+'</pre>'
+ ;
+    
+
+  //   color value is the count in this area
+    el.style.display = 'block';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+  } else {
+    el.style.display = 'none';
+  }
+};
+

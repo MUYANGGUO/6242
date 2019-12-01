@@ -62,10 +62,7 @@ function sfpdTooltip(object, x, y) {
      for (var i = 0; i < count_category_sorted.slice(0,5).length; i++) {
         el.innerHTML +=  
       
-   
         count_category_sorted[i]+' :'+count_categroy[count_category_sorted[i]]+ '<br />'
-
-      
 
 
      }
@@ -98,14 +95,12 @@ function show_sfpd_layer(){
     deckgl.setProps({layers: sfpd});   
 };
 
-function show_yelp_layer(){
-
-};
 
 function reset_picker_layers(){
-        reset_layers();
-        push_user_location();
-        
+        // reset_layers();
+        // // push_user_location();
+        var stats_layer = update_layer.concat(base_layer);
+        deckgl.setProps({layers: stats_layer});  
 
         // render a empty push matched layers here(rerender); does not need to reset, reset is to show the matched users layer only
 };
