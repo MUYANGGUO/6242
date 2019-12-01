@@ -236,6 +236,7 @@ function closeForm() {
 
   }
 
+//changed
 function openMessage() {
     document.getElementById("message-profile-form").style.display = "block";
     loadMessages();

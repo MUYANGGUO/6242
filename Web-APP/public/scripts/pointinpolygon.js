@@ -80,7 +80,20 @@
 
 // });
 
+function clear_previous_matched_logs(){
+    var user = firebase.auth().currentUser;
+    var useruid=user.uid;
+    console.log(useruid)
+    var matchedresults = db.collection("matchedresults").doc(useruid);
+    matchedresults.set({});
 
+    return new Promise(resolve => {
+        setTimeout(() => {
+          resolve('cleaned data');
+        }, 1000);
+      });
+
+}
 function clear_previous_user_region_logs(){
     var user = firebase.auth().currentUser;
     var useruid;
