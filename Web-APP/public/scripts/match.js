@@ -206,15 +206,74 @@ function push_match_data(){
               getColor: [65,105,225],
               // onHover: ({object, x, y}) => {
               // const tooltip = `${object.name}\n${object.address}`;
-              onClick: (event) => {
-                icon_event(data);
-                // console.log(data.id);
-              },
+
+            //   onClick: (event) => {
+            //     icon_event_matched(data_final);
+            //     // console.log(data_final);
+            //     // console.log(data.id);
+            //   },
+
+              onClick: function(d){
+                  var userinfo = d.object;
+                  console.log(userinfo)
+                  var user_lat = userinfo.coordinates.latitude;
+                  var user_long = userinfo.coordinates.longtitude;
+                  global_lat = user_lat;
+                  global_long= user_long;
+                  Swal.fire({
+                    position: 'middle',
+                    imageUrl: d.photoURL,
+                    imageWidth: 300,
+                    imageHeight: 300,
+                    // icon:'success',
+                    showCloseButton: true,
+                    showCancelButton: true,
+                    background: `rgb(0,0,0)`,
+                    title: d.name,
+                    html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
+                    //"the userid: "+d.id,
+                
+                    confirmButtonText: "View Stats",
+                    cancelButtonText: "Messages",
+                  }).then((result) => {
+                    if (result.value) {
+                      openNav_picker();
+                      push_sfpd_layer(user_lat,user_long);
+                    // push_sfpd_layer(user_lat,user_long);
+                    }
+                    else if (
+                      /* Read more about handling dismissals below */
+                      result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                      Swal.fire(
+                        'communcation starting',
+                        'success'
+                      )
+
+                    }
+                  })
+                  
+                },
+                
+                
+
+                
+                  
+
+
+
+
+
+
+
+
               
             }),
             )
-            
-            deckgl.setProps({layers:match_layer})
+            var matched_finalized_layer = match_layer.concat(update_layer).concat(base_layer);
+            update_layer.push(match_layer);
+
+            deckgl.setProps({layers:matched_finalized_layer});
   
           
 
@@ -229,3 +288,56 @@ function push_match_data(){
     // deckgl.setProps({layers:match_layer})
 }
 
+function icon_event_matched(d){
+    console.log(d)
+    // console.log(update_layer);
+    var user_lat = d.coordinates.latitude;
+    var user_long = d.coordinates.longtitude;
+    global_lat = user_lat;
+    global_long= user_long;
+    console.log(d);
+    // push_sfpd_layer(user_lat,user_long);
+    Swal.fire({
+      position: 'middle',
+      imageUrl: d.photoURL,
+      imageWidth: 300,
+      imageHeight: 300,
+      // icon:'success',
+      showCloseButton: true,
+      showCancelButton: true,
+      background: `rgb(0,0,0)`,
+      title: d.name,
+      html: "User id: "+ d.id+"<br>Email: "+d.email+"<br>Gender: "+d.gender+"<br>Role: "+d.type,
+      //"the userid: "+d.id,
+  
+      confirmButtonText: "View Stats",
+      cancelButtonText: "Messages",
+    }).then((result) => {
+      if (result.value) {
+        openNav_picker();
+        push_sfpd_layer(user_lat,user_long);
+      // push_sfpd_layer(user_lat,user_long);
+      }
+      else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        Swal.fire(
+          'communcation starting',
+          'success'
+        )
+  
+        
+  
+  
+  
+  
+  
+  
+          // push_sfpd_layer(user_lat,user_long);
+      }
+    })
+    
+  };
+  
+  
