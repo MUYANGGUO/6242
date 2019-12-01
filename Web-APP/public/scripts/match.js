@@ -1,6 +1,4 @@
-var match_layer_flag = false;
-var match_data_global =[];
-var match_data_obj = {datakey:[],color:[65,105,225]};
+
 var match_layer = [];
 var count = 0;
 const trial_data ='https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
@@ -93,8 +91,6 @@ function match(){
         }
         matched.delete(useruid)
         console.log(matched)
-        var match_data=[];
-        var match_data_obj = {datakey:[],color:[65,105,225]};
         var matchedresults = db.collection("matchedresults").doc(useruid);
         matchedresults.set({});
         for (matchId of matched){
@@ -135,8 +131,7 @@ function match(){
         
   
     })
-    var check = match_data_obj.datakey;
-    console.log(check.length);
+  
       db.collection("users").doc(useruid).update({
         matchedRegions: matchedRegions
       }) 
@@ -196,14 +191,24 @@ function push_match_data(){
               autoHighlight: true,
             // iconAtlas and iconMapping are required
             // getIcon: return a string
-              iconAtlas: 'images/icon-atlas.png',
-              iconMapping: ICON_MAPPING,
+              iconAtlas: 'images/icon_position.png',
+              
+              iconMapping: POSITION_ICON_MAPPING,
               getIcon: d => 'marker',
-              sizeMinPixels: 100,
-              sizeScale: 20,
+              sizeMinPixels: 80,
+              sizeScale: 1,
               getPosition: d => [d.coordinates.longtitude,d.coordinates.latitude],
-              getSize: d => 10,
-              getColor: [65,105,225],
+              getSize: d => 80,
+            //   getColor: [65,105,225],
+            getColor: function(d){
+                if (d.type == "landlord")
+                return [105,0,0];
+                else if(d.type == "tenant")
+                return [0,105,0];
+                else 
+                return [0,0,0];
+
+            },
               // onHover: ({object, x, y}) => {
               // const tooltip = `${object.name}\n${object.address}`;
 
@@ -233,7 +238,7 @@ function push_match_data(){
                     html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
                     //"the userid: "+d.id,
                 
-                    confirmButtonText: "View Stats",
+                    confirmButtonText: "View Location Stats",
                     cancelButtonText: "Messages",
                   }).then((result) => {
                     if (result.value) {
@@ -254,20 +259,7 @@ function push_match_data(){
                   })
                   
                 },
-                
-                
 
-                
-                  
-
-
-
-
-
-
-
-
-              
             }),
             )
             var matched_finalized_layer = match_layer.concat(update_layer).concat(base_layer);

@@ -45,7 +45,7 @@ console.log(status);
             iconMapping: ICON_MAPPING,
             getIcon: d => 'marker',
           
-            sizeScale: 3,
+            sizeScale: 2,
             sizeMinPixels: 100,
             getSize: d => 50,
             getColor:[255,255,0],
@@ -109,17 +109,17 @@ Swal.mixin({
 
 
 function yelpTooltip(object, x, y) {
-  console.log(object)
+  // console.log(object)
   const el = document.getElementById('tooltip');
 
   if (object) {
 
 
     el.innerHTML =  
-    '<img src='+object.image_url+' width="100" height="100">'+
+    '<img src='+object.image_url+' width="100" height="100">'+'<img src=images/icon_yelp.png width="100" height="100" align="right">'+
       '<pre style="color:white;font-size: 18px;">'+
     'Place Name : '+object.name+ '</pre>'+'<pre style="color:white;font-size: 16px;">Cateogry : '+ object.categories[0].title+'</pre>'
-    +'<pre style="color:white;font-size: 16px;">Rating : '+ object.rating+';  Review Count : '+ object.review_count +'</pre>' +'<pre style="color:orange;font-size: 16px;">Price : '+ object.price+'</pre>'
+    +'<pre style="color:white;font-size: 16px;">Rating : '+ object.rating+' ;  Review Count : '+ object.review_count +'</pre>' +'<pre style="color:orange;font-size: 16px;">Price : '+ object.price+'</pre>'
     +'<pre style="color:white;font-size: 16px;">Location : '+ object.location.display_address+'</pre>'
  ;
     

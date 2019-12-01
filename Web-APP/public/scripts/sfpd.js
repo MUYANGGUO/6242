@@ -55,7 +55,7 @@ function sfpdTooltip(object, x, y) {
       el.innerHTML =  
       
         '<pre style="color:gray;font-size: 18px;">'+
-      'Total Incidents :'+object.colorValue+ '</pre>'+'<pre style="color:gray;font-size: 12px;">Top 5 Incidents :'+ '</pre>'
+      'Total Incidents :'+object.colorValue+ '</pre>'+'<pre style="color:gray;font-size: 12px;">Top 5 Incidents :'+ '</pre>'+'<img src=images/icon_sfpd.png width="50" height="50" align="right">'
 
    ;
       
