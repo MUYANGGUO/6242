@@ -572,7 +572,7 @@ function click_user(){
 };
 
 
-
+var targetuid = [];
 function icon_event(d){
   Swal.fire({
     position: 'middle',
@@ -587,7 +587,9 @@ function icon_event(d){
     confirmButtonText: "message",
     cancelButtonText: "cancel",
   }).then((result) => {
-    openMessage(d.id)
+    openMessage(d.id),
+    targetuid = d.id,
+    console.log("target:" + targetuid)
     // console.log(d.id)
     // if (result.value) {
     //   Swal.fire(

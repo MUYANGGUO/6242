@@ -279,7 +279,7 @@ function isUserSignedIn() {
 function saveMessage(messageText) {
   // Add a new message entry to the database.
   var senderuid = firebase.auth().currentUser.uid;
-  var receiveruid = firebase.auth().currentUser.uid;
+  var receiveruid = targetuid;
   var uidpair = [senderuid, receiveruid];
   var sortuid = uidpair.sort();
   var loweruid = sortuid[0];
@@ -306,11 +306,12 @@ function loadMessages(d) {
   var sortuid = uidpair.sort();
   var loweruid = sortuid[0];
   var upperuid = sortuid[1];
+  console.log("current:"+currentuid);
   console.log("uid1load: " + loweruid);
   console.log("uid2load: " + upperuid);
   var query = firebase.firestore()
                   .collection('messages')
-                  .where("messagepair", "==", [loweruid, upperuid])            
+                  .where("messagepair", "==", sortuid)            
                   .orderBy('timestamp', 'desc')
                   .limit(4);
 
@@ -588,6 +589,34 @@ function checkSetup() {
         'Make sure you go through the codelab setup instructions and make ' +
         'sure you are running the codelab using `firebase serve`');
   }
+}
+
+// Open the list of users messaged with
+
+function openList() {
+  var currentuid = firebase.auth().currentUser.uid;
+  //console.log(currentuid);
+  db.collection('messages').where("messagepair", "array-contains", currentuid).get().then((snapshot) => {
+    snapshot.docs.forEach(doc => {
+      var otheruid = {};
+      pairs = doc.data().messagepair;
+      var a = pairs.indexOf(currentuid);
+      var otheruid = pairs[1-a];
+      // const uniqueother = otheruid.filter((x, i, a) => a.indexOf(x) == i);
+      console.log("index:"+a);
+      console.log("other:"+otheruid);
+      // for (var doc in doc.data()) {
+      //   var element = document.createElement("button");
+      //   //Assign different attributes to the element. 
+      //   element.setAttribute("otheruid", otheruid);
+      //   element.innerHTML = otheruid;           
+      //   element.setAttribute("onclick", openMessage(otheruid)); //If you wish to add click event
+  
+      //   //Append the element in page (in span).  
+      //   document.body.appendChild(element);
+      // }
+        ;}) 
+    })
 }
 
 // Checks that Firebase has been imported.
