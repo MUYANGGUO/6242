@@ -4,6 +4,7 @@ var count = 0;
 const trial_data ='https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
 async function match(){
   var checkresult = await clear_previous_matched_logs();
+  document.getElementById("show_match_button").setAttribute('hidden','true');
   console.log(checkresult)
   match_layer = [];
   
@@ -191,7 +192,7 @@ function click_user(){
 function push_match_data(){
 
 
-  document.getElementById("show_match_button").setAttribute('hidden','true');
+  // document.getElementById("show_match_button").setAttribute('hidden','true');
     var user = firebase.auth().currentUser;
     var useruid;
     if (user != null) {
