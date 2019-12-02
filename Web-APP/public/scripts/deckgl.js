@@ -562,10 +562,10 @@ function icon_event(d){
       result.dismiss === Swal.DismissReason.cancel
     ) {
       openMessage(d),
-                    myname = d.name,
-                    targetuid = d.id,
-                    targetname = d.name,
-                    targetphoto = d.photoURL
+                    myname = d.name;
+                    targetuid = d.id;
+                    targetname = d.name;
+                    targetphoto = d.photoURL;
       // Swal.fire(
       //   'communcation starting',
       //   'success'
