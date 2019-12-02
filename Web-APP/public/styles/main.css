@@ -314,13 +314,11 @@
 .swal2-progress-steps .swal2-progress-step {
   background: grey !important;
 }
-
 .swal2-progress-steps .swal2-progress-step ~ .swal2-progress-step-line {
   background: grey !important;
 }
-
 .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{
-  background:green !important;
+  background:#B22222!important;
 }
 .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step ~ .swal2-progress-step-line {
   background: grey !important;
@@ -662,3 +660,6 @@ main, #messages-card {
   margin-right: 10px;
   color:white;
 }
+
+
+

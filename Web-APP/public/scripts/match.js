@@ -127,6 +127,7 @@ async function match(){
          }}).catch(function(error) {
           console.log("Error getting document:", error);
           });
+          
         }
 
        
@@ -163,12 +164,13 @@ async function match(){
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(matchedUid);
-      }, 1000);
+      }, 100);
     });
   };
 
 
   return new Promise(resolve => {
+    
     setTimeout(() => {
       resolve('clean and pushed data to matched results');
     }, 1000);
@@ -186,8 +188,14 @@ function click_user(){
   })
 };
 
+var targetuid = [];
+var targetname = [];
+var targetphoto = [];
+var myname = [];
 function push_match_data(){
-    document.getElementById("show_match_button").setAttribute('hidden','true');
+
+
+  document.getElementById("show_match_button").setAttribute('hidden','true');
     var user = firebase.auth().currentUser;
     var useruid;
     if (user != null) {
@@ -196,10 +204,10 @@ function push_match_data(){
       // console.log(test)
     }
     var docRef = db.collection("matchedresults").doc(useruid);
-    docRef.get().then(async function(doc) {
+    docRef.get().then(function(doc) {
 
       if (doc.exists) {
-  
+        
           // document.getElementById("match-button").removeAttribute('hidden');
           console.log('fetching matched results')
           var data = doc.data();
@@ -274,10 +282,16 @@ function push_match_data(){
                       /* Read more about handling dismissals below */
                       result.dismiss === Swal.DismissReason.cancel
                     ) {
-                      Swal.fire(
-                        'communcation starting',
-                        'success'
-                      )
+                      openMessage(userinfo.id),
+                      otheruid = userinfo.id,
+                      othername = userinfo.name,
+                      otherphoto = userinfo.photoURL,
+                      console.log(userinfo)
+                      // Swal.fire(
+                      //   'communcation starting',
+                      //   'success'
+                      // )
+
 
                     }
                   })
@@ -346,10 +360,15 @@ function push_match_data(){
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                   ) {
-                    Swal.fire(
-                      'communcation starting',
-                      'success'
-                    )
+                    openMessage(userinfo.id),
+                      otheruid = userinfo.id,
+                      othername = userinfo.name,
+                      otherphoto = userinfo.photoURL,
+                      console.log(userinfo)
+                      // Swal.fire(
+                      //   'communcation starting',
+                      //   'success'
+                      // )
 
                   }
                 })
@@ -423,10 +442,15 @@ function icon_event_matched(d){
         /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel
       ) {
-        Swal.fire(
-          'communcation starting',
-          'success'
-        )
+        openMessage(userinfo.id),
+        otheruid = userinfo.id,
+        othername = userinfo.name,
+        otherphoto = userinfo.photoURL,
+        console.log(userinfo)
+                      // Swal.fire(
+                      //   'communcation starting',
+                      //   'success'
+                      // )
   
         
   
@@ -441,4 +465,5 @@ function icon_event_matched(d){
     
   };
   
+
   

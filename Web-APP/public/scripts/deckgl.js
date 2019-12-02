@@ -392,7 +392,7 @@ uber_layer.push(
     id: 'line-layer',
     data: uber_data,
     pickable: true,
-
+    opacity:0.9,
     getWidth: 4,
     getSourcePosition: d => d.start,
     getTargetPosition: d => d.end,
@@ -404,23 +404,25 @@ uber_layer.push(
       // console.log(color(d.speed))
 
       // return color(d.speed)
-      if(d.speed>45)
-      return  [0,255,0] ;   
-      else if(d.speed>35)  
-      return [75,255,0];
-      else if(d.speed>30)  
-      return  [125,255,0];
-      else if(d.speed>25)  
-      return  [255,255,0];
-      else if(d.speed>20)  
-      return [255,191,0];
-      else if(d.speed>15)  
-      return [255,125,0];
-      else if(d.speed>10)
-      return [255,45,0];
-      else if(d.speed>5)
-      return [255,0,0];
-      else return [54.5,0,0];
+      if(d.speed>45)      
+      return  [60,179,63] ;        
+      if(d.speed>40)      
+      return [50,205,50];       
+      else if(d.speed>35)        
+      return [173,255,47];      
+      else if(d.speed>30)        
+      return  [255,255,0];      
+      else if(d.speed>25)        
+      return  [255,191,0];      
+      else if(d.speed>20)        
+      return [255,125,0];      
+      else if(d.speed>15)        
+      return [255,69,0];      
+      else if(d.speed>10)      
+      return [220,20,60];      
+      else if(d.speed>5)      
+      return [178,34,34];      
+      else return [127,255,0];
       
         }  
 
@@ -434,6 +436,7 @@ uber_layer.push(
   update_layer.push(uber_layer)
   deckgl.setProps({layers: new_layer});
   uber_layer_flag = true;
+  document.getElementById("legend").removeAttribute('hidden');
 // }
 
 };
@@ -494,6 +497,7 @@ uber_layer_flag = false;
 my_location_layer_flag = false;
 var reset_layers = base_layer;
 deckgl.setProps({layers: reset_layers});
+document.getElementById("legend").setAttribute("hidden", true);
 };
 
 
@@ -522,6 +526,7 @@ function click_user(){
 var global_lat;
 var global_long;
 
+var myname = [];
 function icon_event(d){
   console.log(d)
   console.log(update_layer);
@@ -556,11 +561,15 @@ function icon_event(d){
       /* Read more about handling dismissals below */
       result.dismiss === Swal.DismissReason.cancel
     ) {
-      Swal.fire(
-        'communcation starting',
-        'success'
-      )
-
+      openMessage(d),
+                    myname = d.name,
+                    targetuid = d.id,
+                    targetname = d.name,
+                    targetphoto = d.photoURL
+      // Swal.fire(
+      //   'communcation starting',
+      //   'success'
+      // )
       
 
 

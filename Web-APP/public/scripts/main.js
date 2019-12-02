@@ -237,10 +237,15 @@ function closeForm() {
   }
 
 //changed
-function openMessage() {
-    document.getElementById("message-profile-form").style.display = "block";
-    loadMessages();
+function openMessage(id) {
+  document.getElementById("message-profile-form").style.display = "block";
+  loadMessages(id);
+  console.log("id:"+id);
+}
 
+
+function clearMessage() {
+document.getElementById("messages").innerHTML='';
 }
 
 function closeMessage() {
@@ -278,13 +283,44 @@ function getUserName() {
 function isUserSignedIn() {
   return !!firebase.auth().currentUser;
 }
+// Get current user name in db
+function getname(){
+  var currentuser = [];
+  var id1 = firebase.auth().currentUser.uid
+    db.collection('users').doc(id1).get().then(function(doc){
+      var data = doc.data();
+      //console.log(data);
+      //console.log("name:"+data['name']);
+      currentuser.push(data['name']);
+    })
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(currentuser);
+      }, 1000);
+    });
+  }
 // Saves a new message on the Firebase DB.
-function saveMessage(messageText) {
+async function saveMessage(messageText) {
   // Add a new message entry to the database.
-  return firebase.firestore().collection('messages').add({
-    name: getUserName(),
+  var senderuid = firebase.auth().currentUser.uid;
+  var username = await getname();
+  var receiveruid = otheruid;
+  var receivername = othername;
+  var receiverphoto = otherphoto;
+  var uidpair = [senderuid, receiveruid];
+  var sortuid = uidpair.sort();
+  var loweruid = sortuid[0];
+  var upperuid = sortuid[1];
+  //console.log("11:"+username);
+  console.log("uid1save: " + loweruid);
+  console.log("uid2save: " + upperuid);
+  return firebase.firestore().collection('messages').doc().set({
+    name1: username[0],
+    name2: receivername,
     text: messageText,
-    profilePicUrl: getProfilePicUrl(),
+    messagepair: [loweruid, upperuid],
+    profilePicUrl1: getProfilePicUrl(),
+    profilePicUrl2: receiverphoto,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   }).catch(function(error) {
     console.error('Error writing new message to database', error);
@@ -292,12 +328,24 @@ function saveMessage(messageText) {
 }
 
 // Loads chat messages history and listens for upcoming ones.
-function loadMessages() {
-  // Create the query to load the last 2 messages and listen for new ones.
+function loadMessages(id) {
+  // Create the query to load the last 4 messages and listen for new ones.
+  var otheruid = id;
+  //var othername = d.name;
+  //var otherphoto = d.photoURL;
+  var currentuid = firebase.auth().currentUser.uid;
+  var uidpair = [currentuid, otheruid];
+  var sortuid = uidpair.sort();
+  var loweruid = sortuid[0];
+  var upperuid = sortuid[1];
+  console.log("current:"+currentuid);
+  console.log("uid1load: " + loweruid);
+  console.log("uid2load: " + upperuid);
   var query = firebase.firestore()
                   .collection('messages')
+                  .where("messagepair", "==", sortuid)      
                   .orderBy('timestamp', 'desc')
-                  .limit(2);
+                  .limit(4);
 
   // Start listening to the query.
   query.onSnapshot(function(snapshot) {
@@ -306,11 +354,109 @@ function loadMessages() {
         deleteMessage(change.doc.id);
       } else {
         var message = change.doc.data();
-        displayMessage(change.doc.id, message.timestamp, message.name,
-                       message.text, message.profilePicUrl, message.imageUrl);
+        if (othername = message.name1) {
+          displayMessage(change.doc.id, message.timestamp, message.name1,
+            message.text, message.profilePicUrl1, message.imageUrl);
+        }
+        else if (othername = message.name2) {
+          displayMessage(change.doc.id, message.timestamp, message.name2,
+            message.text, message.profilePicUrl2, message.imageUrl);
+        }
+        
       }
     });
   });
+}
+
+function openMyMessage() {
+  document.getElementById("message-profile-form").style.display = "block";
+  //myid = firebase.auth().currentUser.uid;
+  loadMyMessages();
+  //console.log(getid(myname));
+  //console.log(firebase.auth().currentUser.uid);
+}
+
+async function loadMyMessages() {
+  // Create the query to load the last 4 messages and listen for new ones.
+  //console.log("name:"+name);
+  var myname = await getname();
+  var query = firebase.firestore()
+                  .collection('messages')
+                  .where("name2", "==", myname[0])      
+                  .orderBy('timestamp', 'desc')
+                  .limit(4);
+
+  // Start listening to the query.
+  query.onSnapshot(function(snapshot) {
+    snapshot.docChanges().forEach(function(change) {
+      if (change.type === 'removed') {
+        deleteMessage(change.doc.id);
+      } else {
+        var message = change.doc.data();
+          displayMessage(change.doc.id, message.timestamp, message.name1,
+            message.text, message.profilePicUrl1, message.imageUrl);
+            console.log("displayed");
+      }
+    });
+  });
+}
+
+async function intername() {
+  var interactname = new Set();
+  //var interid = new Set();
+  var currentuid = firebase.auth().currentUser.uid;
+  db.collection('messages').where("messagepair", "array-contains", currentuid).get().then(function(querySnapshot){
+    querySnapshot.forEach(function(doc){
+      var nameData=doc.data()
+      interactname.add(nameData['name1']);
+      interactname.add(nameData['name2']);
+    })
+  })
+  var username = await getname();
+  //console.log("inter:"+Array.from(interactname));
+  interactname.delete(username[0]);
+  //console.log("inter1:"+Array.from(interactname));
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(interactname);
+    }, 1000);
+  });
+}
+
+function interid(name) {
+  var interactid = [];
+  db.collection('users').where("name","==",name).get().then(function(querySnapshot){
+    querySnapshot.forEach(function(doc){
+    var data = doc.data();
+    interactid.push(data['id']);
+    })
+  })
+  //console.log("iid:"+interactid)
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(interactid);
+    }, 1000);
+  });
+}
+
+async function openList() {
+  var interactname = await intername();
+  var othersname = Array.from(interactname);
+  var myname = await getname();
+  console.log("inter:"+othersname);
+  console.log("myname:"+myname);
+  var b1 = document.getElementById("buttons");
+  var iid = [];
+  for (var i=0;i < othersname.length; i++) {
+    var butt = document.createElement("button");
+    //var iid =await interid(othersname[i]);
+    butt.innerHTML = othersname[i];
+    b1.appendChild(butt);
+    //console.log("iidi:"+iid);
+    console.log(othersname[i]);
+    //butt.onclick = function(){openMessage(iid)};
+    butt.onclick = function(){openMyMessage(myname, othersname[i])};
+  }
 }
 
 // Saves a new message containing an image in Firebase.
