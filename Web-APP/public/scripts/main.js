@@ -101,6 +101,7 @@ async function updateUserProfile() {
       type: useridentity,
       location: userlocation,
       email:useremail,
+      photoURL:userphotoUrl,
     })
     .then(function() {
         console.log("User basic info successfully written!");
@@ -235,9 +236,15 @@ function closeForm() {
 
   }
 
-function openMessage(d) {
-    document.getElementById("message-profile-form").style.display = "block";
-    loadMessages(d);
+//changed
+function openMessage(id) {
+  document.getElementById("message-profile-form").style.display = "block";
+  loadMessages(id);
+  console.log("id:"+id);
+}
+
+function clearMessage() {
+document.getElementById("messages").innerHTML='';
 }
 
 function closeMessage() {
@@ -275,22 +282,44 @@ function getUserName() {
 function isUserSignedIn() {
   return !!firebase.auth().currentUser;
 }
+// Get current user name in db
+function getname(){
+  var currentuser = [];
+  var id1 = firebase.auth().currentUser.uid
+    db.collection('users').doc(id1).get().then(function(doc){
+      var data = doc.data();
+      //console.log(data);
+      //console.log("name:"+data['name']);
+      currentuser.push(data['name']);
+    })
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(currentuser);
+      }, 1000);
+    });
+  }
 // Saves a new message on the Firebase DB.
-function saveMessage(messageText) {
+async function saveMessage(messageText) {
   // Add a new message entry to the database.
   var senderuid = firebase.auth().currentUser.uid;
-  var receiveruid = targetuid;
+  var username = await getname();
+  var receiveruid = otheruid;
+  var receivername = othername;
+  var receiverphoto = otherphoto;
   var uidpair = [senderuid, receiveruid];
   var sortuid = uidpair.sort();
   var loweruid = sortuid[0];
   var upperuid = sortuid[1];
+  //console.log("11:"+username);
   console.log("uid1save: " + loweruid);
   console.log("uid2save: " + upperuid);
   return firebase.firestore().collection('messages').doc().set({
-    name: getUserName(),
+    name1: username[0],
+    name2: receivername,
     text: messageText,
     messagepair: [loweruid, upperuid],
-    profilePicUrl: getProfilePicUrl(),
+    profilePicUrl1: getProfilePicUrl(),
+    profilePicUrl2: receiverphoto,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   }).catch(function(error) {
     console.error('Error writing new message to database', error);
@@ -298,11 +327,13 @@ function saveMessage(messageText) {
 }
 
 // Loads chat messages history and listens for upcoming ones.
-function loadMessages(d) {
+function loadMessages(id) {
   // Create the query to load the last 4 messages and listen for new ones.
-  var targetuid = d;
+  var otheruid = id;
+  //var othername = d.name;
+  //var otherphoto = d.photoURL;
   var currentuid = firebase.auth().currentUser.uid;
-  var uidpair = [currentuid, targetuid];
+  var uidpair = [currentuid, otheruid];
   var sortuid = uidpair.sort();
   var loweruid = sortuid[0];
   var upperuid = sortuid[1];
@@ -311,7 +342,7 @@ function loadMessages(d) {
   console.log("uid2load: " + upperuid);
   var query = firebase.firestore()
                   .collection('messages')
-                  .where("messagepair", "==", sortuid)            
+                  .where("messagepair", "==", sortuid)      
                   .orderBy('timestamp', 'desc')
                   .limit(4);
 
@@ -322,11 +353,109 @@ function loadMessages(d) {
         deleteMessage(change.doc.id);
       } else {
         var message = change.doc.data();
-        displayMessage(change.doc.id, message.timestamp, message.name,
-                       message.text, message.profilePicUrl, message.imageUrl);
+        if (othername = message.name1) {
+          displayMessage(change.doc.id, message.timestamp, message.name1,
+            message.text, message.profilePicUrl1, message.imageUrl);
+        }
+        else if (othername = message.name2) {
+          displayMessage(change.doc.id, message.timestamp, message.name2,
+            message.text, message.profilePicUrl2, message.imageUrl);
+        }
+        
       }
     });
   });
+}
+
+function openMyMessage() {
+  document.getElementById("message-profile-form").style.display = "block";
+  //myid = firebase.auth().currentUser.uid;
+  loadMyMessages();
+  //console.log(getid(myname));
+  //console.log(firebase.auth().currentUser.uid);
+}
+
+async function loadMyMessages() {
+  // Create the query to load the last 4 messages and listen for new ones.
+  //console.log("name:"+name);
+  var myname = await getname();
+  var query = firebase.firestore()
+                  .collection('messages')
+                  .where("name2", "==", myname[0])      
+                  .orderBy('timestamp', 'desc')
+                  .limit(4);
+
+  // Start listening to the query.
+  query.onSnapshot(function(snapshot) {
+    snapshot.docChanges().forEach(function(change) {
+      if (change.type === 'removed') {
+        deleteMessage(change.doc.id);
+      } else {
+        var message = change.doc.data();
+          displayMessage(change.doc.id, message.timestamp, message.name1,
+            message.text, message.profilePicUrl1, message.imageUrl);
+            console.log("displayed");
+      }
+    });
+  });
+}
+
+async function intername() {
+  var interactname = new Set();
+  //var interid = new Set();
+  var currentuid = firebase.auth().currentUser.uid;
+  db.collection('messages').where("messagepair", "array-contains", currentuid).get().then(function(querySnapshot){
+    querySnapshot.forEach(function(doc){
+      var nameData=doc.data()
+      interactname.add(nameData['name1']);
+      interactname.add(nameData['name2']);
+    })
+  })
+  var username = await getname();
+  //console.log("inter:"+Array.from(interactname));
+  interactname.delete(username[0]);
+  //console.log("inter1:"+Array.from(interactname));
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(interactname);
+    }, 1000);
+  });
+}
+
+function interid(name) {
+  var interactid = [];
+  db.collection('users').where("name","==",name).get().then(function(querySnapshot){
+    querySnapshot.forEach(function(doc){
+    var data = doc.data();
+    interactid.push(data['id']);
+    })
+  })
+  //console.log("iid:"+interactid)
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(interactid);
+    }, 1000);
+  });
+}
+
+async function openList() {
+  var interactname = await intername();
+  var othersname = Array.from(interactname);
+  var myname = await getname();
+  console.log("inter:"+othersname);
+  console.log("myname:"+myname);
+  var b1 = document.getElementById("buttons");
+  var iid = [];
+  for (var i=0;i < othersname.length; i++) {
+    var butt = document.createElement("button");
+    //var iid =await interid(othersname[i]);
+    butt.innerHTML = othersname[i];
+    b1.appendChild(butt);
+    //console.log("iidi:"+iid);
+    console.log(othersname[i]);
+    //butt.onclick = function(){openMessage(iid)};
+    butt.onclick = function(){openMyMessage(myname, othersname[i])};
+  }
 }
 
 // Saves a new message containing an image in Firebase.
@@ -353,17 +482,15 @@ function saveImageMessage(file) {
 // }
 
 // Requests permissions to show notifications.
-
-// function requestNotificationsPermissions() {
-//   console.log('Requesting notifications permission...');
-//   firebase.messaging().requestPermission().then(function() {
-//     // Notification permission granted.
-//     saveMessagingDeviceToken();
-//   }).catch(function(error) {
-//     console.error('Unable to get permission to notify.', error);
-//   });
-// }
-
+function requestNotificationsPermissions() {
+  console.log('Requesting notifications permission...');
+  firebase.messaging().requestPermission().then(function() {
+    // Notification permission granted.
+    // saveMessagingDeviceToken();
+  }).catch(function(error) {
+    console.error('Unable to get permission to notify.', error);
+  });
+}
 
 // // Triggered when a file is selected via the media picker.
 // function onMediaFileSelected(event) {
@@ -589,34 +716,6 @@ function checkSetup() {
         'Make sure you go through the codelab setup instructions and make ' +
         'sure you are running the codelab using `firebase serve`');
   }
-}
-
-// Open the list of users messaged with
-
-function openList() {
-  var currentuid = firebase.auth().currentUser.uid;
-  //console.log(currentuid);
-  db.collection('messages').where("messagepair", "array-contains", currentuid).get().then((snapshot) => {
-    snapshot.docs.forEach(doc => {
-      var otheruid = {};
-      pairs = doc.data().messagepair;
-      var a = pairs.indexOf(currentuid);
-      var otheruid = pairs[1-a];
-      // const uniqueother = otheruid.filter((x, i, a) => a.indexOf(x) == i);
-      console.log("index:"+a);
-      console.log("other:"+otheruid);
-      // for (var doc in doc.data()) {
-      //   var element = document.createElement("button");
-      //   //Assign different attributes to the element. 
-      //   element.setAttribute("otheruid", otheruid);
-      //   element.innerHTML = otheruid;           
-      //   element.setAttribute("onclick", openMessage(otheruid)); //If you wish to add click event
-  
-      //   //Append the element in page (in span).  
-      //   document.body.appendChild(element);
-      // }
-        ;}) 
-    })
 }
 
 // Checks that Firebase has been imported.
