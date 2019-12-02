@@ -188,6 +188,10 @@ function click_user(){
   })
 };
 
+var targetuid = [];
+var targetname = [];
+var targetphoto = [];
+var myname = [];
 function push_match_data(){
 
 
@@ -278,10 +282,16 @@ function push_match_data(){
                       /* Read more about handling dismissals below */
                       result.dismiss === Swal.DismissReason.cancel
                     ) {
-                      Swal.fire(
-                        'communcation starting',
-                        'success'
-                      )
+                      openMessage(userinfo.id),
+                      otheruid = userinfo.id,
+                      othername = userinfo.name,
+                      otherphoto = userinfo.photoURL,
+                      console.log(userinfo)
+                      // Swal.fire(
+                      //   'communcation starting',
+                      //   'success'
+                      // )
+
 
                     }
                   })
@@ -350,10 +360,15 @@ function push_match_data(){
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                   ) {
-                    Swal.fire(
-                      'communcation starting',
-                      'success'
-                    )
+                    openMessage(userinfo.id),
+                      otheruid = userinfo.id,
+                      othername = userinfo.name,
+                      otherphoto = userinfo.photoURL,
+                      console.log(userinfo)
+                      // Swal.fire(
+                      //   'communcation starting',
+                      //   'success'
+                      // )
 
                   }
                 })
@@ -427,10 +442,15 @@ function icon_event_matched(d){
         /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel
       ) {
-        Swal.fire(
-          'communcation starting',
-          'success'
-        )
+        openMessage(userinfo.id),
+        otheruid = userinfo.id,
+        othername = userinfo.name,
+        otherphoto = userinfo.photoURL,
+        console.log(userinfo)
+                      // Swal.fire(
+                      //   'communcation starting',
+                      //   'success'
+                      // )
   
         
   
