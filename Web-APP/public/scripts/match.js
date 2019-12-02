@@ -127,6 +127,7 @@ async function match(){
          }}).catch(function(error) {
           console.log("Error getting document:", error);
           });
+          
         }
 
        
@@ -163,12 +164,13 @@ async function match(){
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(matchedUid);
-      }, 1000);
+      }, 100);
     });
   };
 
 
   return new Promise(resolve => {
+    
     setTimeout(() => {
       resolve('clean and pushed data to matched results');
     }, 1000);
@@ -187,7 +189,9 @@ function click_user(){
 };
 
 function push_match_data(){
-    document.getElementById("show_match_button").setAttribute('hidden','true');
+
+
+  document.getElementById("show_match_button").setAttribute('hidden','true');
     var user = firebase.auth().currentUser;
     var useruid;
     if (user != null) {
@@ -196,10 +200,10 @@ function push_match_data(){
       // console.log(test)
     }
     var docRef = db.collection("matchedresults").doc(useruid);
-    docRef.get().then(async function(doc) {
+    docRef.get().then(function(doc) {
 
       if (doc.exists) {
-  
+        
           // document.getElementById("match-button").removeAttribute('hidden');
           console.log('fetching matched results')
           var data = doc.data();
