@@ -370,7 +370,6 @@ function push_match_data(){
                       //   'success'
                       // )
 
-
                   }
                 })
                 

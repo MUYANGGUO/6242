@@ -243,6 +243,7 @@ function openMessage(id) {
   console.log("id:"+id);
 }
 
+
 function clearMessage() {
 document.getElementById("messages").innerHTML='';
 }

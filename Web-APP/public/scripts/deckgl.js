@@ -525,6 +525,7 @@ function click_user(){
 
 var global_lat;
 var global_long;
+
 var myname = [];
 function icon_event(d){
   console.log(d)
