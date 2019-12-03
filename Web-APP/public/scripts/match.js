@@ -66,7 +66,7 @@ async function match(){
     }
     var rawbase = 'https://raw.githubusercontent.com/';
     var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillowDataCleanedv2.geojson';
-    $.getJSON(rawbase + jsonloc, function( data ) {
+    $.getJSON(rawbase + jsonloc, async function( data ) {
       var regions=data['features']
       var matchedRegions=[]
       for (region of regions){
@@ -79,12 +79,29 @@ async function match(){
       var user = firebase.auth().currentUser;
       var useruid;
       if (user != null) {
-        useruid = user.uid  // The user's ID, unique to the Firebase project.
+        useruid = user.uid  
+        // The user's ID, unique to the Firebase project.
       }
-      
+      var host=await check_host(result)
+      matchedRegions=matchedRegions.concat(host)
     db.collection("users").doc(useruid).get().then(async function(doc){
         var data=doc.data()
         var usertype=data['type']  
+        if (usertype=='landlord'){
+           matchedRegions=[]
+           matchedRegions.push(data['region'])
+           db.collection('users').doc(useruid).update({
+             house:result.value[0],
+             upper:result.value[1],
+             lower:result.value[2],
+             matchedRegions:matchedRegions
+           })
+        }else{
+          db.collection("users").doc(useruid).update({
+            matchedRegions: matchedRegions.slice(0,5),
+          })
+        }
+        console.log(matchedRegions)
         var matched=new Set()
         matched.add(useruid)   
         for (matchedRegion of matchedRegions.slice(0,5)){
@@ -145,10 +162,9 @@ async function match(){
   
     })
   
-      db.collection("users").doc(useruid).update({
-        matchedRegions: matchedRegions
-
-      })
+      // db.collection("users").doc(useruid).update({
+      //   matchedRegions: matchedRegions.slice(0,5),
+      // })
 
      
     })
@@ -162,7 +178,11 @@ async function match(){
     db.collection('regions').doc(matchedRegion).collection('users').get().then(function(querySnapshot){
       querySnapshot.forEach(function(doc){
         var matchedData=doc.data()
-        matchedUid.add(matchedData['uid'])
+        var flag=matchedData['flag']
+        if (flag!=null){
+          console.log(flag)
+          matchedUid.add(matchedData['uid'])
+        }    
       })
     })
     return new Promise(resolve => {
@@ -180,6 +200,22 @@ async function match(){
   });
 
 };
+function check_host(result){
+  var matchedHost=[]
+  db.collection('users').get().then(function(querySnapshot){
+    querySnapshot.forEach(function(doc){
+      var hostdata=doc.data()
+      if (hostdata['type']=='landlord' && hostdata['house']==result.value[0] && hostdata['upper']<=result.value[1] && hostdata['lower']>=result.value[2]){
+        matchedHost.push(hostdata['region'])
+      }
+    })
+  })
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(matchedHost);
+    }, 1000);
+  });
+}
 
 function click_user(){
   Swal.fire({
