@@ -439,19 +439,70 @@ Swal.fire({
 // 
 
 new deck.PolygonLayer({
-  id: 'polygon-layer',
+  id: 'polygon-layer'+JSON.stringify(count),
   data: handlepoly,
   pickable: true,
   stroked: true,
   filled: true,
+  extruded: true,
   wireframe: true,
   lineWidthMinPixels: 10,
   getPolygon: data=>data.contour,
-  getElevation: 400,
+  getElevation: 100,
   getFillColor: [255,215,0],
   getLineColor: [255, 215, 0],
-  getLineWidth: 20
-})
+  getLineWidth: 20,
+  opacity: 0.8,
+  autoHighlight:true,
+  onClick:function(d){
+
+    var userinfo = d.object;
+    console.log(userinfo)
+    var contour = userinfo.contour;
+    console.log(contour)
+    center = getcenter(contour[0]);
+    console.log(center)
+    var user_lat = center[1];
+    var user_long = center[0];
+    global_lat = user_lat;
+    global_long= user_long;
+    Swal.fire({
+      position: 'middle',
+      // imageUrl: userinfo.photoURL,
+      // imageWidth: 300,
+      // imageHeight: 300,
+      // icon:'success',
+      showCloseButton: true,
+      showCancelButton: true,
+      background: `rgb(0,0,0)`,
+      // title: d.name,
+      // html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
+      //"the userid: "+d.id,
+      allowOutsideClick:false,
+      confirmButtonText: "View Location Stats",
+      cancelButtonText: "Close",
+    }).then((result) => {
+      if (result.value) {
+        openNav_picker();
+        push_sfpd_layer(user_lat,user_long);
+      // push_sfpd_layer(user_lat,user_long);
+      }
+      else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+      //   openMessage(userinfo.id),
+      //   othername = userinfo.name;
+      //   otheruid = userinfo.id;
+       
+      //  otherphoto = userinfo.photoURL;
+
+      }
+    })
+   
+    
+  },
+}),
 
 
 
@@ -464,7 +515,7 @@ new deck.PolygonLayer({
        
             update_layer.push(match_layer);
             count = count +1;
-
+            console.log(update_layer)
             deckgl.setProps({layers:matched_finalized_layer});
   
           
@@ -744,4 +795,18 @@ function icon_event_matched(d){
     
   };
   
-  
+
+
+
+function getcenter (arr)
+{
+    var minX, maxX, minY, maxY;
+    for (var i = 0; i < arr.length; i++)
+    {
+        minX = (arr[i][0] < minX || minX == null) ? arr[i][0] : minX;
+        maxX = (arr[i][0] > maxX || maxX == null) ? arr[i][0] : maxX;
+        minY = (arr[i][1] < minY || minY == null) ? arr[i][1] : minY;
+        maxY = (arr[i][1] > maxY || maxY == null) ? arr[i][1] : maxY;
+    }
+    return [(minX + maxX) / 2, (minY + maxY) / 2];
+};

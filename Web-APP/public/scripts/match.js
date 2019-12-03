@@ -165,16 +165,9 @@ async function match(){
   
     })
   
-<<<<<<< HEAD
-      db.collection("users").doc(useruid).update({
-        matchedRegions: matchedRegions.slice(0,5),
-        // matchedPolygons: matched_polygon.slice(0,5),
-      })
-=======
       // db.collection("users").doc(useruid).update({
       //   matchedRegions: matchedRegions.slice(0,5),
       // })
->>>>>>> 92655192b0fbcc8b2bf1696b2088a4f9619db288
 
      
     })
