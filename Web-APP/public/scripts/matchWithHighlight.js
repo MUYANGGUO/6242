@@ -1,14 +1,12 @@
 
-
-
 var match_layer = [];
 var count = 0;
 var newpoly=[]
 //const trial_data ='https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
 async function match(){
- 
+
   var checkresult = await clear_previous_matched_logs();
-  
+
   console.log(checkresult)
   match_layer = [];
   newpoly=[]
@@ -39,7 +37,7 @@ async function match(){
         'two_bedroom':'Two Bedroom',
         'three_bedroom':'Three Bedroom',
         'four_bedroom':'Four Bedroom'
-      } 
+      }
     },
     {
       text: "What's the maximum monthly rental",
@@ -71,36 +69,38 @@ async function match(){
     $.getJSON(rawbase + jsonloc, async function( data ) {
       var regions=data['features']
       var matchedRegions=[]
-      var matchedpoly=[]
+      var matchedpoly={}
       var host=await check_host(result)
       matchedRegions=matchedRegions.concat(host)
       for (region of regions){
         var regionId=region["properties"]["regionid"]
-        var regionPrice=region['properties'][result.value[0]] 
+        var regionPrice=region['properties'][result.value[0]]
         if (regionPrice!=null && regionPrice<=result.value[1] && regionPrice>=result.value[2]){
           matchedRegions.push(regionId)
-          matchedpoly.push(region["geometry"]["coordinates"])
-        }else if (matchedRegions.includes(regionId)){
-          matchedpoly.push(region["geometry"]["coordinates"])
         }
+        matchedpoly[regionId]=region["geometry"]["coordinates"]
       }
-      var temppoly=matchedpoly.slice(0,5)
+      var temppoly=[]
+      for (matchedRegion of matchedRegions.slice(0,5)){
+        temppoly.push(matchedpoly[matchedRegion])
+      }
       console.log(temppoly)
       for(poly of temppoly){
         var temp={"contour":poly}
         newpoly.push(temp)
       }
       console.log(newpoly)
+      console.log(matchedRegions.slice(0,5))
       var user = firebase.auth().currentUser;
       var useruid;
       if (user != null) {
-        useruid = user.uid  
+        useruid = user.uid
         // The user's ID, unique to the Firebase project.
       }
-      
+
     db.collection("users").doc(useruid).get().then(async function(doc){
         var data=doc.data()
-        var usertype=data['type']  
+        var usertype=data['type']
         if (usertype=='landlord'){
            matchedRegions=[]
            matchedRegions.push(data['region'])
@@ -117,7 +117,7 @@ async function match(){
         }
         console.log(matchedRegions)
         var matched=new Set()
-        matched.add(useruid)   
+        matched.add(useruid)
         for (matchedRegion of matchedRegions.slice(0,5)){
           var temp=await get_match_user(matchedRegion);
           temp.forEach(matched.add,matched)
@@ -127,7 +127,7 @@ async function match(){
               type: usertype,
               flag:1
             }
-          )  
+          )
         }
         matched.delete(useruid)
         console.log(matched)
@@ -152,11 +152,11 @@ async function match(){
 
               count = count +1;
 
-              
+
               matchedresults.update({
                 datacollection: firebase.firestore.FieldValue.arrayUnion(data)
             });
-            
+
           } else {
             console.log("No such document!");
          }}).catch(function(error) {
@@ -164,7 +164,7 @@ async function match(){
           });
         }
 
-       
+
         // console.log(match_data)
         // match_data_global = match_data;
         // console.log(match_data["position"])
@@ -172,19 +172,19 @@ async function match(){
 
 
         // console.log(check.coordinates)
-        
-  
+
+
     })
-  
+
       // db.collection("users").doc(useruid).update({
       //   matchedRegions: matchedRegions.slice(0,5),
       // })
 
-     
+
     })
 
   })
-  
+
 
 
   function get_match_user(matchedRegion){
@@ -195,7 +195,7 @@ async function match(){
         var flag=matchedData['flag']
         if (flag!=null){
           matchedUid.add(matchedData['uid'])
-        }    
+        }
       })
     })
     return new Promise(resolve => {
@@ -275,14 +275,14 @@ Swal.fire({
     docRef.get().then(async function(doc) {
 
       if (doc.exists) {
-  
+
           // document.getElementById("match-button").removeAttribute('hidden');
           console.log('fetching matched results')
           var data = doc.data();
           var data_final = data.datacollection;
           var handlepoly=newpoly;
 
-          match_layer.push(     
+          match_layer.push(
             new deck.IconLayer({
               id: 'match-layer'+JSON.stringify(count),
               // data: icons,
@@ -292,7 +292,7 @@ Swal.fire({
             // iconAtlas and iconMapping are required
             // getIcon: return a string
               iconAtlas: 'images/icon_position.png',
-              
+
               iconMapping: POSITION_ICON_MAPPING,
               getIcon: d => 'marker',
               sizeMinPixels: 80,
@@ -305,7 +305,7 @@ Swal.fire({
                 return [105,0,0];
                 else if(d.type == "tenant")
                 return [0,105,0];
-                else 
+                else
                 return [0,0,0];
 
             },
@@ -353,17 +353,17 @@ Swal.fire({
                       openMessage(userinfo.id),
                       othername = userinfo.name;
                       otheruid = userinfo.id;
-                     
+
                      otherphoto = userinfo.photoURL;
 
                     }
                   })
-                  
+
                 },
 
             }),
 
-// 
+//
             new deck.IconLayer({
               id: 'icon-layer-image-matched'+JSON.stringify(count),
               // data: icons,
@@ -376,14 +376,14 @@ Swal.fire({
               // iconMapping: ICON_MAPPING,
               // getIcon: d => 'marker',
               getIcon: d => ({
-           
+
                 url: d.photoURL,
                 width: 128,
                 height: 128,
                 anchorY: 220,
                 anchorX: -50,
               }),
-              
+
               sizeScale: 1,
               sizeMinPixels: 80,
               getPosition: d => [d.coordinates.longtitude,d.coordinates.latitude],
@@ -426,17 +426,17 @@ Swal.fire({
                     openMessage(userinfo.id),
                     othername = userinfo.name;
                     otheruid = userinfo.id;
-                   
+
                    otherphoto = userinfo.photoURL;
 
                   }
                 })
-                
+
               },
 
           }),
 
-// 
+//
 
 new deck.PolygonLayer({
   id: 'polygon-layer'+JSON.stringify(count),
@@ -494,13 +494,13 @@ new deck.PolygonLayer({
       //   openMessage(userinfo.id),
       //   othername = userinfo.name;
       //   otheruid = userinfo.id;
-       
+
       //  otherphoto = userinfo.photoURL;
 
       }
     })
-   
-    
+
+
   },
 }),
 
@@ -510,15 +510,15 @@ new deck.PolygonLayer({
 
 
             )
-    
+
             var matched_finalized_layer = match_layer.concat(update_layer).concat(base_layer);
-       
+
             update_layer.push(match_layer);
             count = count +1;
             console.log(update_layer)
             deckgl.setProps({layers:matched_finalized_layer});
-  
-          
+
+
 
       } else {
           // doc.data() will be undefined in this case
@@ -550,14 +550,14 @@ new deck.PolygonLayer({
 //     docRef.get().then(async function(doc) {
 
 //       if (doc.exists) {
-  
+
 //           // document.getElementById("match-button").removeAttribute('hidden');
 //           console.log('fetching matched results')
 //           var data = doc.data();
 //           var data_final = data.datacollection;
-         
 
-//           match_layer.push(     
+
+//           match_layer.push(
 //             new deck.IconLayer({
 //               id: 'match-layer'+JSON.stringify(count),
 //               // data: icons,
@@ -567,7 +567,7 @@ new deck.PolygonLayer({
 //             // iconAtlas and iconMapping are required
 //             // getIcon: return a string
 //               iconAtlas: 'images/icon_position.png',
-              
+
 //               iconMapping: POSITION_ICON_MAPPING,
 //               getIcon: d => 'marker',
 //               sizeMinPixels: 80,
@@ -580,7 +580,7 @@ new deck.PolygonLayer({
 //                 return [105,0,0];
 //                 else if(d.type == "tenant")
 //                 return [0,105,0];
-//                 else 
+//                 else
 //                 return [0,0,0];
 
 //             },
@@ -612,7 +612,7 @@ new deck.PolygonLayer({
 //                     title: d.name,
 //                     html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
 //                     //"the userid: "+d.id,
-                
+
 //                     confirmButtonText: "View Location Stats",
 //                     cancelButtonText: "Messages",
 //                   }).then((result) => {
@@ -628,17 +628,17 @@ new deck.PolygonLayer({
 //                       openMessage(userinfo.id),
 //                       othername = userinfo.name;
 //                       otheruid = userinfo.id;
-                     
+
 //                      otherphoto = userinfo.photoURL;
 
 //                     }
 //                   })
-                  
+
 //                 },
 
 //             }),
 
-// // 
+// //
 //             new deck.IconLayer({
 //               id: 'icon-layer-image-matched'+JSON.stringify(count),
 //               // data: icons,
@@ -651,14 +651,14 @@ new deck.PolygonLayer({
 //               // iconMapping: ICON_MAPPING,
 //               // getIcon: d => 'marker',
 //               getIcon: d => ({
-           
+
 //                 url: d.photoURL,
 //                 width: 128,
 //                 height: 128,
 //                 anchorY: 220,
 //                 anchorX: -50,
 //               }),
-              
+
 //               sizeScale: 1,
 //               sizeMinPixels: 80,
 //               getPosition: d => [d.coordinates.longtitude,d.coordinates.latitude],
@@ -685,7 +685,7 @@ new deck.PolygonLayer({
 //                   title: d.name,
 //                   html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
 //                   //"the userid: "+d.id,
-              
+
 //                   confirmButtonText: "View Location Stats",
 //                   cancelButtonText: "Messages",
 //                 }).then((result) => {
@@ -701,17 +701,17 @@ new deck.PolygonLayer({
 //                     openMessage(userinfo.id),
 //                     othername = userinfo.name;
 //                     otheruid = userinfo.id;
-                   
+
 //                    otherphoto = userinfo.photoURL;
 
 //                   }
 //                 })
-                
+
 //               },
 
 //           }),
 
-// // 
+// //
 
 
 
@@ -721,15 +721,15 @@ new deck.PolygonLayer({
 
 
 //             )
-    
+
 //             var matched_finalized_layer = match_layer.concat(update_layer).concat(base_layer);
-       
+
 //             update_layer.push(match_layer);
 //             count = count +1;
 
 //             deckgl.setProps({layers:matched_finalized_layer});
-  
-          
+
+
 
 //       } else {
 //           // doc.data() will be undefined in this case
@@ -763,7 +763,7 @@ function icon_event_matched(d){
       title: d.name,
       html: "User id: "+ d.id+"<br>Email: "+d.email+"<br>Gender: "+d.gender+"<br>Role: "+d.type,
       //"the userid: "+d.id,
-  
+
       confirmButtonText: "View Stats",
       cancelButtonText: "Messages",
     }).then((result) => {
@@ -781,20 +781,20 @@ function icon_event_matched(d){
         targetuid = d.id;
         targetname = d.name;
         targetphoto = d.photoURL;
-  
-        
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
           // push_sfpd_layer(user_lat,user_long);
       }
     })
-    
+
   };
-  
+
 
 
 
