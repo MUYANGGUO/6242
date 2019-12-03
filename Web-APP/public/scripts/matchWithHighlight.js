@@ -3,6 +3,7 @@
 
 var match_layer = [];
 var count = 0;
+var newpoly=[]
 //const trial_data ='https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
 async function match(){
  
@@ -10,7 +11,8 @@ async function match(){
   
   console.log(checkresult)
   match_layer = [];
-  
+  newpoly=[]
+
   Swal.mixin({
     input: 'text',
     confirmButtonText: 'Next &rarr;',
@@ -69,21 +71,33 @@ async function match(){
     $.getJSON(rawbase + jsonloc, async function( data ) {
       var regions=data['features']
       var matchedRegions=[]
+      var matchedpoly=[]
+      var host=await check_host(result)
+      matchedRegions=matchedRegions.concat(host)
       for (region of regions){
         var regionId=region["properties"]["regionid"]
         var regionPrice=region['properties'][result.value[0]] 
         if (regionPrice!=null && regionPrice<=result.value[1] && regionPrice>=result.value[2]){
           matchedRegions.push(regionId)
+          matchedpoly.push(region["geometry"]["coordinates"])
+        }else if (matchedRegions.includes(regionId)){
+          matchedpoly.push(region["geometry"]["coordinates"])
         }
       }
+      var temppoly=matchedpoly.slice(0,5)
+      console.log(temppoly)
+      for(poly of temppoly){
+        var temp={"contour":poly}
+        newpoly.push(temp)
+      }
+      console.log(newpoly)
       var user = firebase.auth().currentUser;
       var useruid;
       if (user != null) {
         useruid = user.uid  
         // The user's ID, unique to the Firebase project.
       }
-      var host=await check_host(result)
-      matchedRegions=matchedRegions.concat(host)
+      
     db.collection("users").doc(useruid).get().then(async function(doc){
         var data=doc.data()
         var usertype=data['type']  
@@ -180,7 +194,6 @@ async function match(){
         var matchedData=doc.data()
         var flag=matchedData['flag']
         if (flag!=null){
-          console.log(flag)
           matchedUid.add(matchedData['uid'])
         }    
       })
@@ -267,7 +280,7 @@ Swal.fire({
           console.log('fetching matched results')
           var data = doc.data();
           var data_final = data.datacollection;
-         
+          var handlepoly=newpoly;
 
           match_layer.push(     
             new deck.IconLayer({
@@ -425,7 +438,20 @@ Swal.fire({
 
 // 
 
-
+new deck.PolygonLayer({
+  id: 'polygon-layer',
+  data: handlepoly,
+  pickable: true,
+  stroked: true,
+  filled: true,
+  wireframe: true,
+  lineWidthMinPixels: 10,
+  getPolygon: data=>data.contour,
+  getElevation: 400,
+  getFillColor: [255,215,0],
+  getLineColor: [255, 215, 0],
+  getLineWidth: 20
+})
 
 
 
