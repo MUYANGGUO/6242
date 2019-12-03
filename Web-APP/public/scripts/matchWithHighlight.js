@@ -241,10 +241,10 @@ function click_user(){
 };
 
 function push_match_data(){
-  let timerInterval
+let timerInterval
 Swal.fire({
   title: 'Fetching your match request ... ',
-  // html: 'Fetching your matched results in <b></b> milliseconds.',
+  html: 'Fetching your matched results in <b></b> milliseconds.',
   timer: 5500,
   timerProgressBar: true,
   onBeforeOpen: () => {
