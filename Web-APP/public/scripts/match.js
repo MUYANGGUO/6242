@@ -3,6 +3,7 @@
 
 var match_layer = [];
 var count = 0;
+var matched_polygon= [];
 //const trial_data ='https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
 async function match(){
  
@@ -69,11 +70,13 @@ async function match(){
     $.getJSON(rawbase + jsonloc, function( data ) {
       var regions=data['features']
       var matchedRegions=[]
+      matched_polygon =[];
       for (region of regions){
         var regionId=region["properties"]["regionid"]
         var regionPrice=region['properties'][result.value[0]] 
         if (regionPrice!=null && regionPrice<=result.value[1] && regionPrice>=result.value[2]){
-          matchedRegions.push(regionId)
+          matchedRegions.push(regionId);
+          matched_polygon.push({regionId:region["geometry"]["coordinates"]});
         }
       }
       var user = firebase.auth().currentUser;
@@ -146,8 +149,8 @@ async function match(){
     })
   
       db.collection("users").doc(useruid).update({
-        matchedRegions: matchedRegions
-
+        matchedRegions: matchedRegions.slice(0,5),
+        // matchedPolygons: matched_polygon.slice(0,5),
       })
 
      
@@ -192,6 +195,7 @@ function click_user(){
 };
 
 function push_match_data(){
+  console.log(matched_polygon)
   let timerInterval
 Swal.fire({
   title: 'Fetching your match request ... ',
@@ -231,7 +235,13 @@ Swal.fire({
           console.log('fetching matched results')
           var data = doc.data();
           var data_final = data.datacollection;
-         
+          // var matchedregionids = data_final.matchedRegions;
+          // console.log(matchedregions)
+       
+          
+
+
+          
 
           match_layer.push(     
             new deck.IconLayer({
@@ -386,7 +396,35 @@ Swal.fire({
               },
 
           }),
-
+            new PolygonLayer({
+            id: 'polygon-layer'+JSON.stringify(count),
+            data, data_final,
+            pickable: true,
+            stroked: true,
+            filled: true,
+            wireframe: true,
+            lineWidthMinPixels: 1,
+            getPolygon: function(d){
+              var regionids = d.object.matchedRegions;
+              var polys = []
+              for (regionid of regionids){
+              var poly = matchedRegions[regionid]
+              
+              polys.push(poly)}
+              console.log(polys)
+              return polys
+            },
+            getElevation: 5,
+            getFillColor: d => [60, 140, 0],
+            getLineColor: [80, 80, 80],
+            getLineWidth: 2,
+            // onHover: ({object, x, y}) => {
+            //   const tooltip = `${object.zipcode}\nPopulation: ${object.population}`;
+              /* Update tooltip
+                 http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object
+              */
+            
+          }),
 // 
 
 
