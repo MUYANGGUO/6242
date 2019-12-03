@@ -544,6 +544,7 @@ function icon_event(d){
     // icon:'success',
     showCloseButton: true,
     showCancelButton: true,
+    allowOutsideClick:false,
     background: `rgb(0,0,0)`,
     title: d.name,
     html: "User id: "+ d.id+"<br>Email: "+d.email+"<br>Gender: "+d.gender+"<br>Role: "+d.type,

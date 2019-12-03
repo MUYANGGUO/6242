@@ -196,7 +196,7 @@ function push_match_data(){
 Swal.fire({
   title: 'Fetching your match request ... ',
   // html: 'Fetching your matched results in <b></b> milliseconds.',
-  timer: 5000,
+  timer: 5500,
   timerProgressBar: true,
   onBeforeOpen: () => {
     Swal.showLoading()
@@ -288,7 +288,7 @@ Swal.fire({
                     title: d.name,
                     html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
                     //"the userid: "+d.id,
-                
+                    allowOutsideClick:false,
                     confirmButtonText: "View Location Stats",
                     cancelButtonText: "Messages",
                   }).then((result) => {
@@ -361,7 +361,7 @@ Swal.fire({
                   title: d.name,
                   html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
                   //"the userid: "+d.id,
-              
+                  allowOutsideClick:false,
                   confirmButtonText: "View Location Stats",
                   cancelButtonText: "Messages",
                 }).then((result) => {
