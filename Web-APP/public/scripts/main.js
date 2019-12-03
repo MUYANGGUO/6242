@@ -240,12 +240,11 @@ function closeForm() {
 function openMessage(id) {
   document.getElementById("message-profile-form").style.display = "block";
   loadMessages(id);
-  console.log("id:"+id);
+  //console.log("id:"+id);
 }
 
-
-function clearMessage() {
-document.getElementById("messages").innerHTML='';
+function clearMessage(field) {
+document.getElementById(field).innerHTML='';
 }
 
 function closeMessage() {
@@ -338,7 +337,7 @@ function loadMessages(id) {
   var sortuid = uidpair.sort();
   var loweruid = sortuid[0];
   var upperuid = sortuid[1];
-  console.log("current:"+currentuid);
+  //console.log("current:"+currentuid);
   console.log("uid1load: " + loweruid);
   console.log("uid2load: " + upperuid);
   var query = firebase.firestore()
@@ -368,38 +367,38 @@ function loadMessages(id) {
   });
 }
 
-function openMyMessage() {
-  document.getElementById("message-profile-form").style.display = "block";
-  //myid = firebase.auth().currentUser.uid;
-  loadMyMessages();
-  //console.log(getid(myname));
-  //console.log(firebase.auth().currentUser.uid);
-}
+// function openMyMessage() {
+//   document.getElementById("message-profile-form").style.display = "block";
+//   //myid = firebase.auth().currentUser.uid;
+//   loadMyMessages();
+//   //console.log(getid(myname));
+//   //console.log(firebase.auth().currentUser.uid);
+// }
 
-async function loadMyMessages() {
-  // Create the query to load the last 4 messages and listen for new ones.
-  //console.log("name:"+name);
-  var myname = await getname();
-  var query = firebase.firestore()
-                  .collection('messages')
-                  .where("name2", "==", myname[0])      
-                  .orderBy('timestamp', 'desc')
-                  .limit(4);
+// async function loadMyMessages() {
+//   // Create the query to load the last 4 messages and listen for new ones.
+//   //console.log("name:"+name);
+//   var myname = await getname();
+//   var query = firebase.firestore()
+//                   .collection('messages')
+//                   .where("name2", "==", myname[0])      
+//                   .orderBy('timestamp', 'desc')
+//                   .limit(4);
 
-  // Start listening to the query.
-  query.onSnapshot(function(snapshot) {
-    snapshot.docChanges().forEach(function(change) {
-      if (change.type === 'removed') {
-        deleteMessage(change.doc.id);
-      } else {
-        var message = change.doc.data();
-          displayMessage(change.doc.id, message.timestamp, message.name1,
-            message.text, message.profilePicUrl1, message.imageUrl);
-            console.log("displayed");
-      }
-    });
-  });
-}
+//   // Start listening to the query.
+//   query.onSnapshot(function(snapshot) {
+//     snapshot.docChanges().forEach(function(change) {
+//       if (change.type === 'removed') {
+//         deleteMessage(change.doc.id);
+//       } else {
+//         var message = change.doc.data();
+//           displayMessage(change.doc.id, message.timestamp, message.name1,
+//             message.text, message.profilePicUrl1, message.imageUrl);
+//             console.log("displayed");
+//       }
+//     });
+//   });
+// }
 
 async function intername() {
   var interactname = new Set();
@@ -439,6 +438,25 @@ function interid(name) {
   });
 }
 
+function getphoto(id) {
+  var getphoto = [];
+  //console.log(id[0])
+  db.collection('users').doc(id[0]).get().then(function(doc){
+    var data = doc.data();
+    getphoto.push(data['photoURL']);
+  })
+  //console.log("photo:"+getphoto)
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(getphoto);
+    }, 1000);
+  });
+}
+
+function getiid(iid) {
+  return iid;
+}
+
 async function openList() {
   var interactname = await intername();
   var othersname = Array.from(interactname);
@@ -447,15 +465,34 @@ async function openList() {
   console.log("myname:"+myname);
   var b1 = document.getElementById("buttons");
   var iid = [];
+  var photo = [];
   for (var i=0;i < othersname.length; i++) {
     var butt = document.createElement("button");
-    //var iid =await interid(othersname[i]);
+    iid[i] = await interid(othersname[i]);
+    photo[i] = await getphoto(iid[i])
     butt.innerHTML = othersname[i];
     b1.appendChild(butt);
-    //console.log("iidi:"+iid);
-    console.log(othersname[i]);
-    //butt.onclick = function(){openMessage(iid)};
-    butt.onclick = function(){openMyMessage(myname, othersname[i])};
+    butt.onclick=getFun(butt,iid[i],photo[i])
+    //console.log(butt.innerHTML);
+    //butt.setAttribute('onclick', openMessage(iid[i]))
+    //console.log(othersname[i]);
+    
+    // butt.onclick =function(){
+    //   console.log(2)
+    // };
+    //butt.onclick = function(){openMyMessage(myname, othersname[i])};
+  }
+  
+  
+}
+function getFun(val,val2,val3){
+  return function(){
+    otheruid = val2[0]
+    otherphoto = val3[0]
+    othername = val.innerHTML
+    openMessage(otheruid)
+    //console.log(val.innerHTML)
+    //console.log(val3)
   }
 }
 
