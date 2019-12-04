@@ -525,6 +525,7 @@ function click_user(){
 
 var global_lat;
 var global_long;
+
 var myname = [];
 function icon_event(d){
   console.log(d)
@@ -543,6 +544,7 @@ function icon_event(d){
     // icon:'success',
     showCloseButton: true,
     showCancelButton: true,
+    allowOutsideClick:false,
     background: `rgb(0,0,0)`,
     title: d.name,
     html: "User id: "+ d.id+"<br>Email: "+d.email+"<br>Gender: "+d.gender+"<br>Role: "+d.type,
@@ -560,11 +562,11 @@ function icon_event(d){
       /* Read more about handling dismissals below */
       result.dismiss === Swal.DismissReason.cancel
     ) {
-      openMessage(d);
+      openMessage(d),
                     myname = d.name;
                     targetuid = d.id;
                     targetname = d.name;
-                    targetphoto = d.photoURL
+                    targetphoto = d.photoURL;
       // Swal.fire(
       //   'communcation starting',
       //   'success'

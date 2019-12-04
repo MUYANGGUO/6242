@@ -237,11 +237,21 @@ function closeForm() {
   }
 
 //changed
-function openMessage(id) {
+var othername = [];
+var otherphoto = [];
+var otheruid = [];
+function openMessage(id,name,photourl) {
+  clearMessage('messages');
   document.getElementById("message-profile-form").style.display = "block";
   loadMessages(id);
-  //console.log("id:"+id);
+  otheruid = id;
+  othername = name;
+  otherphoto = photourl;
+  console.log(otheruid);
+  console.log(othername);
+  console.log(otherphoto);
 }
+
 
 function clearMessage(field) {
 document.getElementById(field).innerHTML='';
@@ -310,7 +320,7 @@ async function saveMessage(messageText) {
   var sortuid = uidpair.sort();
   var loweruid = sortuid[0];
   var upperuid = sortuid[1];
-  //console.log("11:"+username);
+  //console.log("othername:"+receivername);
   console.log("uid1save: " + loweruid);
   console.log("uid2save: " + upperuid);
   return firebase.firestore().collection('messages').doc().set({
@@ -452,17 +462,13 @@ function getphoto(id) {
     }, 1000);
   });
 }
-
-function getiid(iid) {
-  return iid;
-}
-
 async function openList() {
+  clearMessage('buttons');
   var interactname = await intername();
   var othersname = Array.from(interactname);
   var myname = await getname();
   console.log("inter:"+othersname);
-  console.log("myname:"+myname);
+  //console.log("myname:"+myname);
   var b1 = document.getElementById("buttons");
   var iid = [];
   var photo = [];
@@ -472,27 +478,12 @@ async function openList() {
     photo[i] = await getphoto(iid[i])
     butt.innerHTML = othersname[i];
     b1.appendChild(butt);
-    butt.onclick=getFun(butt,iid[i],photo[i])
-    //console.log(butt.innerHTML);
-    //butt.setAttribute('onclick', openMessage(iid[i]))
-    //console.log(othersname[i]);
-    
-    // butt.onclick =function(){
-    //   console.log(2)
-    // };
-    //butt.onclick = function(){openMyMessage(myname, othersname[i])};
+    butt.onclick=getFun(othersname[i],iid[i],photo[i])
   }
-  
-  
 }
 function getFun(val,val2,val3){
   return function(){
-    otheruid = val2[0]
-    otherphoto = val3[0]
-    othername = val.innerHTML
-    openMessage(otheruid)
-    //console.log(val.innerHTML)
-    //console.log(val3)
+    openMessage(val2[0],val,val3[0])
   }
 }
 
