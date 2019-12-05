@@ -476,7 +476,7 @@ async function openList() {
     var butt = document.createElement("button");
     iid[i] = await interid(othersname[i]);
     photo[i] = await getphoto(iid[i])
-    butt.innerHTML = othersname[i];
+    butt.innerHTML =othersname[i];
     b1.appendChild(butt);
     butt.onclick=getFun(othersname[i],iid[i],photo[i])
   }
