@@ -305,7 +305,7 @@ function getname(){
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(currentuser);
-      }, 1000);
+      }, 450);
     });
   }
 // Saves a new message on the Firebase DB.
@@ -428,7 +428,7 @@ async function intername() {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve(interactname);
-    }, 1000);
+    }, 450);
   });
 }
 
@@ -444,7 +444,7 @@ function interid(name) {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve(interactid);
-    }, 1000);
+    }, 450);
   });
 }
 
@@ -459,7 +459,7 @@ function getphoto(id) {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve(getphoto);
-    }, 1000);
+    }, 450);
   });
 }
 async function openList() {
@@ -476,7 +476,7 @@ async function openList() {
     var butt = document.createElement("button");
     iid[i] = await interid(othersname[i]);
     photo[i] = await getphoto(iid[i])
-    butt.innerHTML =othersname[i];
+    butt.innerHTML ='<button class="listbutton">'+othersname[i]+'</button>';
     b1.appendChild(butt);
     butt.onclick=getFun(othersname[i],iid[i],photo[i])
   }
