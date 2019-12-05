@@ -1,9 +1,14 @@
 
+
+
 var match_layer = [];
 var count = 0;
-const trial_data ='https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
+var matched_polygon= [];
+//const trial_data ='https://raw.githubusercontent.com/uber-common/deck.gl-data/master/website/bart-stations.json';
 async function match(){
+ 
   var checkresult = await clear_previous_matched_logs();
+  
   console.log(checkresult)
   match_layer = [];
   
@@ -62,28 +67,47 @@ async function match(){
     }
     var rawbase = 'https://raw.githubusercontent.com/';
     var jsonloc = 'muyangguo/6242/master/Zillow-DataClean/zillowDataCleanedv2.geojson';
-    $.getJSON(rawbase + jsonloc, function( data ) {
+    $.getJSON(rawbase + jsonloc, async function( data ) {
       var regions=data['features']
       var matchedRegions=[]
+      matched_polygon =[];
       for (region of regions){
         var regionId=region["properties"]["regionid"]
         var regionPrice=region['properties'][result.value[0]] 
         if (regionPrice!=null && regionPrice<=result.value[1] && regionPrice>=result.value[2]){
-          matchedRegions.push(regionId)
+          matchedRegions.push(regionId);
+          matched_polygon.push({regionId:region["geometry"]["coordinates"]});
         }
       }
       var user = firebase.auth().currentUser;
       var useruid;
       if (user != null) {
-        useruid = user.uid  // The user's ID, unique to the Firebase project.
+        useruid = user.uid  
+        // The user's ID, unique to the Firebase project.
       }
-      
+      var host=await check_host(result)
+      matchedRegions=matchedRegions.concat(host)
     db.collection("users").doc(useruid).get().then(async function(doc){
         var data=doc.data()
         var usertype=data['type']  
+        if (usertype=='landlord'){
+           matchedRegions=[]
+           matchedRegions.push(data['region'])
+           db.collection('users').doc(useruid).update({
+             house:result.value[0],
+             upper:result.value[1],
+             lower:result.value[2],
+             matchedRegions:matchedRegions
+           })
+        }else{
+          db.collection("users").doc(useruid).update({
+            matchedRegions: matchedRegions.slice(0,5),
+          })
+        }
+        console.log(matchedRegions)
         var matched=new Set()
         matched.add(useruid)   
-        for (matchedRegion of matchedRegions){
+        for (matchedRegion of matchedRegions.slice(0,5)){
           var temp=await get_match_user(matchedRegion);
           temp.forEach(matched.add,matched)
           db.collection('regions').doc(matchedRegion).collection('users').doc(useruid).set(
@@ -127,7 +151,6 @@ async function match(){
          }}).catch(function(error) {
           console.log("Error getting document:", error);
           });
-          
         }
 
        
@@ -142,11 +165,11 @@ async function match(){
   
     })
   
-      db.collection("users").doc(useruid).update({
-        matchedRegions: matchedRegions
-      })
+      // db.collection("users").doc(useruid).update({
+      //   matchedRegions: matchedRegions.slice(0,5),
+      // })
 
-      
+     
     })
 
   })
@@ -158,25 +181,44 @@ async function match(){
     db.collection('regions').doc(matchedRegion).collection('users').get().then(function(querySnapshot){
       querySnapshot.forEach(function(doc){
         var matchedData=doc.data()
-        matchedUid.add(matchedData['uid'])
+        var flag=matchedData['flag']
+        if (flag!=null){
+          console.log(flag)
+          matchedUid.add(matchedData['uid'])
+        }    
       })
     })
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(matchedUid);
-      }, 100);
+      }, 1000);
     });
   };
 
 
   return new Promise(resolve => {
-    
     setTimeout(() => {
       resolve('clean and pushed data to matched results');
     }, 1000);
   });
 
 };
+function check_host(result){
+  var matchedHost=[]
+  db.collection('users').get().then(function(querySnapshot){
+    querySnapshot.forEach(function(doc){
+      var hostdata=doc.data()
+      if (hostdata['type']=='landlord' && hostdata['house']==result.value[0] && hostdata['upper']<=result.value[1] && hostdata['lower']>=result.value[2]){
+        matchedHost.push(hostdata['region'])
+      }
+    })
+  })
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(matchedHost);
+    }, 1000);
+  });
+}
 
 function click_user(){
   Swal.fire({
@@ -188,14 +230,31 @@ function click_user(){
   })
 };
 
-var targetuid = [];
-var targetname = [];
-var targetphoto = [];
-var myname = [];
 function push_match_data(){
+  console.log(matched_polygon)
+  let timerInterval
+Swal.fire({
+  title: 'Fetching your match request ... ',
+  // html: 'Fetching your matched results in <b></b> milliseconds.',
+  timer: 5500,
+  timerProgressBar: true,
+  onBeforeOpen: () => {
+    Swal.showLoading()
+    timerInterval = setInterval(() => {
+      Swal.getContent().querySelector('b')
+        .textContent = Swal.getTimerLeft()
+    }, 100)
+  },
+  onClose: () => {
+    clearInterval(timerInterval)
+  }
+}).then((result) => {
+  if (
+    /* Read more about handling dismissals below */
+    result.dismiss === Swal.DismissReason.timer
+  ) {
+    // console.log('I was closed by the timer') // eslint-disable-line
 
-
-  document.getElementById("show_match_button").setAttribute('hidden','true');
     var user = firebase.auth().currentUser;
     var useruid;
     if (user != null) {
@@ -204,15 +263,21 @@ function push_match_data(){
       // console.log(test)
     }
     var docRef = db.collection("matchedresults").doc(useruid);
-    docRef.get().then(function(doc) {
+    docRef.get().then(async function(doc) {
 
       if (doc.exists) {
-        
+  
           // document.getElementById("match-button").removeAttribute('hidden');
           console.log('fetching matched results')
           var data = doc.data();
           var data_final = data.datacollection;
-         
+          // var matchedregionids = data_final.matchedRegions;
+          // console.log(matchedregions)
+       
+          
+
+
+          
 
           match_layer.push(     
             new deck.IconLayer({
@@ -269,7 +334,7 @@ function push_match_data(){
                     title: d.name,
                     html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
                     //"the userid: "+d.id,
-                
+                    allowOutsideClick:false,
                     confirmButtonText: "View Location Stats",
                     cancelButtonText: "Messages",
                   }).then((result) => {
@@ -283,15 +348,10 @@ function push_match_data(){
                       result.dismiss === Swal.DismissReason.cancel
                     ) {
                       openMessage(userinfo.id),
-                      otheruid = userinfo.id,
-                      othername = userinfo.name,
-                      otherphoto = userinfo.photoURL,
-                      console.log(userinfo)
-                      // Swal.fire(
-                      //   'communcation starting',
-                      //   'success'
-                      // )
-
+                      othername = userinfo.name;
+                      otheruid = userinfo.id;
+                     
+                     otherphoto = userinfo.photoURL;
 
                     }
                   })
@@ -347,7 +407,7 @@ function push_match_data(){
                   title: d.name,
                   html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
                   //"the userid: "+d.id,
-              
+                  allowOutsideClick:false,
                   confirmButtonText: "View Location Stats",
                   cancelButtonText: "Messages",
                 }).then((result) => {
@@ -361,14 +421,10 @@ function push_match_data(){
                     result.dismiss === Swal.DismissReason.cancel
                   ) {
                     openMessage(userinfo.id),
-                      otheruid = userinfo.id,
-                      othername = userinfo.name,
-                      otherphoto = userinfo.photoURL,
-                      console.log(userinfo)
-                      // Swal.fire(
-                      //   'communcation starting',
-                      //   'success'
-                      // )
+                    othername = userinfo.name;
+                    otheruid = userinfo.id;
+                   
+                   otherphoto = userinfo.photoURL;
 
                   }
                 })
@@ -376,7 +432,35 @@ function push_match_data(){
               },
 
           }),
-
+            new PolygonLayer({
+            id: 'polygon-layer'+JSON.stringify(count),
+            data, data_final,
+            pickable: true,
+            stroked: true,
+            filled: true,
+            wireframe: true,
+            lineWidthMinPixels: 1,
+            getPolygon: function(d){
+              var regionids = d.object.matchedRegions;
+              var polys = []
+              for (regionid of regionids){
+              var poly = matchedRegions[regionid]
+              
+              polys.push(poly)}
+              console.log(polys)
+              return polys
+            },
+            getElevation: 5,
+            getFillColor: d => [60, 140, 0],
+            getLineColor: [80, 80, 80],
+            getLineWidth: 2,
+            // onHover: ({object, x, y}) => {
+            //   const tooltip = `${object.zipcode}\nPopulation: ${object.population}`;
+              /* Update tooltip
+                 http://deck.gl/#/documentation/developer-guide/adding-interactivity?section=example-display-a-tooltip-for-hovered-object
+              */
+            
+          }),
 // 
 
 
@@ -404,6 +488,217 @@ function push_match_data(){
   }).catch(function(error) {
       console.log("Error getting document:", error);
   });
+
+
+
+
+
+
+
+
+
+  }
+})
+//     // document.getElementById("show_match_button").setAttribute('hidden','true');
+//     var user = firebase.auth().currentUser;
+//     var useruid;
+//     if (user != null) {
+//       useruid = user.uid  // The user's ID, unique to the Firebase project.
+//       // var test = await clear_previous_matched_logs();
+//       // console.log(test)
+//     }
+//     var docRef = db.collection("matchedresults").doc(useruid);
+//     docRef.get().then(async function(doc) {
+
+//       if (doc.exists) {
+  
+//           // document.getElementById("match-button").removeAttribute('hidden');
+//           console.log('fetching matched results')
+//           var data = doc.data();
+//           var data_final = data.datacollection;
+         
+
+//           match_layer.push(     
+//             new deck.IconLayer({
+//               id: 'match-layer'+JSON.stringify(count),
+//               // data: icons,
+//               data: data_final,
+//               pickable: true,
+//               autoHighlight: true,
+//             // iconAtlas and iconMapping are required
+//             // getIcon: return a string
+//               iconAtlas: 'images/icon_position.png',
+              
+//               iconMapping: POSITION_ICON_MAPPING,
+//               getIcon: d => 'marker',
+//               sizeMinPixels: 80,
+//               sizeScale: 1,
+//               getPosition: d => [d.coordinates.longtitude,d.coordinates.latitude],
+//               getSize: d => 80,
+//             //   getColor: [65,105,225],
+//             getColor: function(d){
+//                 if (d.type == "landlord")
+//                 return [105,0,0];
+//                 else if(d.type == "tenant")
+//                 return [0,105,0];
+//                 else 
+//                 return [0,0,0];
+
+//             },
+//               // onHover: ({object, x, y}) => {
+//               // const tooltip = `${object.name}\n${object.address}`;
+
+//             //   onClick: (event) => {
+//             //     icon_event_matched(data_final);
+//             //     // console.log(data_final);
+//             //     // console.log(data.id);
+//             //   },
+
+//               onClick: function(d){
+//                   var userinfo = d.object;
+//                   console.log(userinfo)
+//                   var user_lat = userinfo.coordinates.latitude;
+//                   var user_long = userinfo.coordinates.longtitude;
+//                   global_lat = user_lat;
+//                   global_long= user_long;
+//                   Swal.fire({
+//                     position: 'middle',
+//                     imageUrl: userinfo.photoURL,
+//                     imageWidth: 300,
+//                     imageHeight: 300,
+//                     // icon:'success',
+//                     showCloseButton: true,
+//                     showCancelButton: true,
+//                     background: `rgb(0,0,0)`,
+//                     title: d.name,
+//                     html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
+//                     //"the userid: "+d.id,
+                
+//                     confirmButtonText: "View Location Stats",
+//                     cancelButtonText: "Messages",
+//                   }).then((result) => {
+//                     if (result.value) {
+//                       openNav_picker();
+//                       push_sfpd_layer(user_lat,user_long);
+//                     // push_sfpd_layer(user_lat,user_long);
+//                     }
+//                     else if (
+//                       /* Read more about handling dismissals below */
+//                       result.dismiss === Swal.DismissReason.cancel
+//                     ) {
+//                       openMessage(userinfo.id),
+//                       othername = userinfo.name;
+//                       otheruid = userinfo.id;
+                     
+//                      otherphoto = userinfo.photoURL;
+
+//                     }
+//                   })
+                  
+//                 },
+
+//             }),
+
+// // 
+//             new deck.IconLayer({
+//               id: 'icon-layer-image-matched'+JSON.stringify(count),
+//               // data: icons,
+//               data: data_final,
+//               pickable: true,
+//               autoHighlight: true,
+//             // iconAtlas and iconMapping are required
+//             // getIcon: return a string
+//               // iconAtlas: 'images/icon-atlas.png',
+//               // iconMapping: ICON_MAPPING,
+//               // getIcon: d => 'marker',
+//               getIcon: d => ({
+           
+//                 url: d.photoURL,
+//                 width: 128,
+//                 height: 128,
+//                 anchorY: 220,
+//                 anchorX: -50,
+//               }),
+              
+//               sizeScale: 1,
+//               sizeMinPixels: 80,
+//               getPosition: d => [d.coordinates.longtitude,d.coordinates.latitude],
+//               getSize: d => 40,
+//               // getColor: d => d.color,
+//               // onHover: ({object, x, y}) => {
+//               // const tooltip = `${object.name}\n${object.address}`;
+//               onClick: function(d){
+//                 var userinfo = d.object;
+//                 console.log(userinfo)
+//                 var user_lat = userinfo.coordinates.latitude;
+//                 var user_long = userinfo.coordinates.longtitude;
+//                 global_lat = user_lat;
+//                 global_long= user_long;
+//                 Swal.fire({
+//                   position: 'middle',
+//                   imageUrl: userinfo.photoURL,
+//                   imageWidth: 300,
+//                   imageHeight: 300,
+//                   // icon:'success',
+//                   showCloseButton: true,
+//                   showCancelButton: true,
+//                   background: `rgb(0,0,0)`,
+//                   title: d.name,
+//                   html: "User id: "+ userinfo.id+"<br>Email: "+userinfo.email+"<br>Gender: "+userinfo.gender+"<br>Role: "+userinfo.type,
+//                   //"the userid: "+d.id,
+              
+//                   confirmButtonText: "View Location Stats",
+//                   cancelButtonText: "Messages",
+//                 }).then((result) => {
+//                   if (result.value) {
+//                     openNav_picker();
+//                     push_sfpd_layer(user_lat,user_long);
+//                   // push_sfpd_layer(user_lat,user_long);
+//                   }
+//                   else if (
+//                     /* Read more about handling dismissals below */
+//                     result.dismiss === Swal.DismissReason.cancel
+//                   ) {
+//                     openMessage(userinfo.id),
+//                     othername = userinfo.name;
+//                     otheruid = userinfo.id;
+                   
+//                    otherphoto = userinfo.photoURL;
+
+//                   }
+//                 })
+                
+//               },
+
+//           }),
+
+// // 
+
+
+
+
+
+
+
+
+//             )
+    
+//             var matched_finalized_layer = match_layer.concat(update_layer).concat(base_layer);
+       
+//             update_layer.push(match_layer);
+//             count = count +1;
+
+//             deckgl.setProps({layers:matched_finalized_layer});
+  
+          
+
+//       } else {
+//           // doc.data() will be undefined in this case
+//           console.log("No such document!");
+//       }
+//   }).catch(function(error) {
+//       console.log("Error getting document:", error);
+//   });
     // console.log(match_layer)
     // deckgl.setProps({layers:match_layer})
 }
@@ -442,15 +737,11 @@ function icon_event_matched(d){
         /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel
       ) {
-        openMessage(userinfo.id),
-        otheruid = userinfo.id,
-        othername = userinfo.name,
-        otherphoto = userinfo.photoURL,
-        console.log(userinfo)
-                      // Swal.fire(
-                      //   'communcation starting',
-                      //   'success'
-                      // )
+        openMessage(d),
+        myname = d.name;
+        targetuid = d.id;
+        targetname = d.name;
+        targetphoto = d.photoURL;
   
         
   

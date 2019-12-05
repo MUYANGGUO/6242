@@ -86,6 +86,18 @@ function clear_previous_matched_logs(){
     console.log(useruid)
     var matchedresults = db.collection("matchedresults").doc(useruid);
     matchedresults.set({});
+    db.collection('users').doc(useruid).get().then(function(doc){
+        var data=doc.data()
+        var matchedRegions=data['matchedRegions']
+        for (matchedRegion of matchedRegions){
+            db.collection('regions').doc(matchedRegion).collection('users').doc(useruid).delete().then(function() {
+                console.log("Document successfully deleted!");
+            }).catch(function(error) {
+                console.error("Error removing document: ", error);
+            });
+        }
+    })
+    
 
     return new Promise(resolve => {
         setTimeout(() => {
