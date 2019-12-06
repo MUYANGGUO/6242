@@ -1,4 +1,8 @@
-# Residense Recommendation System based on Personal Interests and Geo-info
+#  Geo-based SNS, Residense/roommates/landlords Recommendation System, Multi-dimensional exploratory data visualization
+
+ 
+![title_logo](https://github.com/MUYANGGUO/6242/blob/master/readme_images/title_log.png)
+
 
 ## Project <"Hood---Mate"> V1
 
