@@ -551,7 +551,9 @@ function icon_event(d){
     //"the userid: "+d.id,
 
     confirmButtonText: "View Location Stats",
+
     cancelButtonText: "Close",
+
   }).then((result) => {
     if (result.value) {
       openNav_picker();
