@@ -551,7 +551,7 @@ function icon_event(d){
     //"the userid: "+d.id,
 
     confirmButtonText: "View Location Stats",
-    cancelButtonText: "Messages",
+    cancelButtonText: "Cancel",
   }).then((result) => {
     if (result.value) {
       openNav_picker();
@@ -562,11 +562,11 @@ function icon_event(d){
       /* Read more about handling dismissals below */
       result.dismiss === Swal.DismissReason.cancel
     ) {
-      openMessage(d),
-                    myname = d.name;
-                    targetuid = d.id;
-                    targetname = d.name;
-                    targetphoto = d.photoURL;
+      // openMessage(d),
+      //               myname = d.name;
+      //               targetuid = d.id;
+      //               targetname = d.name;
+      //               targetphoto = d.photoURL;
       // Swal.fire(
       //   'communcation starting',
       //   'success'

@@ -350,11 +350,13 @@ Swal.fire({
                       /* Read more about handling dismissals below */
                       result.dismiss === Swal.DismissReason.cancel
                     ) {
-                      openMessage(userinfo.id),
-                      othername = userinfo.name;
-                      otheruid = userinfo.id;
 
-                     otherphoto = userinfo.photoURL;
+                    //   openMessage(userinfo.id),
+                    //   othername = userinfo.name;
+                    //   otheruid = userinfo.id;
+                    //  console.log(othername);
+                    //  otherphoto = userinfo.photoURL;
+
 
                     }
                   })
@@ -423,11 +425,13 @@ Swal.fire({
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                   ) {
-                    openMessage(userinfo.id),
-                    othername = userinfo.name;
-                    otheruid = userinfo.id;
 
-                   otherphoto = userinfo.photoURL;
+                    openMessage(userinfo.id, userinfo.name, userinfo.photoURL)
+                  //   othername = userinfo.name;
+                  //   otheruid = userinfo.id;
+                  //  console.log(othername);
+                  //  otherphoto = userinfo.photoURL;
+
 
                   }
                 })
