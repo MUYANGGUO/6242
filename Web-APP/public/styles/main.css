@@ -143,7 +143,16 @@
   border-color: red;
 }
 
-
+.listbutton {
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  margin-left: -12px;
+  margin-right: -12px;
+  width:125px;
+  background-color: #191919;
+  color: #fff;
+}
 
 .form-popup {
   display: none;
