@@ -314,8 +314,8 @@ async function saveMessage(messageText) {
   var senderuid = firebase.auth().currentUser.uid;
   var username = await getname();
   var receiveruid = otheruid;
-  var receivername = getothername(receiveruid);
-  var receiverphoto = getphoto(receiveruid);
+  var receivername = await getothername(receiveruid);
+  var receiverphoto =await getphoto(receiveruid);
   var uidpair = [senderuid, receiveruid];
   var sortuid = uidpair.sort();
   var loweruid = sortuid[0];
