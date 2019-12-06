@@ -351,11 +351,7 @@ Swal.fire({
                       result.dismiss === Swal.DismissReason.cancel
                     ) {
 
-                    //   openMessage(userinfo.id),
-                    //   othername = userinfo.name;
-                    //   otheruid = userinfo.id;
-                    //  console.log(othername);
-                    //  otherphoto = userinfo.photoURL;
+                      openMessage(userinfo.id, userinfo.name, userinfo.photoURL);
 
 
                     }
@@ -426,11 +422,8 @@ Swal.fire({
                     result.dismiss === Swal.DismissReason.cancel
                   ) {
 
-                    openMessage(userinfo.id, userinfo.name, userinfo.photoURL)
-                  //   othername = userinfo.name;
-                  //   otheruid = userinfo.id;
-                  //  console.log(othername);
-                  //  otherphoto = userinfo.photoURL;
+                    openMessage(userinfo.id, userinfo.name, userinfo.photoURL);
+
 
 
                   }
@@ -484,7 +477,7 @@ new deck.PolygonLayer({
       //"the userid: "+d.id,
       allowOutsideClick:false,
       confirmButtonText: "View Location Stats",
-      cancelButtonText: "Close",
+      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.value) {
         openNav_picker();
