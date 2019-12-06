@@ -39,7 +39,21 @@ Direct to project wiki page to download progress documentations in PDF.
 
 - [Deck.gl](https://deck.gl/#/)
 
-- [D3](https://d3js.org/)
+All deck.gl layers are made to allow zoom, pan, rotate, focus. 
+All Props are made to be clickable/hoverable for different interactive purpose or exploratory data stats display.
+ 
+  - Base Map Layer, mapbox tiles layer
+  - Cleaned and reformatted Zillow geoJSON data as base layer, as subregions partitions
+  - Systematically Sampled Uber Movements Trips Data, scaled to street level with color scheme for speed.
+  - Icon Layers:
+    - Red Icons : Hosts/Landlords, location as host location
+    - Green Icons: Visitors/Tenants, location as destination location
+    - Blue Icons: User "My Location"
+  - Profile images layers, showing up with Icon Layers, display the users profile avatar image.
+  - SFPD safety 3D extruded hexagon layers, show selected props surrounding incidents history since 2019, projected to hexagons and sort, rank by occurences for each sub hexagon. Extruded height is the incident density, with color scheme. 
+    - on Hover: show the stats.
+  - Yelp location icon layers, display selected props surrounding POIs, based on the keyword inputs, showing up in black to red linearly scaled color, color indicating the ratings. 
+    - on Hover: show the yelp essential infos.
 
 ## Map Service
 
