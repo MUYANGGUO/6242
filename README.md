@@ -59,6 +59,18 @@ Direct to project wiki page to download progress documentations in PDF.
 
 - [Mapbox](http://mapbox.com/)
 
+## Contributing
+
+> Please kindly refer to project wiki for details, for enviroment setup and account authroization, please see the link below:
+
+- For web-builders,
+
+[New contributor to the project directly please request for a authorization to the firebase project](https://github.com/MUYANGGUO/6242/wiki/Web-APP-Development-Environment-Setup-Guide)
+
+- For non web-builders, please kindly star and fork this project.
+
+- We are maintaining this project, and the API keys are rotated frequently.
+
 ## License
 
 This project is licensed under the GPL_3.0 License - see the [LICENSE.md](/LICENSE) file for details
