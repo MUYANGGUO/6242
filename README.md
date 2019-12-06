@@ -39,8 +39,8 @@ Direct to project wiki page to download progress documentations in PDF.
 
 - [Deck.gl](https://deck.gl/#/)
 
-All deck.gl layers are made to allow zoom, pan, rotate, focus. 
-All Props are made to be clickable/hoverable for different interactive purpose or exploratory data stats display.
+> All deck.gl layers are made to allow zoom, pan, rotate, focus. 
+> All Props are made to be clickable/hoverable for different interactive purpose or exploratory data stats display.
  
   - Base Map Layer, mapbox tiles layer
   - Cleaned and reformatted Zillow geoJSON data as base layer, as subregions partitions
