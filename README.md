@@ -21,6 +21,7 @@ It is also an academic study project of big data analysis and visualization, con
 * **Rui Jia**
 * **Xiaoxun Liu**
 * **Xufan Song**
+* **Yanan Chen**
 
 ## Documentations
 
